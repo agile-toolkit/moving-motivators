@@ -20,7 +20,7 @@ interface Props {
   onInfo?: (id: MotivatorId) => void
 }
 
-function SortableCard({ item, onInfo }: { item: MotivatorItem; onInfo?: (id: MotivatorId) => void }) {
+function SortableCard({ item }: { item: MotivatorItem }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.id })
   return (
@@ -31,12 +31,7 @@ function SortableCard({ item, onInfo }: { item: MotivatorItem; onInfo?: (id: Mot
       {...attributes}
       {...listeners}
     >
-      <MotivatorCard
-        item={item}
-        showRank
-        isDragging={isDragging}
-        onInfo={onInfo}
-      />
+      <MotivatorCard item={item} showRank isDragging={isDragging} />
     </div>
   )
 }
@@ -67,14 +62,25 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
       </div>
 
       <div className="bg-white rounded-2xl p-4 card-shadow overflow-x-auto">
-        <div className="flex items-stretch gap-1 pb-1" style={{ minWidth: 'max-content' }}>
-          <div className="flex flex-col justify-between text-xs text-gray-400 pr-2 py-1">
-            <span>⬅ {t('rank.title').split(' ')[0]}</span>
-          </div>
+        <div className="flex items-start gap-1 pb-1" style={{ minWidth: 'max-content' }}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={motivators.map(m => m.id)} strategy={horizontalListSortingStrategy}>
               <div className="flex gap-2">
-                {motivators.map(item => <SortableCard key={item.id} item={item} onInfo={onInfo} />)}
+                {motivators.map(item => (
+                  // Column: [draggable card] above [info button] — info is outside dnd, no conflict
+                  <div key={item.id} className="flex flex-col items-center gap-1">
+                    <SortableCard item={item} />
+                    {onInfo && (
+                      <button
+                        onClick={() => onInfo(item.id)}
+                        title={t('common.learnMore')}
+                        className="text-[11px] text-gray-300 hover:text-gray-500 transition-colors leading-none py-0.5"
+                      >
+                        ⓘ
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
             </SortableContext>
           </DndContext>

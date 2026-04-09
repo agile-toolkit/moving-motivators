@@ -64,7 +64,18 @@ export default function ChangeAssessment({ motivators, change, onChangeText, onM
           <div className="bg-white rounded-2xl p-4 card-shadow overflow-x-auto">
             <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
               {motivators.map(item => (
-                <MotivatorCard key={item.id} item={item} showRank showImpact onImpact={handleImpact} onInfo={onInfo} />
+                <div key={item.id} className="flex flex-col items-center gap-1">
+                  <MotivatorCard item={item} showRank showImpact onImpact={handleImpact} />
+                  {onInfo && (
+                    <button
+                      onClick={() => onInfo(item.id)}
+                      title={t('common.learnMore')}
+                      className="text-[11px] text-gray-300 hover:text-gray-500 transition-colors leading-none py-0.5"
+                    >
+                      ⓘ
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
           </div>
