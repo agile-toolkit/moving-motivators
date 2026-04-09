@@ -1,7 +1,0 @@
-fix: card UX — distinct descs, full-card drag, tap-to-info on name area
-
-- en/ru: replace "I am motivated by..." prefix with short distinct labels
-- RankingBoard: move dnd listeners to SortableCard wrapper; whole card draggable
-- MotivatorCard: remove dragHandleProps; name+desc area is the info tap target
-  with inline "ⓘ" affordance and stopPropagation to block drag sensor;
-  impact buttons and info area both use onPointerDown.stopPropagation
