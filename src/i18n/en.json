@@ -1,0 +1,72 @@
+{
+  "app": {
+    "title": "Moving Motivators",
+    "subtitle": "A Management 3.0 practice",
+    "tagline": "Rank what drives you. See how change affects it."
+  },
+  "home": {
+    "solo": "Solo",
+    "soloDesc": "Explore your own motivators",
+    "team": "Team Session",
+    "teamDesc": "Facilitate a team workshop",
+    "teamUnavailable": "Team sessions require Firebase setup — see README",
+    "host": "Host a Session",
+    "join": "Join a Session"
+  },
+  "rank": {
+    "title": "Rank Your Motivators",
+    "instruction": "Drag the cards to order them — most important on the left, least important on the right.",
+    "next": "Continue to Change Assessment",
+    "skip": "Skip — just explore rankings"
+  },
+  "assess": {
+    "title": "Assess a Change",
+    "instruction": "Describe a change you're facing (e.g. 'move to remote work', 'new manager', 'project pivot').",
+    "placeholder": "Describe the change...",
+    "impactInstruction": "Now tap ↑ or ↓ on each card to show whether this change positively or negatively affects that motivator.",
+    "positive": "Positive impact",
+    "negative": "Negative impact",
+    "neutral": "No impact",
+    "seeResults": "See Results"
+  },
+  "results": {
+    "title": "Your Results",
+    "change": "Change assessed",
+    "positives": "Motivators boosted",
+    "negatives": "Motivators hurt",
+    "neutral": "Unaffected",
+    "insight": "The motivators that matter most to you and are negatively affected deserve the most attention.",
+    "startOver": "Start Over",
+    "share": "Copy image"
+  },
+  "team": {
+    "pinLabel": "Session PIN",
+    "waitingFor": "Waiting for participants…",
+    "participants": "participants",
+    "reveal": "Reveal Results",
+    "joinPrompt": "Enter PIN to join",
+    "joinPin": "Session PIN",
+    "yourName": "Your name",
+    "join": "Join",
+    "phase": {
+      "lobby": "Waiting for host to start",
+      "ranking": "Rank your motivators",
+      "assessing": "Assess the change",
+      "revealed": "Team results"
+    }
+  },
+  "motivators": {
+    "curiosity":   { "name": "Curiosity",   "desc": "I am motivated by learning and exploring new ideas." },
+    "honor":       { "name": "Honor",       "desc": "I am motivated by upholding my personal values." },
+    "acceptance":  { "name": "Acceptance",  "desc": "I am motivated by the approval of those around me." },
+    "mastery":     { "name": "Mastery",     "desc": "I am motivated by improving my competence and skills." },
+    "power":       { "name": "Power",       "desc": "I am motivated by having influence over what happens." },
+    "freedom":     { "name": "Freedom",     "desc": "I am motivated by independence and self-direction." },
+    "relatedness": { "name": "Relatedness", "desc": "I am motivated by close social bonds and teamwork." },
+    "order":       { "name": "Order",       "desc": "I am motivated by stability and a predictable environment." },
+    "goal":        { "name": "Goal",        "desc": "I am motivated by a higher purpose and sense of meaning." },
+    "status":      { "name": "Status",      "desc": "I am motivated by recognition and a good reputation." }
+  },
+  "lang": { "en": "English", "ru": "Русский" },
+  "common": { "back": "Back" }
+}
