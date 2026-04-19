@@ -19,6 +19,7 @@ export type Screen =
   | 'team-join'
   | 'team-play'
   | 'team-results'
+  | 'facilitation'
 
 export interface SessionParticipant {
   id: string

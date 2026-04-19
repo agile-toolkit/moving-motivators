@@ -8,6 +8,7 @@ import ChangeAssessment from './components/ChangeAssessment'
 import ResultsView from './components/ResultsView'
 import TeamSession from './components/TeamSession'
 import MotivatorInfo from './components/MotivatorInfo'
+import FacilitationGuide from './components/FacilitationGuide'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -46,7 +47,11 @@ function App() {
             onSolo={() => setScreen('solo-rank')}
             onHost={() => setScreen('team-host')}
             onJoin={() => setScreen('team-join')}
+            onFacilitation={() => setScreen('facilitation')}
           />
+        )}
+        {screen === 'facilitation' && (
+          <FacilitationGuide onBack={() => setScreen('home')} />
         )}
         {screen === 'solo-rank' && (
           <RankingBoard
