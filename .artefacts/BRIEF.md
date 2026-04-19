@@ -1,40 +1,35 @@
-# BRIEF
+# Moving Motivators — Brief
 
-Derived per [`agent-state.NO-BRIEF.md`](https://github.com/agile-toolkit/.github/blob/main/agent-state.NO-BRIEF.md). There was **no prior** `BRIEF.md`. Sources: `README.md`, `src/i18n/en.json` / `ru.json`, `src/`. Generated **2026-04-19**.
+## Overview
 
-## Product scope (from `README.md`)
+Interactive [Management 3.0 Moving Motivators](https://management30.com/practice/moving-motivators/) (CHAMPFROGS): solo ranking and change assessment, plus optional Firebase-backed team sessions. React 18, Vite, Tailwind, `@dnd-kit`, react-i18next. Deploy: GitHub Pages (`vite.config` base `/moving-motivators/`).
 
-- **Solo mode** — rank CHAMPFROGS motivators, assess change impact (↑ / ↓ / neutral).
-- **Team mode** — host/join with PIN, aggregate view (**Firebase**).
-- **EN + RU**, responsive / touch DnD, solo works offline.
+## Features
 
-## Build
+- [x] Solo mode — rank ten motivators, assess change (↑ / ↓ / neutral), results + interpretation
+- [x] Team mode — host/join flow, PIN, Firebase realtime (`TeamSession.tsx`)
+- [x] English + Russian locales (`src/i18n/en.json`, `ru.json`)
+- [x] Responsive layout and touch-friendly drag-and-drop
+- [ ] Share / copy results as image — `results.share` exists in locales but no control in `src/components/ResultsView.tsx`
+- [ ] Optional insight line — `results.insight` unused in `src/`
+- [ ] Facilitation guide screen — `facilitation.*` strings unused
+- [ ] Team session phase copy — `team.phase.lobby` / `ranking` / `assessing`, `team.waitingFor`, `team.facilitationGuide` unused; only `team.phase.revealed` wired
+- [ ] Home copy — `home.team` unused (host/join/unavailable used)
+- [ ] Header language toggle uses raw `EN`/`RU` in `App.tsx` instead of `lang.en` / `lang.ru`
 
-- `npm run build` — **passes** (verified **2026-04-19**; large-bundle warning only).
+## Backlog
 
-## TODO in `src/`
+<!-- Agent: append `needs-review` research issues here as `- [ ] #N …` -->
 
-- None.
+## Tech notes
 
-## i18n — keys not wired (confirmed)
+- Firebase optional for solo; CI/production builds may use `VITE_FIREBASE_*` secrets (see `.github/workflows/deploy.yml`).
+- Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
-- **`results.share`** — exists in `en.json` / `ru.json`; **no** `t('results.share')` in `src/components/ResultsView.tsx` (share / copy-image control missing for solo results).
-- **`results.insight`** — not referenced in `src/` (README “insight” copy may be intended under results card).
-- **`facilitation.*`** subtree — no component imports `t('facilitation…')` (facilitation guide from README not exposed).
-- **`team.phase.lobby`**, **`team.phase.ranking`**, **`team.phase.assessing`** — `TeamSession.tsx` only uses **`team.phase.revealed`** (duplicated twice); other phases not shown.
-- **`team.waitingFor`**, **`team.facilitationGuide`** — not referenced.
-- **`home.team`** — not used (cards use **`home.host`**, **`home.join`**, **`home.teamUnavailable`**).
-- **`lang.en`**, **`lang.ru`** — language switch in `App.tsx` uses raw **`EN` / `RU`** strings instead of these keys.
+## Agent Log
 
-## i18n — dynamic keys (used)
+### 2026-04-19 — docs: BRIEF template (AGENT_AUTONOMOUS)
 
-- **`results.interpretation.${patternKey}`** in `ResultsView.tsx` — covers `positivePattern`, `negativePattern`, `mixedPattern`, `noChangeNote`; do **not** treat those four keys as orphaned.
-
-## Hardcoded user-visible strings
-
-- **`App.tsx`** language toggle (`EN` / `RU`) — see above.
-
-## Classification (NO-BRIEF)
-
-- **Status:** `in-progress`
-- **First next task:** In **`moving-motivators`**, add dependency **`html2canvas`** to `package.json`, then in **`src/components/ResultsView.tsx`** next to the existing **Start Over** button (~line 202), add a control labeled **`t('results.share')`** that captures the results column and offers download or clipboard (keys already in **`src/i18n/en.json`** / **`ru.json`**).
+- Done: Replaced ad-hoc NO-BRIEF dump with Overview / Features / Backlog / Tech notes / Agent Log per `agile-toolkit/.github` `AGENT_AUTONOMOUS.md`.
+- Remaining: share button (`html2canvas` + `t('results.share')`), facilitation + team phase i18n, lang toggle, optional `results.insight`.
+- Next task: `npm install html2canvas`; in `src/components/ResultsView.tsx` beside Start Over (~line 202) add button `t('results.share')` for PNG/clipboard capture; keys already in `en.json` / `ru.json`.
