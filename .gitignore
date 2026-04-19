@@ -26,8 +26,8 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# Agentic kit artefacts
-.artefacts/
-.agentic-kit/
-\"commit_msg.txt\"  
-commit_msg.txt  
+# Agentic kit artefacts — track BRIEF, ignore other generated files
+.artefacts/*
+!.artefacts/BRIEF.md
+
+commit_msg.txt
