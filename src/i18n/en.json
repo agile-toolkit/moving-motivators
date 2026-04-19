@@ -16,7 +16,9 @@
       "toggle": "About this exercise",
       "title": "What is Moving Motivators?",
       "body": "Moving Motivators is a Management 3.0 practice developed by Jurgen Appelo. It is built on the CHAMPFROGS model — ten intrinsic motivators that research suggests drive most of our engagement and satisfaction at work. Unlike external rewards (salary, perks), these are internal drivers: the things that make work feel meaningful and energizing, or deeply frustrating when absent.",
+      "howTitle": "How it works",
       "how": "The exercise has two phases. First, rank the ten motivators by personal importance — most important on the right. Then describe a change you are facing (a new manager, a restructure, a move to remote work) and assess whether it positively or negatively affects each motivator. The result is an honest map of what matters to you and whether the change threatens it.",
+      "usesTitle": "When to use it",
       "uses": "Use it for: personal reflection on what drives you, preparing for a career conversation, helping your team surface hidden concerns about a change, or building mutual understanding in a new team.",
       "dismiss": "Got it"
     }
@@ -49,6 +51,7 @@
     "interpretation": {
       "topTitle": "What drives you most",
       "topDesc": "Your top motivators are your core drivers. Changes that threaten them will feel deeply uncomfortable — even if the change is objectively positive. Pay close attention to these in any conversation about this change.",
+      "bottomTitle": "Your lower-ranked motivators",
       "bottomNote": "Your lower-ranked motivators matter less to you personally — but don't assume the same is true for your teammates. These differ widely across people.",
       "positivePattern": "This change appears to align well with what drives you. That is a good sign — but check whether your teammates feel the same way.",
       "negativePattern": "This change risks undermining motivators that are core to you. Name this explicitly in conversations with your manager or team — unexpressed concerns rarely get resolved.",

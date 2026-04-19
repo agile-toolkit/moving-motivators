@@ -113,7 +113,7 @@ function InterpretationPanel({ motivators, change, onInfo }: {
       {bottom3.length > 0 && (
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">
-            Your lower-ranked motivators
+            {t('results.interpretation.bottomTitle')}
           </h3>
           <div className="flex flex-wrap gap-2 mb-2">
             {bottom3.map(item => {

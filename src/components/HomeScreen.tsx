@@ -81,11 +81,11 @@ export default function HomeScreen({ onSolo, onHost, onJoin }: Props) {
               <p>{t('home.about.body')}</p>
             </div>
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">How it works</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">{t('home.about.howTitle')}</h3>
               <p>{t('home.about.how')}</p>
             </div>
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">When to use it</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">{t('home.about.usesTitle')}</h3>
               <p>{t('home.about.uses')}</p>
             </div>
             <div className="flex items-center justify-between pt-2 border-t border-gray-100">
