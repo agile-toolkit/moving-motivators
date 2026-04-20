@@ -222,6 +222,13 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
       {/* Interpretation */}
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
 
+      {/* Insight hint */}
+      {change && negatives.length > 0 && (
+        <p className="text-sm text-gray-500 leading-relaxed px-1">
+          💡 {t('results.insight')}
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-3">
         <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
           ↩ {t('results.startOver')}

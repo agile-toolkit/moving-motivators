@@ -11,7 +11,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] English + Russian locales (`src/i18n/en.json`, `ru.json`)
 - [x] Responsive layout and touch-friendly drag-and-drop
 - [x] Share / copy results as image — html2canvas captures results div to clipboard PNG (or downloads if clipboard API unavailable)
-- [ ] Optional insight line — `results.insight` unused in `src/`
+- [x] Optional insight line — `results.insight` shown below interpretation panel when change has negatives
 - [ ] Facilitation guide screen — `facilitation.*` strings unused
 - [ ] Team session phase copy — `team.phase.lobby` / `ranking` / `assessing`, `team.waitingFor`, `team.facilitationGuide` unused; only `team.phase.revealed` wired
 - [ ] Home copy — `home.team` unused (host/join/unavailable used)
@@ -27,6 +27,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-04-20 — feat: wire results.insight hint paragraph
+- Done: added `<p>` below `InterpretationPanel` in `ResultsView.tsx` rendering `t('results.insight')` when `change` is set and `negatives.length > 0`.
+- Remaining features: facilitation guide screen (`facilitation.*` strings), team session phase copy (`team.phase.lobby/ranking/assessing`, `team.waitingFor`, `team.facilitationGuide`), home.team i18n key, lang toggle EN/RU → i18n keys.
+- Next task: Add facilitation guide screen — `FacilitationGuide.tsx` already exists; wire it into `App.tsx` routing and add a link from `HomeScreen.tsx`; `facilitation.*` i18n keys already in `en.json`/`ru.json`.
 
 ### 2026-04-19 — feat: share / copy results as image
 - Done: installed html2canvas; added `handleShare` in `ResultsView.tsx` — captures container div to PNG, writes to clipboard via ClipboardItem, falls back to download link; share button added beside Start Over with `t('results.share')` label and spinner state.
