@@ -44,6 +44,7 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: P
 
         {/* Team */}
         <div className="flex flex-col gap-2">
+          <span className="font-semibold text-gray-900 text-lg px-1">🤝 {t('home.team')}</span>
           <button
             onClick={firebaseReady ? onHost : undefined}
             disabled={!firebaseReady}

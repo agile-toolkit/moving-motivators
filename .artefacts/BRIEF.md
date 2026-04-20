@@ -11,11 +11,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] English + Russian locales (`src/i18n/en.json`, `ru.json`)
 - [x] Responsive layout and touch-friendly drag-and-drop
 - [x] Share / copy results as image — html2canvas captures results div to clipboard PNG (or downloads if clipboard API unavailable)
-- [x] Optional insight line — `results.insight` shown below interpretation panel when change has negatives
-- [ ] Facilitation guide screen — `facilitation.*` strings unused
-- [ ] Team session phase copy — `team.phase.lobby` / `ranking` / `assessing`, `team.waitingFor`, `team.facilitationGuide` unused; only `team.phase.revealed` wired
-- [ ] Home copy — `home.team` unused (host/join/unavailable used)
-- [ ] Header language toggle uses raw `EN`/`RU` in `App.tsx` instead of `lang.en` / `lang.ru`
+- [x] Optional insight line — `results.insight` shown below interpretation panel when change is assessed
+- [x] Facilitation guide screen — FacilitationGuide.tsx wired in App.tsx; linked from HomeScreen
+- [x] Team session phase copy — lobby/ranking/assessing/revealed all wired; `team.waitingFor` shown when no participants yet
+- [x] Home team section label — `home.team` used as section heading above host/join buttons
+- [x] Header language toggle — uses `lang.en` / `lang.ru` i18n keys
 
 ## Backlog
 
@@ -28,10 +28,10 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 
 ## Agent Log
 
-### 2026-04-20 — feat: wire results.insight hint paragraph
-- Done: added `<p>` below `InterpretationPanel` in `ResultsView.tsx` rendering `t('results.insight')` when `change` is set and `negatives.length > 0`.
-- Remaining features: facilitation guide screen (`facilitation.*` strings), team session phase copy (`team.phase.lobby/ranking/assessing`, `team.waitingFor`, `team.facilitationGuide`), home.team i18n key, lang toggle EN/RU → i18n keys.
-- Next task: Add facilitation guide screen — `FacilitationGuide.tsx` already exists; wire it into `App.tsx` routing and add a link from `HomeScreen.tsx`; `facilitation.*` i18n keys already in `en.json`/`ru.json`.
+### 2026-04-20 — feat: wire all remaining unused i18n keys
+- Done: `results.insight` paragraph in ResultsView.tsx (shown when change assessed); `home.team` heading in HomeScreen.tsx team section; `lang.en`/`lang.ru` in App.tsx header toggle; `team.waitingFor` in host lobby when no participants; `team.phase.lobby` waiting screen for participants; `team.phase.ranking`/`assessing` phase badges in team-play.
+- Remaining features: none — all BRIEF features implemented.
+- Next task: check needs-review issues for human feedback; run research cycle for market/integration/UX improvements.
 
 ### 2026-04-19 — feat: share / copy results as image
 - Done: installed html2canvas; added `handleShare` in `ResultsView.tsx` — captures container div to PNG, writes to clipboard via ClipboardItem, falls back to download link; share button added beside Start Over with `t('results.share')` label and spinner state.

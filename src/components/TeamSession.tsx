@@ -268,9 +268,13 @@ export default function TeamSession({
         <div className="text-6xl font-mono font-bold text-brand-600 tracking-widest bg-brand-50 px-8 py-4 rounded-2xl">
           {pin}
         </div>
-        <p className="text-gray-500">
-          {completedCount}/{entries.length} {t('team.participants')} done
-        </p>
+        {entries.length === 0 ? (
+          <p className="text-gray-500">{t('team.waitingFor')}</p>
+        ) : (
+          <p className="text-gray-500">
+            {completedCount}/{entries.length} {t('team.participants')} done
+          </p>
+        )}
         {entries.map(([id, p]) => (
           <div key={id} className="flex items-center gap-2 text-sm text-gray-700">
             <span>{p.completed ? '✅' : '⏳'}</span>
@@ -324,28 +328,45 @@ export default function TeamSession({
 
   // ── PARTICIPANT play ────────────────────────────────────────────────────
   if (screen === 'team-play') {
-    if (sessionPhase === 'lobby' || sessionPhase === 'ranking') {
+    if (sessionPhase === 'lobby') {
       return (
-        <RankingBoard
-          motivators={motivators}
-          onChange={onMotivators}
-          onNext={() => setSessionPhase('assessing')}
-          onSkip={() => setSessionPhase('assessing')}
-          onBack={onBack}
-          onInfo={onInfo}
-        />
+        <div className="flex flex-col items-center gap-4 pt-16 text-gray-500">
+          <p className="text-lg font-medium">{t('team.phase.lobby')}</p>
+          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">{t('common.back')}</button>
+        </div>
+      )
+    }
+    const phaseBadge = (key: string) => (
+      <p className="text-xs font-medium text-brand-500 uppercase tracking-wider mb-2">{t(key)}</p>
+    )
+    if (sessionPhase === 'ranking') {
+      return (
+        <div>
+          {phaseBadge('team.phase.ranking')}
+          <RankingBoard
+            motivators={motivators}
+            onChange={onMotivators}
+            onNext={() => setSessionPhase('assessing')}
+            onSkip={() => setSessionPhase('assessing')}
+            onBack={onBack}
+            onInfo={onInfo}
+          />
+        </div>
       )
     }
     return (
-      <ChangeAssessment
-        motivators={motivators}
-        change={change}
-        onChangeText={onChange}
-        onMotivatorChange={onMotivators}
-        onNext={handleParticipantDone}
-        onBack={() => setSessionPhase('ranking')}
-        onInfo={onInfo}
-      />
+      <div>
+        {phaseBadge('team.phase.assessing')}
+        <ChangeAssessment
+          motivators={motivators}
+          change={change}
+          onChangeText={onChange}
+          onMotivatorChange={onMotivators}
+          onNext={handleParticipantDone}
+          onBack={() => setSessionPhase('ranking')}
+          onInfo={onInfo}
+        />
+      </div>
     )
   }
 
