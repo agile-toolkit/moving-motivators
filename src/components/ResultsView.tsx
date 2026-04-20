@@ -222,8 +222,11 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
       {/* Interpretation */}
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
 
-      {change && (
-        <p className="text-xs text-gray-400 leading-relaxed">{t('results.insight')}</p>
+      {/* Insight hint */}
+      {change && negatives.length > 0 && (
+        <p className="text-sm text-gray-500 leading-relaxed px-1">
+          💡 {t('results.insight')}
+        </p>
       )}
 
       <div className="flex flex-wrap gap-3">
