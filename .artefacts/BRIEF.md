@@ -23,6 +23,9 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#9] Feature: ES + BE locale support (suite standard)
 - [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
 - [ ] [#11] Feature: QR code sharing for team sessions
+- [ ] [#12] Feature: PWA / offline support for workshop use
+- [ ] [#13] Feature: print / PDF export of results
+- [ ] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export)
 
 ## Tech notes
 
@@ -30,6 +33,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-04-27 — research: offline, print, and sprint integration opportunities
+- Done: checked issues #9/10/11 — all still `needs-review`, no human feedback yet; created issue #12 (PWA/offline support via vite-plugin-pwa), #13 (print/PDF export via CSS @media print), #14 (Sprint Metrics integration via localStorage + URL param snapshot)
+- Waiting for human review on #9 through #14
+- Next task: check needs-review issues for human feedback (#9 ES+BE locales, #10 Work Profiles integration, #11 QR code sharing, #12 PWA offline, #13 print/PDF export, #14 Sprint Metrics integration)
 
 ### 2026-04-24 — research: market + integration opportunities
 - Done: created issue #9 (ES+BE locales — suite standard gap), #10 (Work Profiles integration via motivator snapshot export), #11 (QR code sharing for team sessions)
