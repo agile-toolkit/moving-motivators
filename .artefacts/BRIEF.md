@@ -9,18 +9,20 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Solo mode — rank ten motivators, assess change (↑ / ↓ / neutral), results + interpretation
 - [x] Team mode — host/join flow, PIN, Firebase realtime (`TeamSession.tsx`)
 - [x] English + Russian locales (`src/i18n/en.json`, `ru.json`)
+- [x] Spanish + Belarusian locales (`src/i18n/es.json`, `be.json`) — all 4 suite locales now complete
+- [x] 4-language toggle in header — cycles EN → ES → BE → RU
 - [x] Responsive layout and touch-friendly drag-and-drop
 - [x] Share / copy results as image — html2canvas captures results div to clipboard PNG (or downloads if clipboard API unavailable)
 - [x] Optional insight line — `results.insight` shown below interpretation panel when change is assessed
 - [x] Facilitation guide screen — FacilitationGuide.tsx wired in App.tsx; linked from HomeScreen
 - [x] Team session phase copy — lobby/ranking/assessing/revealed all wired; `team.waitingFor` shown when no participants yet
 - [x] Home team section label — `home.team` used as section heading above host/join buttons
-- [x] Header language toggle — uses `lang.en` / `lang.ru` i18n keys
+- [x] Header language toggle — uses `lang.en` / `lang.ru` / `lang.es` / `lang.be` i18n keys
 
 ## Backlog
 
 <!-- Agent: append `needs-review` research issues here as `- [ ] #N …` -->
-- [ ] [#9] Feature: ES + BE locale support (suite standard)
+- [x] [#9] Feature: ES + BE locale support (suite standard) — implemented 2026-05-01
 - [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
 - [ ] [#11] Feature: QR code sharing for team sessions
 - [ ] [#12] Feature: PWA / offline support for workshop use
@@ -33,6 +35,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-01 — feat: ES + BE locale support (issue #9, approved)
+- Done: created `src/i18n/es.json` and `src/i18n/be.json` with full translations of all ~50 keys (app, home, rank, assess, results, facilitation, team, motivators, lang, common); registered es + be in `src/i18n/index.ts`; updated header toggle in `App.tsx` to cycle EN → ES → BE → RU; added `lang.es` and `lang.be` keys to en.json and ru.json
+- Remaining backlog: #10 Work Profiles integration, #11 QR code sharing, #12 PWA offline, #13 print/PDF export, #14 Sprint Metrics integration; also #5 favicon (research-more)
+- Next task: check needs-review issues for human feedback (#10 Work Profiles integration, #11 QR code sharing, #12 PWA offline, #13 print/PDF export, #14 Sprint Metrics integration); also check #5 favicon (research-more)
 
 ### 2026-04-27 — research: offline, print, and sprint integration opportunities
 - Done: checked issues #9/10/11 — all still `needs-review`, no human feedback yet; created issue #12 (PWA/offline support via vite-plugin-pwa), #13 (print/PDF export via CSS @media print), #14 (Sprint Metrics integration via localStorage + URL param snapshot)

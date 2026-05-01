@@ -1,0 +1,166 @@
+{
+  "app": {
+    "title": "Moving Motivators",
+    "subtitle": "Una práctica de Management 3.0",
+    "tagline": "Ordena lo que te impulsa. Ve cómo el cambio lo afecta."
+  },
+  "home": {
+    "solo": "Individual",
+    "soloDesc": "Explora tus propios motivadores",
+    "team": "Sesión de Equipo",
+    "teamDesc": "Facilita un taller de equipo",
+    "teamUnavailable": "Las sesiones de equipo requieren configuración de Firebase — ver README",
+    "host": "Organizar una Sesión",
+    "join": "Unirse a una Sesión",
+    "about": {
+      "toggle": "Acerca de este ejercicio",
+      "title": "¿Qué son los Moving Motivators?",
+      "body": "Moving Motivators es una práctica de Management 3.0 desarrollada por Jurgen Appelo. Se basa en el modelo CHAMPFROGS — diez motivadores intrínsecos que la investigación sugiere que impulsan la mayor parte de nuestro compromiso y satisfacción en el trabajo. A diferencia de las recompensas externas (salario, beneficios), estos son impulsores internos: las cosas que hacen que el trabajo se sienta significativo y energizante, o profundamente frustrante cuando están ausentes.",
+      "howTitle": "Cómo funciona",
+      "how": "El ejercicio tiene dos fases. Primero, ordena los diez motivadores por importancia personal — el más importante a la derecha. Luego describe un cambio al que te enfrentas (un nuevo gerente, una reestructuración, un paso al trabajo remoto) y evalúa si afecta positiva o negativamente a cada motivador. El resultado es un mapa honesto de lo que te importa y si el cambio lo amenaza.",
+      "usesTitle": "Cuándo usarlo",
+      "uses": "Úsalo para: reflexión personal sobre lo que te impulsa, prepararte para una conversación profesional, ayudar a tu equipo a revelar preocupaciones ocultas sobre un cambio, o construir entendimiento mutuo en un equipo nuevo.",
+      "dismiss": "Entendido"
+    }
+  },
+  "rank": {
+    "title": "Ordena Tus Motivadores",
+    "instruction": "Arrastra las tarjetas para ordenarlas — el más importante a la derecha, el menos importante a la izquierda.",
+    "next": "Continuar a la Evaluación del Cambio",
+    "skip": "Omitir — solo explorar clasificaciones"
+  },
+  "assess": {
+    "title": "Evalúa un Cambio",
+    "instruction": "Describe un cambio al que te enfrentas (p. ej. 'cambio al trabajo remoto', 'nuevo gerente', 'pivote del proyecto').",
+    "placeholder": "Describe el cambio...",
+    "impactInstruction": "Ahora toca ↑ o ↓ en cada tarjeta para indicar si este cambio afecta positiva o negativamente a ese motivador.",
+    "positive": "Impacto positivo",
+    "negative": "Impacto negativo",
+    "neutral": "Sin impacto",
+    "seeResults": "Ver Resultados"
+  },
+  "results": {
+    "title": "Tus Resultados",
+    "change": "Cambio evaluado",
+    "positives": "Motivadores potenciados",
+    "negatives": "Motivadores afectados",
+    "neutral": "Sin cambios",
+    "insight": "Los motivadores que más te importan y que se ven afectados negativamente merecen la mayor atención.",
+    "startOver": "Empezar de Nuevo",
+    "share": "Copiar imagen",
+    "interpretation": {
+      "topTitle": "Lo que más te impulsa",
+      "topDesc": "Tus principales motivadores son tus impulsores esenciales. Los cambios que los amenazan se sentirán profundamente incómodos — incluso si el cambio es objetivamente positivo. Presta mucha atención a estos en cualquier conversación sobre este cambio.",
+      "bottomTitle": "Tus motivadores de menor rango",
+      "bottomNote": "Tus motivadores de menor rango te importan menos personalmente — pero no asumas que lo mismo es cierto para tus compañeros de equipo. Estos varían ampliamente entre personas.",
+      "positivePattern": "Este cambio parece alinearse bien con lo que te impulsa. Es una buena señal — pero verifica si tus compañeros sienten lo mismo.",
+      "negativePattern": "Este cambio corre el riesgo de socavar motivadores que son fundamentales para ti. Nómbralo explícitamente en las conversaciones con tu gerente o equipo — las preocupaciones no expresadas rara vez se resuelven.",
+      "mixedPattern": "Este cambio tiene un impacto mixto en tus motivadores. Centra la conversación en los negativos: ¿qué tendría que ser verdad para que esos se vuelvan neutros o positivos?",
+      "noChangeNote": "Aún no has evaluado un cambio. Ordena tus motivadores y luego describe un cambio al que te enfrentes para ver cómo afecta a lo que más te importa."
+    }
+  },
+  "facilitation": {
+    "title": "Guía de Facilitación",
+    "intro": "Cómo llevar a cabo Moving Motivators con tu equipo",
+    "steps": [
+      { "label": "Presentar CHAMPFROGS (2 min)", "text": "Explica brevemente los 10 motivadores. Enfatiza que son personales — no hay respuestas correctas o incorrectas. El objetivo es la reflexión honesta, no la gestión de impresiones. Las personas tienden a clasificar lo que creen que suena mejor; anímales a clasificar lo que es realmente verdad para ellas." },
+      { "label": "Clasificación individual (5–8 min)", "text": "Pide a todos que clasifiquen sus motivadores en silencio e independientemente. Sin discusión todavía. El silencio es importante — la influencia social sesgará los resultados. Deja que los participantes usen el modo individual en su propio dispositivo." },
+      { "label": "Revelar clasificaciones (5 min)", "text": "Muestra los resultados individuales sin comentarios. Deja que el equipo vea dónde están de acuerdo y divergen. Pregunta: '¿Qué te sorprende de tu propia clasificación? ¿Qué te sorprende de tus colegas?'" },
+      { "label": "Presentar el cambio (1 min)", "text": "Declara el cambio de forma clara y neutral. Evita enmarcarlo positiva o negativamente — por ejemplo, di 'nos estamos mudando a un modelo completamente remoto' en lugar de 'tenemos una emocionante oportunidad de trabajar desde cualquier lugar'." },
+      { "label": "Evaluación de impacto individual (3–5 min)", "text": "Todos marcan cada motivador como ↑ positivo / ↓ negativo / – neutro, en silencio. Recuerda a los participantes que evalúen el impacto real probable, no el previsto." },
+      { "label": "Debate (10–15 min)", "text": "Muestra los resultados del equipo juntos. Pregunta: '¿Qué motivadores muestran más desacuerdo en el impacto? ¿Qué nos dice eso sobre cómo introducir este cambio? ¿Qué tendría que cambiar para que los negativos se volvieran neutros?'" }
+    ],
+    "tip": "El momento más valioso suele ser cuando las personas ven que el mismo cambio afecta a los colegas de manera muy diferente. Esto genera empatía y saca a la luz preocupaciones que de otro modo permanecerían ocultas hasta convertirse en desenganche."
+  },
+  "team": {
+    "pinLabel": "PIN de Sesión",
+    "waitingFor": "Esperando participantes…",
+    "participants": "participantes",
+    "reveal": "Revelar Resultados",
+    "joinPrompt": "Ingresa el PIN para unirte",
+    "joinPin": "PIN de Sesión",
+    "yourName": "Tu nombre",
+    "join": "Unirse",
+    "facilitationGuide": "Guía de Facilitación",
+    "phase": {
+      "lobby": "Esperando que el anfitrión inicie",
+      "ranking": "Ordena tus motivadores",
+      "assessing": "Evalúa el cambio",
+      "revealed": "Resultados del equipo"
+    }
+  },
+  "motivators": {
+    "curiosity": {
+      "name": "Curiosidad",
+      "desc": "Explorar y aprender",
+      "detail": "La curiosidad es el deseo de investigar y pensar sobre el mundo que te rodea. Las personas impulsadas por la curiosidad quieren explorar ideas, aprender cosas nuevas y preguntar '¿por qué?'. Se energizan con problemas sin respuestas obvias y prosperan en entornos donde se fomenta la experimentación.",
+      "example": "Busca desafíos fuera de su zona de confort, lee ampliamente en distintas disciplinas y experimenta con nuevos enfoques incluso cuando los existentes funcionan bien.",
+      "reflection": "¿Cuándo fue la última vez que aprendiste algo en el trabajo que realmente te emocionó? ¿Tu función actual te da suficiente espacio para explorar?"
+    },
+    "honor": {
+      "name": "Honor",
+      "desc": "Valores e integridad",
+      "detail": "El honor es la necesidad de sentirse orgulloso de tu trabajo y de actuar de acuerdo con tus valores personales. Las personas motivadas por el honor se preocupan profundamente por la integridad — necesitan que su trabajo refleje quiénes son. Las asignaciones que entran en conflicto con su código moral resultan agotadoras, incluso cuando la compensación es buena.",
+      "example": "Rechaza tareas que entran en conflicto con sus valores, señala preocupaciones éticas y se enorgullece de hacer las cosas bien incluso cuando atajar el camino pasaría desapercibido.",
+      "reflection": "¿Tu trabajo actual refleja quién eres y en qué crees? ¿Hay partes de tu función que se sienten en conflicto con tus valores?"
+    },
+    "acceptance": {
+      "name": "Aceptación",
+      "desc": "Aprobación y pertenencia",
+      "detail": "La aceptación es la necesidad de ser aprobado y valorado por las personas que te rodean. Las personas impulsadas por la aceptación son muy sensibles a cómo se perciben sus contribuciones y están profundamente motivadas por la pertenencia. Dan lo mejor de sí mismas cuando se sienten genuinamente incluidas y apreciadas.",
+      "example": "Se registra frecuentemente para recibir retroalimentación, trabaja arduamente para encajar en la cultura del equipo, y se energiza visiblemente con los elogios y se desanima visiblemente con las críticas.",
+      "reflection": "¿Te sientes genuinamente valorado y aceptado por tu equipo? ¿Sabes que tus contribuciones son vistas y apreciadas?"
+    },
+    "mastery": {
+      "name": "Maestría",
+      "desc": "Crecimiento de habilidades y excelencia",
+      "detail": "La maestría es el impulso de mejorar tus habilidades y ser excelente en el trabajo que te importa. Las personas motivadas por la maestría se energizan con el crecimiento y se frustran con el estancamiento. El trabajo repetitivo sin curva de aprendizaje se vuelve rápidamente desmotivador, sin importar cuán cómodo sea el entorno.",
+      "example": "Busca asignaciones desafiantes, invierte tiempo personal en el desarrollo de habilidades, se energiza con desafíos técnicos y se siente visiblemente incómodo haciendo trabajo que siente que ya ha superado.",
+      "reflection": "¿Estás mejorando significativamente en algo importante a través de tu trabajo actual? ¿Sientes que estás creciendo o quedándote quieto?"
+    },
+    "power": {
+      "name": "Poder",
+      "desc": "Influencia y agencia",
+      "detail": "El poder es la necesidad de tener influencia sobre el mundo que te rodea — para liderar, decidir y dar forma a los resultados. Esto no se trata de dominancia; se trata de agencia. Las personas motivadas por el poder quieren que su voz importe y que sus decisiones cuenten. Ser excluido de decisiones clave es profundamente frustrante para ellas.",
+      "example": "Se ofrece voluntariamente para liderar iniciativas, participa activamente en la toma de decisiones, aporta opiniones sólidas a las discusiones y se frustra cuando su opinión es ignorada o anulada.",
+      "reflection": "¿Tienes suficiente influencia sobre las cosas que afectan tu trabajo y tu equipo? ¿Las personas escuchan y actúan cuando hablas?"
+    },
+    "freedom": {
+      "name": "Libertad",
+      "desc": "Autonomía e independencia",
+      "detail": "La libertad es la necesidad de independencia y autonomía en la forma en que trabajas. Las personas impulsadas por la libertad necesitan espacio para definir su propio enfoque, horario y método. La microgestión y los procesos rígidos son profundamente agotadores para ellas; la autonomía y la confianza son energizantes.",
+      "example": "Prefiere el trabajo autodirigido, define su propio proceso para alcanzar metas y se siente incómodo con flujos de trabajo prescritos o supervisión excesiva.",
+      "reflection": "¿Tienes suficiente libertad para trabajar de la manera que mejor te convenga? ¿O te sientes sobregestioned y restringido?"
+    },
+    "relatedness": {
+      "name": "Relaciones",
+      "desc": "Conexión y trabajo en equipo",
+      "detail": "Las relaciones son la necesidad de conexiones sociales y un sentido de pertenencia en el trabajo. Las personas impulsadas por las relaciones se energizan con sus vínculos con los colegas. El aislamiento — ya sea físico, remoto o social — es una de las experiencias más desmotivadoras para ellas.",
+      "example": "Inicia el contacto social, se preocupa por sus compañeros de equipo, se energiza con la colaboración y el trabajo en pareja, y se vuelve notablemente menos comprometido durante períodos de aislamiento.",
+      "reflection": "¿Te sientes genuinamente conectado con las personas con las que trabajas? ¿Hay suficiente calidez humana y colaboración en tu trabajo diario?"
+    },
+    "order": {
+      "name": "Orden",
+      "desc": "Estabilidad y estructura",
+      "detail": "El orden es la necesidad de un entorno estable, predecible y bien estructurado. Las personas impulsadas por el orden prefieren reglas claras, procesos consistentes y responsabilidades definidas. El caos, la ambigüedad y el cambio constante son agotadores; la claridad y la estructura son profundamente tranquilizadoras.",
+      "example": "Crea documentación y listas de verificación, prefiere definiciones claras de roles, se siente incómodo con procesos indefinidos y se pone ansioso en entornos muy ambiguos o que cambian rápidamente.",
+      "reflection": "¿Tu entorno de trabajo es suficientemente estable y predecible para que puedas hacer tu mejor trabajo? ¿O hay demasiado caos e incertidumbre?"
+    },
+    "goal": {
+      "name": "Meta",
+      "desc": "Propósito y significado",
+      "detail": "La meta es la necesidad de un claro sentido de propósito — un significado superior que haga que el trabajo valga la pena más allá de la tarea inmediata. Las personas impulsadas por la meta necesitan entender por qué su trabajo importa. Cuando se pierde esa conexión con el propósito, incluso el trabajo interesante puede sentirse vacío.",
+      "example": "Conecta el trabajo diario con el panorama general, pregunta sobre la estrategia y dirección organizacional, se motiva sabiendo su impacto concreto y se desconecta cuando el trabajo parece arbitrario o sin sentido.",
+      "reflection": "¿Tienes un claro sentido de propósito en tu trabajo? ¿Se siente significativo más allá del entregable inmediato — sabes por qué importa?"
+    },
+    "status": {
+      "name": "Estatus",
+      "desc": "Reconocimiento y reputación",
+      "detail": "El estatus es la necesidad de una posición respetada y el reconocimiento de los demás. Las personas impulsadas por el estatus se preocupan por su posición profesional — los títulos, los marcadores de antigüedad y el reconocimiento público les importan. Esta es una necesidad humana legítima: ser visto como capaz, respetado y con progresión profesional.",
+      "example": "Se motiva con ascensos, títulos y reconocimiento público; sigue cuidadosamente la progresión de carrera; y quiere que su experiencia y conocimiento sean visiblemente reconocidos por sus pares y líderes.",
+      "reflection": "¿Te sientes apropiadamente reconocido y respetado por tu posición profesional? ¿Tu experiencia y contribución son visibles para las personas que importan?"
+    }
+  },
+  "lang": { "en": "English", "es": "Español", "be": "Беларуская", "ru": "Русский" },
+  "common": { "back": "Atrás", "close": "Cerrar", "learnMore": "Más información" }
+}

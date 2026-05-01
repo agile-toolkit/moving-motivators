@@ -161,6 +161,6 @@
       "reflection": "Do you feel appropriately recognized and respected for your professional standing? Is your expertise and contribution visible to the people who matter?"
     }
   },
-  "lang": { "en": "English", "ru": "Русский" },
+  "lang": { "en": "English", "es": "Español", "be": "Беларуская", "ru": "Русский" },
   "common": { "back": "Back", "close": "Close", "learnMore": "Learn more" }
 }

@@ -33,10 +33,20 @@ function App() {
             {t('app.title')}
           </button>
           <button
-            onClick={() => i18n.changeLanguage(i18n.language.startsWith('ru') ? 'en' : 'ru')}
+            onClick={() => {
+              const langs = ['en', 'es', 'be', 'ru']
+              const current = langs.find(l => i18n.language.startsWith(l)) ?? 'en'
+              const next = langs[(langs.indexOf(current) + 1) % langs.length]
+              i18n.changeLanguage(next)
+            }}
             className="text-sm text-gray-500 hover:text-gray-700 px-2 py-1 rounded hover:bg-gray-100 transition-colors"
           >
-            {i18n.language.startsWith('ru') ? t('lang.en') : t('lang.ru')}
+            {(() => {
+              const langs = ['en', 'es', 'be', 'ru']
+              const current = langs.find(l => i18n.language.startsWith(l)) ?? 'en'
+              const next = langs[(langs.indexOf(current) + 1) % langs.length]
+              return t(`lang.${next}`)
+            })()}
           </button>
         </div>
       </header>
