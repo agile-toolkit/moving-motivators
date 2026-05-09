@@ -28,6 +28,8 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#12] Feature: PWA / offline support for workshop use
 - [ ] [#13] Feature: print / PDF export of results
 - [ ] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export)
+- [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
+- [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
 
 ## Tech notes
 
@@ -35,6 +37,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-09 — research: localStorage persistence, accessibility, favicon
+- Done: set issue #9 to "In Review" (already implemented in prior run); updated issue #5 (favicon research-more) with detailed findings — teal #0d9488, geometric 3-bar descending design, corrupted SVG confirmed; created issue #16 (localStorage solo session persistence + Dashboard card reader — app is only suite app with null Dashboard data); created issue #17 (KeyboardSensor for drag-and-drop ranking — RankingBoard uses PointerSensor + TouchSensor only, KeyboardSensor absent, WCAG 2.1.1 failure)
+- Waiting for human review on #5, #10–#14, #16, #17
+- Next task: check issues for human feedback; implement first approved item — likely #16 (localStorage + Dashboard) or #5 (favicon fix)
 
 ### 2026-05-01 — feat: ES + BE locale support (issue #9, approved)
 - Done: created `src/i18n/es.json` and `src/i18n/be.json` with full translations of all ~50 keys (app, home, rank, assess, results, facilitation, team, motivators, lang, common); registered es + be in `src/i18n/index.ts`; updated header toggle in `App.tsx` to cycle EN → ES → BE → RU; added `lang.es` and `lang.be` keys to en.json and ru.json
