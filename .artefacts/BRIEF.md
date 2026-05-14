@@ -30,6 +30,9 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export)
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
+- [ ] [#18] Feature: team session history — view past revealed sessions
+- [ ] [#19] Feature: side-by-side individual comparison in team sessions
+- [ ] [#20] Feature: facilitator timer for ranking and assessment phases
 
 ## Tech notes
 
@@ -37,6 +40,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-14 — research: team history, comparison view, facilitator timer
+- Done: confirmed issue #9 (ES+BE locale) already implemented — set project status to "In Review"; updated issue #5 (favicon) with additional research comment — 3 SVG design options (A: descending bars, B: ranked list lines, C: card stack), browser compatibility notes, and contrast analysis; created issue #18 (team session history via localStorage moving-motivators:sessionHistory), issue #19 (side-by-side individual comparison in revealed phase), issue #20 (facilitator timer for ranking/assessing phases using Web Audio API, pattern from scrum-facilitator)
+- Waiting for human review on #5, #10–#14, #16–#20
+- Next task: check issues for human feedback; implement first approved item — #16 (localStorage solo session persistence + Dashboard card reader) or #5 (favicon fix, single-file change)
 
 ### 2026-05-09 — research: localStorage persistence, accessibility, favicon
 - Done: set issue #9 to "In Review" (already implemented in prior run); updated issue #5 (favicon research-more) with detailed findings — teal #0d9488, geometric 3-bar descending design, corrupted SVG confirmed; created issue #16 (localStorage solo session persistence + Dashboard card reader — app is only suite app with null Dashboard data); created issue #17 (KeyboardSensor for drag-and-drop ranking — RankingBoard uses PointerSensor + TouchSensor only, KeyboardSensor absent, WCAG 2.1.1 failure)
