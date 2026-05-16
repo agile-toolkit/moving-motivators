@@ -33,6 +33,8 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#18] Feature: team session history — view past revealed sessions
 - [ ] [#19] Feature: side-by-side individual comparison in team sessions
 - [ ] [#20] Feature: facilitator timer for ranking and assessment phases
+- [ ] [#21] Feature: solo motivator shift tracking — compare sessions over time
+- [ ] [#22] Integration: Moving Motivators ↔ Change Planner (motivator impact on change)
 
 ## Tech notes
 
@@ -40,6 +42,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-16 — research: favicon follow-up, shift tracking, Change Planner integration
+- Done: confirmed issue #9 (ES+BE locale) already in "In Review" project status — no action needed; added additional research comment to issue #5 (research-more): confirmed scrum-facilitator favicon also corrupted with same binary, validated visual differentiation from Kanban Designer's columns (staircase vs random heights), compared emoji vs geometric approaches, confirmed geometric ranked-cards SVG recommendation; created issue #21 (solo motivator shift tracking — extend #16's sessionHistory array to 5 entries, show delta view in ResultsView.tsx with rank-change arrows); created issue #22 (Moving Motivators ↔ Change Planner integration — motivator snapshot export via URL param, pre-fill change description from URL on load)
+- Waiting for human review on #5, #10–#14, #16–#22
+- Next task: check issues for human feedback; implement first approved item — priority candidates: #16 (localStorage persistence, most requested, unlocks #21), #5 (favicon fix, single-file change), #17 (keyboard a11y, WCAG fix)
 
 ### 2026-05-14 — research: team history, comparison view, facilitator timer
 - Done: confirmed issue #9 (ES+BE locale) already implemented — set project status to "In Review"; updated issue #5 (favicon) with additional research comment — 3 SVG design options (A: descending bars, B: ranked list lines, C: card stack), browser compatibility notes, and contrast analysis; created issue #18 (team session history via localStorage moving-motivators:sessionHistory), issue #19 (side-by-side individual comparison in revealed phase), issue #20 (facilitator timer for ranking/assessing phases using Web Audio API, pattern from scrum-facilitator)
