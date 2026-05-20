@@ -23,6 +23,23 @@ function App() {
     setScreen('home')
   }
 
+  const goToSoloResults = () => {
+    const ranked = [...motivators].sort((a, b) => a.rank - b.rank).map(m => m.id)
+    const changes: Record<string, string> = {}
+    motivators.forEach(m => { changes[m.id] = m.impact })
+    localStorage.setItem(
+      'moving-motivators:lastSession',
+      JSON.stringify({
+        date: new Date().toISOString().slice(0, 10),
+        savedAt: Date.now(),
+        ranked,
+        change,
+        changes,
+      })
+    )
+    setScreen('solo-results')
+  }
+
   const isTeamScreen = ['team-host','team-join','team-play','team-results'].includes(screen)
 
   return (
@@ -82,7 +99,7 @@ function App() {
             motivators={motivators}
             onChange={setMotivators}
             onNext={() => setScreen('solo-assess')}
-            onSkip={() => setScreen('solo-results')}
+            onSkip={goToSoloResults}
             onBack={() => setScreen('home')}
             onInfo={setInfoMotivator}
           />
@@ -93,7 +110,7 @@ function App() {
             change={change}
             onChangeText={setChange}
             onMotivatorChange={setMotivators}
-            onNext={() => setScreen('solo-results')}
+            onNext={goToSoloResults}
             onBack={() => setScreen('solo-rank')}
             onInfo={setInfoMotivator}
           />

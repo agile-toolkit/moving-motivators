@@ -18,6 +18,13 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Team session phase copy — lobby/ranking/assessing/revealed all wired; `team.waitingFor` shown when no participants yet
 - [x] Home team section label — `home.team` used as section heading above host/join buttons
 - [x] Header language toggle — uses `lang.en` / `lang.ru` / `lang.es` / `lang.be` i18n keys
+- [x] Solo results localStorage persistence — writes `moving-motivators:lastSession` on solo-results transition (issue #16, moving-motivators side)
+
+## localStorage keys
+
+| Key | Written by | Shape |
+|-----|-----------|-------|
+| `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
 
 ## Backlog
 
@@ -42,6 +49,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-20 — feat: solo results localStorage persistence (issue #16, moving-motivators side)
+- Done: added `goToSoloResults()` in `App.tsx` — sorts motivators by rank, builds `ranked[]` + `changes{}` object, writes `moving-motivators:lastSession` to localStorage, then calls `setScreen('solo-results')`; wired to `onSkip` (RankingBoard) and `onNext` (ChangeAssessment); documented key in BRIEF.md `## localStorage keys` section
+- Remaining for #16: add `readMovingMotivators()` to `agile-toolkit.github.io/src/readers.ts` and replace `null` in `readAll()` — to be done in a Dashboard-targeted run
+- Next task: in `agile-toolkit.github.io` run — add `readMovingMotivators()` reading `moving-motivators:lastSession`, chip with top 3 motivators + change text + date; also check remaining approved issues (#17 keyboard a11y, #21 shift tracking, #22 Change Planner integration)
 
 ### 2026-05-16 — research: favicon follow-up, shift tracking, Change Planner integration
 - Done: confirmed issue #9 (ES+BE locale) already in "In Review" project status — no action needed; added additional research comment to issue #5 (research-more): confirmed scrum-facilitator favicon also corrupted with same binary, validated visual differentiation from Kanban Designer's columns (staircase vs random heights), compared emoji vs geometric approaches, confirmed geometric ranked-cards SVG recommendation; created issue #21 (solo motivator shift tracking — extend #16's sessionHistory array to 5 entries, show delta view in ResultsView.tsx with rank-change arrows); created issue #22 (Moving Motivators ↔ Change Planner integration — motivator snapshot export via URL param, pre-fill change description from URL on load)
