@@ -27,7 +27,8 @@
     "title": "Ordena Tus Motivadores",
     "instruction": "Arrastra las tarjetas para ordenarlas — el más importante a la derecha, el menos importante a la izquierda.",
     "next": "Continuar a la Evaluación del Cambio",
-    "skip": "Omitir — solo explorar clasificaciones"
+    "skip": "Omitir — solo explorar clasificaciones",
+    "keyboardHint": "Tab para enfocar · Espacio para levantar · Flechas para reordenar · Espacio o Enter para soltar"
   },
   "assess": {
     "title": "Evalúa un Cambio",
@@ -63,12 +64,30 @@
     "title": "Guía de Facilitación",
     "intro": "Cómo llevar a cabo Moving Motivators con tu equipo",
     "steps": [
-      { "label": "Presentar CHAMPFROGS (2 min)", "text": "Explica brevemente los 10 motivadores. Enfatiza que son personales — no hay respuestas correctas o incorrectas. El objetivo es la reflexión honesta, no la gestión de impresiones. Las personas tienden a clasificar lo que creen que suena mejor; anímales a clasificar lo que es realmente verdad para ellas." },
-      { "label": "Clasificación individual (5–8 min)", "text": "Pide a todos que clasifiquen sus motivadores en silencio e independientemente. Sin discusión todavía. El silencio es importante — la influencia social sesgará los resultados. Deja que los participantes usen el modo individual en su propio dispositivo." },
-      { "label": "Revelar clasificaciones (5 min)", "text": "Muestra los resultados individuales sin comentarios. Deja que el equipo vea dónde están de acuerdo y divergen. Pregunta: '¿Qué te sorprende de tu propia clasificación? ¿Qué te sorprende de tus colegas?'" },
-      { "label": "Presentar el cambio (1 min)", "text": "Declara el cambio de forma clara y neutral. Evita enmarcarlo positiva o negativamente — por ejemplo, di 'nos estamos mudando a un modelo completamente remoto' en lugar de 'tenemos una emocionante oportunidad de trabajar desde cualquier lugar'." },
-      { "label": "Evaluación de impacto individual (3–5 min)", "text": "Todos marcan cada motivador como ↑ positivo / ↓ negativo / – neutro, en silencio. Recuerda a los participantes que evalúen el impacto real probable, no el previsto." },
-      { "label": "Debate (10–15 min)", "text": "Muestra los resultados del equipo juntos. Pregunta: '¿Qué motivadores muestran más desacuerdo en el impacto? ¿Qué nos dice eso sobre cómo introducir este cambio? ¿Qué tendría que cambiar para que los negativos se volvieran neutros?'" }
+      {
+        "label": "Presentar CHAMPFROGS (2 min)",
+        "text": "Explica brevemente los 10 motivadores. Enfatiza que son personales — no hay respuestas correctas o incorrectas. El objetivo es la reflexión honesta, no la gestión de impresiones. Las personas tienden a clasificar lo que creen que suena mejor; anímales a clasificar lo que es realmente verdad para ellas."
+      },
+      {
+        "label": "Clasificación individual (5–8 min)",
+        "text": "Pide a todos que clasifiquen sus motivadores en silencio e independientemente. Sin discusión todavía. El silencio es importante — la influencia social sesgará los resultados. Deja que los participantes usen el modo individual en su propio dispositivo."
+      },
+      {
+        "label": "Revelar clasificaciones (5 min)",
+        "text": "Muestra los resultados individuales sin comentarios. Deja que el equipo vea dónde están de acuerdo y divergen. Pregunta: '¿Qué te sorprende de tu propia clasificación? ¿Qué te sorprende de tus colegas?'"
+      },
+      {
+        "label": "Presentar el cambio (1 min)",
+        "text": "Declara el cambio de forma clara y neutral. Evita enmarcarlo positiva o negativamente — por ejemplo, di 'nos estamos mudando a un modelo completamente remoto' en lugar de 'tenemos una emocionante oportunidad de trabajar desde cualquier lugar'."
+      },
+      {
+        "label": "Evaluación de impacto individual (3–5 min)",
+        "text": "Todos marcan cada motivador como ↑ positivo / ↓ negativo / – neutro, en silencio. Recuerda a los participantes que evalúen el impacto real probable, no el previsto."
+      },
+      {
+        "label": "Debate (10–15 min)",
+        "text": "Muestra los resultados del equipo juntos. Pregunta: '¿Qué motivadores muestran más desacuerdo en el impacto? ¿Qué nos dice eso sobre cómo introducir este cambio? ¿Qué tendría que cambiar para que los negativos se volvieran neutros?'"
+      }
     ],
     "tip": "El momento más valioso suele ser cuando las personas ven que el mismo cambio afecta a los colegas de manera muy diferente. Esto genera empatía y saca a la luz preocupaciones que de otro modo permanecerían ocultas hasta convertirse en desenganche."
   },
@@ -161,6 +180,15 @@
       "reflection": "¿Te sientes apropiadamente reconocido y respetado por tu posición profesional? ¿Tu experiencia y contribución son visibles para las personas que importan?"
     }
   },
-  "lang": { "en": "English", "es": "Español", "be": "Беларуская", "ru": "Русский" },
-  "common": { "back": "Atrás", "close": "Cerrar", "learnMore": "Más información" }
+  "lang": {
+    "en": "English",
+    "es": "Español",
+    "be": "Беларуская",
+    "ru": "Русский"
+  },
+  "common": {
+    "back": "Atrás",
+    "close": "Cerrar",
+    "learnMore": "Más información"
+  }
 }

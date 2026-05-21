@@ -27,7 +27,8 @@
     "title": "Rank Your Motivators",
     "instruction": "Drag the cards to order them — most important on the right, least important on the left.",
     "next": "Continue to Change Assessment",
-    "skip": "Skip — just explore rankings"
+    "skip": "Skip — just explore rankings",
+    "keyboardHint": "Tab to focus · Space to lift · Arrow keys to reorder · Space or Enter to drop"
   },
   "assess": {
     "title": "Assess a Change",
@@ -63,12 +64,30 @@
     "title": "Facilitation Guide",
     "intro": "How to run Moving Motivators with your team",
     "steps": [
-      { "label": "Introduce CHAMPFROGS (2 min)", "text": "Briefly explain the 10 motivators. Emphasize that these are personal — there are no right or wrong answers. The goal is honest self-reflection, not impression management. People tend to rank what they think sounds best; encourage them to rank what is actually true for them." },
-      { "label": "Individual ranking (5–8 min)", "text": "Ask everyone to rank their motivators silently and independently. No discussion yet. Silence is important — social influence will bias results. Let participants use solo mode on their own device." },
-      { "label": "Reveal rankings (5 min)", "text": "Show individual results without comment. Let the team see where they agree and diverge. Ask: 'What surprises you about your own ranking? What surprises you about your colleagues?'" },
-      { "label": "Introduce the change (1 min)", "text": "State the change clearly and neutrally. Avoid framing it positively or negatively — for example say 'we are moving to a fully remote model' rather than 'we have an exciting opportunity to work from anywhere'." },
-      { "label": "Individual impact assessment (3–5 min)", "text": "Everyone marks each motivator ↑ positive / ↓ negative / – neutral, in silence. Remind participants to assess the actual likely impact, not the intended one." },
-      { "label": "Debrief (10–15 min)", "text": "Show the team results together. Ask: 'Which motivators show the most disagreement in impact? What does that tell us about how to introduce this change? What would need to change for the negatives to become neutral?'" }
+      {
+        "label": "Introduce CHAMPFROGS (2 min)",
+        "text": "Briefly explain the 10 motivators. Emphasize that these are personal — there are no right or wrong answers. The goal is honest self-reflection, not impression management. People tend to rank what they think sounds best; encourage them to rank what is actually true for them."
+      },
+      {
+        "label": "Individual ranking (5–8 min)",
+        "text": "Ask everyone to rank their motivators silently and independently. No discussion yet. Silence is important — social influence will bias results. Let participants use solo mode on their own device."
+      },
+      {
+        "label": "Reveal rankings (5 min)",
+        "text": "Show individual results without comment. Let the team see where they agree and diverge. Ask: 'What surprises you about your own ranking? What surprises you about your colleagues?'"
+      },
+      {
+        "label": "Introduce the change (1 min)",
+        "text": "State the change clearly and neutrally. Avoid framing it positively or negatively — for example say 'we are moving to a fully remote model' rather than 'we have an exciting opportunity to work from anywhere'."
+      },
+      {
+        "label": "Individual impact assessment (3–5 min)",
+        "text": "Everyone marks each motivator ↑ positive / ↓ negative / – neutral, in silence. Remind participants to assess the actual likely impact, not the intended one."
+      },
+      {
+        "label": "Debrief (10–15 min)",
+        "text": "Show the team results together. Ask: 'Which motivators show the most disagreement in impact? What does that tell us about how to introduce this change? What would need to change for the negatives to become neutral?'"
+      }
     ],
     "tip": "The most valuable moment is usually when people see that the same change hits colleagues very differently. This builds empathy and surfaces concerns that would otherwise stay hidden until they become disengagement."
   },
@@ -161,6 +180,15 @@
       "reflection": "Do you feel appropriately recognized and respected for your professional standing? Is your expertise and contribution visible to the people who matter?"
     }
   },
-  "lang": { "en": "English", "es": "Español", "be": "Беларуская", "ru": "Русский" },
-  "common": { "back": "Back", "close": "Close", "learnMore": "Learn more" }
+  "lang": {
+    "en": "English",
+    "es": "Español",
+    "be": "Беларуская",
+    "ru": "Русский"
+  },
+  "common": {
+    "back": "Back",
+    "close": "Close",
+    "learnMore": "Learn more"
+  }
 }
