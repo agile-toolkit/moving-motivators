@@ -19,6 +19,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Home team section label — `home.team` used as section heading above host/join buttons
 - [x] Header language toggle — uses `lang.en` / `lang.ru` / `lang.es` / `lang.be` i18n keys
 - [x] Solo results localStorage persistence — writes `moving-motivators:lastSession` on solo-results transition (issue #16, moving-motivators side)
+- [x] Unified AppHeader + LanguagePicker — replaced inline header with design-system components; flag dropdown replaces cycle button (issue #24)
 
 ## localStorage keys
 
@@ -49,6 +50,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
 
 ## Agent Log
+
+### 2026-05-21 — feat: unified AppHeader + LanguagePicker (issue #24)
+- Done: copied `AppHeader.tsx` and `LanguagePicker.tsx` from `agile-toolkit.github.io/design-system/components/` into `src/components/`; replaced inline `<header>` block in `App.tsx` with `<AppHeader title={t('app.title')} onTitleClick={reset} />`; removed cycle-button logic and unused `i18n` import
+- Remaining approved issues: #25 (dark theme — depends on #24, now ready), #17 (KeyboardSensor a11y), #21 (shift tracking), #22 (Change Planner integration), #20 (facilitator timer), #19 (team comparison), #12 (PWA), #11 (QR sharing), #14 (Sprint Metrics), #10 (Work Profiles)
+- Next task: implement #25 (light/dark theme: add darkMode:class to tailwind.config.js, anti-flash script in index.html, copy ThemeToggle.tsx, add dark: variants across src/)
 
 ### 2026-05-20 — feat: solo results localStorage persistence (issue #16, moving-motivators side)
 - Done: added `goToSoloResults()` in `App.tsx` — sorts motivators by rank, builds `ranked[]` + `changes{}` object, writes `moving-motivators:lastSession` to localStorage, then calls `setScreen('solo-results')`; wired to `onSkip` (RankingBoard) and `onNext` (ChangeAssessment); documented key in BRIEF.md `## localStorage keys` section
