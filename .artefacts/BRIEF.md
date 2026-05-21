@@ -20,6 +20,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Header language toggle — uses `lang.en` / `lang.ru` / `lang.es` / `lang.be` i18n keys
 - [x] Solo results localStorage persistence — writes `moving-motivators:lastSession` on solo-results transition (issue #16, moving-motivators side)
 - [x] Unified AppHeader + LanguagePicker — replaced inline header with design-system components; flag dropdown replaces cycle button (issue #24)
+- [x] Light/dark theme — darkMode:class in tailwind.config.js, anti-flash script in index.html, ThemeToggle in AppHeader, dark: variants across all src/ files (issue #25)
 
 ## localStorage keys
 
@@ -50,6 +51,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-21 — feat: light/dark theme (issue #25)
+- Done: added `darkMode: 'class'` to `tailwind.config.js`; added anti-flash inline script to `index.html`; copied `ThemeToggle.tsx` from design-system into `src/components/`; mounted `<ThemeToggle />` in `<AppHeader>` children; added `dark:` Tailwind variants across `App.tsx`, `AppHeader.tsx`, `HomeScreen.tsx`, `RankingBoard.tsx`, `ChangeAssessment.tsx`, `MotivatorCard.tsx`, `ResultsView.tsx`, `FacilitationGuide.tsx`, `MotivatorInfo.tsx`, `TeamSession.tsx` per token map in `design-system/tokens.css`
+- Remaining approved issues: #17 (KeyboardSensor a11y), #21 (shift tracking), #22 (Change Planner integration), #20 (facilitator timer), #19 (team comparison), #12 (PWA), #11 (QR sharing), #14 (Sprint Metrics), #10 (Work Profiles)
+- Next task: check issues for human feedback; implement #17 (KeyboardSensor a11y: add KeyboardSensor to RankingBoard useSensors, set activationConstraint: space/enter)
 
 ### 2026-05-21 — fix: remove submodules:recursive from CI workflow
 - Done: removed `submodules: recursive` from `.github/workflows/deploy.yml`; stale `.agentic-kit` gitlink in index had no URL in .gitmodules, causing `git submodule update --init --recursive` to fail with exit code 128; build does not need any submodule content

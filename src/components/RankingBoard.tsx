@@ -57,11 +57,11 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">{t('rank.title')}</h2>
-        <p className="text-gray-500 mt-1">{t('rank.instruction')}</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{t('rank.title')}</h2>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">{t('rank.instruction')}</p>
       </div>
 
-      <div className="bg-white rounded-2xl p-4 card-shadow overflow-x-auto">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 card-shadow overflow-x-auto">
         <div className="flex items-start gap-1 pb-1" style={{ minWidth: 'max-content' }}>
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={motivators.map(m => m.id)} strategy={horizontalListSortingStrategy}>
@@ -74,7 +74,7 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
                       <button
                         onClick={() => onInfo(item.id)}
                         title={t('common.learnMore')}
-                        className="text-[11px] text-gray-300 hover:text-gray-500 transition-colors leading-none py-0.5"
+                        className="text-[11px] text-gray-300 hover:text-gray-500 dark:text-gray-700 dark:hover:text-gray-500 transition-colors leading-none py-0.5"
                       >
                         ⓘ
                       </button>
@@ -88,11 +88,11 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <button onClick={onBack} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <button onClick={onBack} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
           ← {t('common.back')}
         </button>
         <div className="flex-1" />
-        <button onClick={onSkip} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+        <button onClick={onSkip} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors">
           {t('rank.skip')}
         </button>
         <button onClick={onNext} className="px-6 py-2 text-sm font-medium bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors">

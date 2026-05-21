@@ -42,10 +42,10 @@ function TeamResultsView({
 
   if (entries.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-6 pt-12 text-gray-400">
+      <div className="flex flex-col items-center gap-6 pt-12 text-gray-400 dark:text-gray-600">
         <p>{t('team.phase.revealed')}</p>
         <p className="text-sm">No completed rankings yet.</p>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">{t('common.back')}</button>
+        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">{t('common.back')}</button>
       </div>
     )
   }
@@ -53,13 +53,13 @@ function TeamResultsView({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">{t('team.phase.revealed')}</h2>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{t('team.phase.revealed')}</h2>
+        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">
           ✕ {t('common.back')}
         </button>
       </div>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
         {entries.length} participant{entries.length !== 1 ? 's' : ''} completed
       </p>
 
@@ -68,11 +68,11 @@ function TeamResultsView({
         {entries.map(([id, participant]) => {
           const sorted = [...(participant.motivators ?? [])].sort((a, b) => a.rank - b.rank)
           return (
-            <div key={id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <div key={id} className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
               <div className="flex items-baseline gap-2 mb-3">
-                <span className="font-semibold text-gray-900">{participant.name}</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-50">{participant.name}</span>
                 {participant.change && (
-                  <span className="text-xs text-gray-400 truncate max-w-xs">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 truncate max-w-xs">
                     re: "{participant.change}"
                   </span>
                 )}
@@ -101,7 +101,7 @@ function TeamResultsView({
                         >
                           {t(`motivators.${item.id}.name`)}
                         </span>
-                        <span className="text-[9px] text-gray-400">#{item.rank}</span>
+                        <span className="text-[9px] text-gray-400 dark:text-gray-600">#{item.rank}</span>
                       </div>
                     )
                   })}
@@ -145,8 +145,8 @@ function OverlapPanel({
   if (shared.length === 0) return null
 
   return (
-    <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5">
-      <h3 className="text-sm font-semibold text-brand-700 mb-3">
+    <div className="bg-brand-50 dark:bg-gray-800 border border-brand-100 dark:border-gray-700 rounded-2xl p-5">
+      <h3 className="text-sm font-semibold text-brand-700 dark:text-brand-400 mb-3">
         🤝 Shared top motivators
       </h3>
       <div className="flex flex-wrap gap-2">
@@ -164,7 +164,7 @@ function OverlapPanel({
           )
         })}
       </div>
-      <p className="text-xs text-brand-600 mt-3 leading-relaxed">
+      <p className="text-xs text-brand-600 dark:text-brand-400 mt-3 leading-relaxed">
         These motivators appear in the top 3 for multiple participants. Changes that affect
         them will resonate across the team.
       </p>
@@ -264,19 +264,19 @@ export default function TeamSession({
     const completedCount = entries.filter(([, p]) => p.completed).length
     return (
       <div className="flex flex-col items-center gap-6 max-w-md mx-auto pt-12">
-        <h2 className="text-2xl font-bold">{t('team.pinLabel')}</h2>
-        <div className="text-6xl font-mono font-bold text-brand-600 tracking-widest bg-brand-50 px-8 py-4 rounded-2xl">
+        <h2 className="text-2xl font-bold dark:text-gray-50">{t('team.pinLabel')}</h2>
+        <div className="text-6xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-8 py-4 rounded-2xl">
           {pin}
         </div>
         {entries.length === 0 ? (
-          <p className="text-gray-500">{t('team.waitingFor')}</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('team.waitingFor')}</p>
         ) : (
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             {completedCount}/{entries.length} {t('team.participants')} done
           </p>
         )}
         {entries.map(([id, p]) => (
-          <div key={id} className="flex items-center gap-2 text-sm text-gray-700">
+          <div key={id} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
             <span>{p.completed ? '✅' : '⏳'}</span>
             <span>{p.name}</span>
           </div>
@@ -287,7 +287,7 @@ export default function TeamSession({
         >
           {t('team.reveal')}
         </button>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">
+        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">
           {t('common.back')}
         </button>
       </div>
@@ -298,19 +298,19 @@ export default function TeamSession({
   if (screen === 'team-join') {
     return (
       <div className="flex flex-col items-center gap-4 max-w-sm mx-auto pt-12">
-        <h2 className="text-2xl font-bold">{t('team.joinPrompt')}</h2>
+        <h2 className="text-2xl font-bold dark:text-gray-50">{t('team.joinPrompt')}</h2>
         <input
           value={joinPin}
           onChange={e => setJoinPin(e.target.value)}
           placeholder={t('team.joinPin')}
-          className="w-full border rounded-xl px-4 py-3 text-center text-2xl font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-brand-400"
+          className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-center text-2xl font-mono tracking-widest bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
           maxLength={4}
         />
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder={t('team.yourName')}
-          className="w-full border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
         />
         <button
           onClick={handleJoin}
@@ -319,7 +319,7 @@ export default function TeamSession({
         >
           {t('team.join')}
         </button>
-        <button onClick={onBack} className="text-sm text-gray-400">
+        <button onClick={onBack} className="text-sm text-gray-400 dark:text-gray-600">
           {t('common.back')}
         </button>
       </div>
@@ -330,9 +330,9 @@ export default function TeamSession({
   if (screen === 'team-play') {
     if (sessionPhase === 'lobby') {
       return (
-        <div className="flex flex-col items-center gap-4 pt-16 text-gray-500">
+        <div className="flex flex-col items-center gap-4 pt-16 text-gray-500 dark:text-gray-400">
           <p className="text-lg font-medium">{t('team.phase.lobby')}</p>
-          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600">{t('common.back')}</button>
+          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">{t('common.back')}</button>
         </div>
       )
     }

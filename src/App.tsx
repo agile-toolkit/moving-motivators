@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { Screen, MotivatorItem, MotivatorId } from './types'
 import { defaultMotivatorItems } from './data/motivators'
 import AppHeader from './components/AppHeader'
+import ThemeToggle from './components/ThemeToggle'
 import HomeScreen from './components/HomeScreen'
 import RankingBoard from './components/RankingBoard'
 import ChangeAssessment from './components/ChangeAssessment'
@@ -44,8 +45,8 @@ function App() {
   const isTeamScreen = ['team-host','team-join','team-play','team-results'].includes(screen)
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <AppHeader title={t('app.title')} onTitleClick={reset} />
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
+      <AppHeader title={t('app.title')} onTitleClick={reset}><ThemeToggle /></AppHeader>
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
         {screen === 'home' && (

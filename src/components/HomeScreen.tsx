@@ -26,8 +26,8 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: P
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] gap-8">
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">{t('app.title')}</h1>
-        <p className="text-lg text-gray-500">{t('app.tagline')}</p>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t('app.title')}</h1>
+        <p className="text-lg text-gray-500 dark:text-gray-400">{t('app.tagline')}</p>
         <p className="text-sm text-brand-500 mt-1">{t('app.subtitle')}</p>
       </div>
 
@@ -35,33 +35,33 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: P
         {/* Solo */}
         <button
           onClick={onSolo}
-          className="group flex flex-col items-start gap-2 p-6 bg-white rounded-2xl card-shadow hover:card-shadow-lg transition-all border-2 border-transparent hover:border-brand-500"
+          className="group flex flex-col items-start gap-2 p-6 bg-white dark:bg-gray-900 rounded-2xl card-shadow hover:card-shadow-lg transition-all border-2 border-transparent hover:border-brand-500 dark:border-gray-700 dark:hover:border-brand-500"
         >
           <span className="text-3xl">🧭</span>
-          <span className="font-semibold text-gray-900 text-lg">{t('home.solo')}</span>
-          <span className="text-sm text-gray-500">{t('home.soloDesc')}</span>
+          <span className="font-semibold text-gray-900 dark:text-gray-50 text-lg">{t('home.solo')}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{t('home.soloDesc')}</span>
         </button>
 
         {/* Team */}
         <div className="flex flex-col gap-2">
-          <span className="font-semibold text-gray-900 text-lg px-1">🤝 {t('home.team')}</span>
+          <span className="font-semibold text-gray-900 dark:text-gray-50 text-lg px-1">🤝 {t('home.team')}</span>
           <button
             onClick={firebaseReady ? onHost : undefined}
             disabled={!firebaseReady}
-            className="flex flex-col items-start gap-1 p-4 bg-white rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex flex-col items-start gap-1 p-4 bg-white dark:bg-gray-900 rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed dark:border-gray-700 dark:enabled:hover:border-brand-500"
           >
-            <span className="font-semibold text-gray-900">{t('home.host')}</span>
-            <span className="text-sm text-gray-500">{t('home.teamDesc')}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-50">{t('home.host')}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('home.teamDesc')}</span>
           </button>
           <button
             onClick={firebaseReady ? onJoin : undefined}
             disabled={!firebaseReady}
-            className="flex flex-col items-start gap-1 p-4 bg-white rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex flex-col items-start gap-1 p-4 bg-white dark:bg-gray-900 rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed dark:border-gray-700 dark:enabled:hover:border-brand-500"
           >
-            <span className="font-semibold text-gray-900">{t('home.join')}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-50">{t('home.join')}</span>
           </button>
           {!firebaseReady && (
-            <p className="text-xs text-gray-400 px-1">{t('home.teamUnavailable')}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-600 px-1">{t('home.teamUnavailable')}</p>
           )}
         </div>
       </div>
@@ -78,27 +78,27 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: P
       <div className="w-full max-w-lg">
         <button
           onClick={() => setAboutOpen(v => !v)}
-          className="flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 transition-colors mb-2"
+          className="flex items-center gap-2 text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors mb-2"
         >
           <span className={`transition-transform ${aboutOpen ? 'rotate-90' : ''}`}>▶</span>
           {t('home.about.toggle')}
         </button>
 
         {aboutOpen && (
-          <div className="bg-white rounded-2xl card-shadow p-6 flex flex-col gap-4 text-sm text-gray-600 leading-relaxed">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl card-shadow p-6 flex flex-col gap-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
             <div>
-              <h2 className="text-base font-bold text-gray-900 mb-2">{t('home.about.title')}</h2>
+              <h2 className="text-base font-bold text-gray-900 dark:text-gray-50 mb-2">{t('home.about.title')}</h2>
               <p>{t('home.about.body')}</p>
             </div>
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">{t('home.about.howTitle')}</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">{t('home.about.howTitle')}</h3>
               <p>{t('home.about.how')}</p>
             </div>
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">{t('home.about.usesTitle')}</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">{t('home.about.usesTitle')}</h3>
               <p>{t('home.about.uses')}</p>
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
               <a
                 href="https://management30.com/practice/moving-motivators/"
                 target="_blank"
@@ -109,7 +109,7 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: P
               </a>
               <button
                 onClick={dismissAbout}
-                className="text-xs text-gray-400 hover:text-gray-600 px-3 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+                className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 {t('home.about.dismiss')}
               </button>
