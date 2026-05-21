@@ -47,9 +47,13 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 ## Tech notes
 
 - Firebase optional for solo; CI/production builds may use `VITE_FIREBASE_*` secrets (see `.github/workflows/deploy.yml`).
-- Submodule `agentic-kit` remote: `bthos/agentic-kit` (see `.gitmodules`).
+- `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-21 — fix: remove submodules:recursive from CI workflow
+- Done: removed `submodules: recursive` from `.github/workflows/deploy.yml`; stale `.agentic-kit` gitlink in index had no URL in .gitmodules, causing `git submodule update --init --recursive` to fail with exit code 128; build does not need any submodule content
+- Next task: implement #25 (light/dark theme)
 
 ### 2026-05-21 — feat: unified AppHeader + LanguagePicker (issue #24)
 - Done: copied `AppHeader.tsx` and `LanguagePicker.tsx` from `agile-toolkit.github.io/design-system/components/` into `src/components/`; replaced inline `<header>` block in `App.tsx` with `<AppHeader title={t('app.title')} onTitleClick={reset} />`; removed cycle-button logic and unused `i18n` import
