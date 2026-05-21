@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import {
-  DndContext, closestCenter, PointerSensor, TouchSensor,
+  DndContext, closestCenter, PointerSensor, TouchSensor, KeyboardSensor,
   useSensor, useSensors, type DragEndEvent,
 } from '@dnd-kit/core'
 import {
   SortableContext, useSortable,
-  horizontalListSortingStrategy, arrayMove,
+  horizontalListSortingStrategy, arrayMove, sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import type { MotivatorItem, MotivatorId } from '../types'
@@ -21,13 +21,15 @@ interface Props {
 }
 
 function SortableCard({ item }: { item: MotivatorItem }) {
+  const { t } = useTranslation()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.id })
   return (
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="touch-none cursor-grab active:cursor-grabbing"
+      className="touch-none cursor-grab active:cursor-grabbing rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      aria-label={`${t(`motivators.${item.id}.name`)}, rank ${item.rank}`}
       {...attributes}
       {...listeners}
     >
@@ -42,6 +44,7 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -86,6 +89,10 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
           </DndContext>
         </div>
       </div>
+
+      <p className="text-[11px] text-gray-400 dark:text-gray-600 text-center select-none">
+        {t('rank.keyboardHint')}
+      </p>
 
       <div className="flex flex-wrap gap-3">
         <button onClick={onBack} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">

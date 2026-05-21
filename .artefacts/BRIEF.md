@@ -21,6 +21,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Solo results localStorage persistence — writes `moving-motivators:lastSession` on solo-results transition (issue #16, moving-motivators side)
 - [x] Unified AppHeader + LanguagePicker — replaced inline header with design-system components; flag dropdown replaces cycle button (issue #24)
 - [x] Light/dark theme — darkMode:class in tailwind.config.js, anti-flash script in index.html, ThemeToggle in AppHeader, dark: variants across all src/ files (issue #25)
+- [x] Keyboard accessibility for motivator ranking — KeyboardSensor + sortableKeyboardCoordinates added to RankingBoard; aria-label on each SortableCard; focus-visible ring; keyboard hint text below board (issue #17)
 
 ## localStorage keys
 
@@ -51,6 +52,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-21 — feat: keyboard accessibility for motivator ranking (issue #17)
+- Done: imported `KeyboardSensor` from `@dnd-kit/core` and `sortableKeyboardCoordinates` from `@dnd-kit/sortable`; added `useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })` to `useSensors` in `RankingBoard.tsx`; added `useTranslation` + `aria-label` with motivator name and rank to `SortableCard`; added `focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl` to draggable div; added `rank.keyboardHint` i18n key to all 4 locale files; added keyboard hint `<p>` below the ranking board
+- Remaining approved issues: #21 (shift tracking), #22 (Change Planner integration), #20 (facilitator timer), #19 (team comparison), #12 (PWA), #11 (QR sharing), #14 (Sprint Metrics), #10 (Work Profiles)
+- Next task: check issues for human feedback; implement #21 (solo motivator shift tracking: extend moving-motivators:lastSession to sessionHistory array of 5, show rank-change arrows in ResultsView.tsx comparing current vs previous session)
 
 ### 2026-05-21 — feat: light/dark theme (issue #25)
 - Done: added `darkMode: 'class'` to `tailwind.config.js`; added anti-flash inline script to `index.html`; copied `ThemeToggle.tsx` from design-system into `src/components/`; mounted `<ThemeToggle />` in `<AppHeader>` children; added `dark:` Tailwind variants across `App.tsx`, `AppHeader.tsx`, `HomeScreen.tsx`, `RankingBoard.tsx`, `ChangeAssessment.tsx`, `MotivatorCard.tsx`, `ResultsView.tsx`, `FacilitationGuide.tsx`, `MotivatorInfo.tsx`, `TeamSession.tsx` per token map in `design-system/tokens.css`
