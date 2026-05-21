@@ -27,7 +27,7 @@ export default function MotivatorCard({ item, showRank, showImpact, onImpact, is
 
   return (
     <div
-      className={`flex flex-col bg-white rounded-xl border-l-4 ${meta.borderColor} card-shadow select-none
+      className={`flex flex-col bg-white dark:bg-gray-900 rounded-xl border-l-4 ${meta.borderColor} card-shadow select-none
         ${isDragging ? 'opacity-50 card-shadow-lg rotate-2' : ''}
         ${showImpact && item.impact !== 'neutral'
           ? item.impact === 'positive' ? 'ring-2 ring-green-400' : 'ring-2 ring-red-400'
@@ -47,21 +47,21 @@ export default function MotivatorCard({ item, showRank, showImpact, onImpact, is
         <p className={`text-xs font-semibold ${meta.textColor} leading-tight`}>
           {t(`motivators.${item.id}.name`)}
         </p>
-        <p className="text-[10px] text-gray-400 leading-tight line-clamp-2">
+        <p className="text-[10px] text-gray-400 dark:text-gray-600 leading-tight line-clamp-2">
           {t(`motivators.${item.id}.desc`)}
         </p>
       </div>
 
       {/* Impact controls */}
       {showImpact && onImpact && (
-        <div className="flex border-t border-gray-100">
+        <div className="flex border-t border-gray-100 dark:border-gray-800">
           {(['positive', 'neutral', 'negative'] as ImpactLevel[]).map(lvl => (
             <button
               key={lvl}
               onClick={() => onImpact(item.id, lvl)}
               title={t(`assess.${lvl}`)}
               className={`flex-1 py-1 text-xs font-bold transition-colors
-                ${item.impact === lvl ? impactBg[lvl] : 'text-gray-300 hover:text-gray-500'}`}
+                ${item.impact === lvl ? impactBg[lvl] : 'text-gray-300 hover:text-gray-500 dark:text-gray-700 dark:hover:text-gray-500'}`}
             >
               {impactIcon[lvl]}
             </button>

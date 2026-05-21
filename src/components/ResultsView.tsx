@@ -35,7 +35,7 @@ function ImpactGroup({ items, label, colorClass, onInfo }: {
             >
               <span>{meta.emoji}</span>
               <span>{t(`motivators.${item.id}.name`)}</span>
-              <span className="text-gray-400 font-normal">#{item.rank}</span>
+              <span className="text-gray-400 dark:text-gray-600 font-normal">#{item.rank}</span>
             </button>
           )
         })}
@@ -70,10 +70,10 @@ function InterpretationPanel({ motivators, change, onInfo }: {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-5 card-shadow flex flex-col gap-5">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 card-shadow flex flex-col gap-5">
       {/* Top motivators */}
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">
           {t('results.interpretation.topTitle')}
         </h3>
         <div className="flex flex-wrap gap-2 mb-3">
@@ -95,7 +95,7 @@ function InterpretationPanel({ motivators, change, onInfo }: {
             )
           })}
         </div>
-        <p className="text-sm text-gray-600 leading-relaxed">{t('results.interpretation.topDesc')}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{t('results.interpretation.topDesc')}</p>
       </div>
 
       {/* Pattern insight */}
@@ -114,7 +114,7 @@ function InterpretationPanel({ motivators, change, onInfo }: {
       {/* Lower-ranked note */}
       {bottom3.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">
             {t('results.interpretation.bottomTitle')}
           </h3>
           <div className="flex flex-wrap gap-2 mb-2">
@@ -135,7 +135,7 @@ function InterpretationPanel({ motivators, change, onInfo }: {
               )
             })}
           </div>
-          <p className="text-xs text-gray-400 leading-relaxed">
+          <p className="text-xs text-gray-400 dark:text-gray-600 leading-relaxed">
             {t('results.interpretation.bottomNote')}
           </p>
         </div>
@@ -175,16 +175,16 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
   return (
     <div ref={containerRef} className="flex flex-col gap-6 max-w-2xl">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">{t('results.title')}</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{t('results.title')}</h2>
         {change && (
-          <p className="text-gray-500 mt-1">
-            <span className="font-medium text-gray-700">{t('results.change')}:</span> "{change}"
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <span className="font-medium text-gray-700 dark:text-gray-200">{t('results.change')}:</span> "{change}"
           </p>
         )}
       </div>
 
       {/* Full ranked row */}
-      <div className="bg-white rounded-2xl p-4 card-shadow overflow-x-auto">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 card-shadow overflow-x-auto">
         <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
           {sorted.map(item => {
             const meta = getMotivatorMeta(item.id)
@@ -203,7 +203,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
                 <span className={`text-[9px] font-medium text-center leading-tight ${meta.textColor}`}>
                   {t(`motivators.${item.id}.name`)}
                 </span>
-                <span className="text-[9px] text-gray-400">#{item.rank}</span>
+                <span className="text-[9px] text-gray-400 dark:text-gray-600">#{item.rank}</span>
               </button>
             )
           })}
@@ -212,7 +212,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
 
       {/* Impact groups */}
       {change && (
-        <div className="bg-white rounded-2xl p-5 card-shadow flex flex-col gap-4">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 card-shadow flex flex-col gap-4">
           <ImpactGroup items={positives} label={t('results.positives')} colorClass="text-green-600" onInfo={onInfo} />
           <ImpactGroup items={negatives} label={t('results.negatives')} colorClass="text-red-600" onInfo={onInfo} />
           <ImpactGroup items={neutrals}  label={t('results.neutral')}   colorClass="text-gray-400" onInfo={onInfo} />
@@ -224,13 +224,13 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
 
       {/* Insight hint */}
       {change && negatives.length > 0 && (
-        <p className="text-sm text-gray-500 leading-relaxed px-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed px-1">
           💡 {t('results.insight')}
         </p>
       )}
 
       <div className="flex flex-wrap gap-3">
-        <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+        <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
           ↩ {t('results.startOver')}
         </button>
         <button

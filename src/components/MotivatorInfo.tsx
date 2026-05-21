@@ -39,7 +39,7 @@ export default function MotivatorInfo({ id, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label={t(`motivators.${id}.name`)}
-        className="fixed z-50 bg-white shadow-2xl flex flex-col
+        className="fixed z-50 bg-white dark:bg-gray-900 shadow-2xl flex flex-col
           bottom-0 left-0 right-0 rounded-t-2xl max-h-[85vh]
           md:inset-y-0 md:right-0 md:left-auto md:rounded-none md:rounded-l-2xl md:w-96 md:max-h-full"
       >
@@ -70,8 +70,8 @@ export default function MotivatorInfo({ id, onClose }: Props) {
 
           {/* About */}
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">About</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-2">About</h3>
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
               {t(`motivators.${id}.detail`)}
             </p>
           </section>
@@ -88,10 +88,10 @@ export default function MotivatorInfo({ id, onClose }: Props) {
 
           {/* Reflection */}
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-2">
               Reflect
             </h3>
-            <p className="text-sm text-gray-600 leading-relaxed italic border-l-4 border-gray-200 pl-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed italic border-l-4 border-gray-200 dark:border-gray-700 pl-4">
               {t(`motivators.${id}.reflection`)}
             </p>
           </section>
@@ -99,7 +99,7 @@ export default function MotivatorInfo({ id, onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100">
+        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800">
           <a
             href="https://management30.com/practice/moving-motivators/"
             target="_blank"
