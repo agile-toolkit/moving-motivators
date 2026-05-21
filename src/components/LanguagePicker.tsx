@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next'
  */
 
 const LANGUAGES = [
-  { code: 'en', flag: '🇬🇧', label: 'EN' },
-  { code: 'es', flag: '🇪🇸', label: 'ES' },
-  { code: 'be', flag: '🇧🇾', label: 'BE' },
-  { code: 'ru', flag: '🇷🇺', label: 'RU' },
+  { code: 'en', label: 'EN' },
+  { code: 'es', label: 'ES' },
+  { code: 'be', label: 'BE' },
+  { code: 'ru', label: 'RU' },
 ] as const
 
 type LangCode = (typeof LANGUAGES)[number]['code']
@@ -57,10 +57,9 @@ export default function LanguagePicker() {
         onClick={() => setOpen(v => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 transition-colors select-none"
+        className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors select-none"
       >
-        <span className="text-base leading-none">{active.flag}</span>
-        <span className="font-medium">{active.label}</span>
+        <span>{active.label}</span>
         <svg className={`w-3 h-3 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -83,13 +82,12 @@ export default function LanguagePicker() {
                 <button
                   type="button"
                   onClick={() => { i18n.changeLanguage(lang.code); setOpen(false) }}
-                  className={`w-full flex items-center gap-2.5 px-3 py-1.5 text-sm transition-colors ${
+                  className={`w-full flex items-center gap-2 px-3 py-1.5 text-sm transition-colors ${
                     isCurrent
                       ? 'bg-brand-50 text-brand-700 font-semibold'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <span className="text-base leading-none">{lang.flag}</span>
                   <span>{lang.label}</span>
                   {isCurrent && (
                     <svg className="ml-auto w-3.5 h-3.5 text-brand-600" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
