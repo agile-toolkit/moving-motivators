@@ -22,6 +22,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Unified AppHeader + LanguagePicker — replaced inline header with design-system components; flag dropdown replaces cycle button (issue #24)
 - [x] Light/dark theme — darkMode:class in tailwind.config.js, anti-flash script in index.html, ThemeToggle in AppHeader, dark: variants across all src/ files (issue #25)
 - [x] Keyboard accessibility for motivator ranking — KeyboardSensor + sortableKeyboardCoordinates added to RankingBoard; aria-label on each SortableCard; focus-visible ring; keyboard hint text below board (issue #17)
+- [x] Solo motivator shift tracking — writes `moving-motivators:sessionHistory` (last 5 sessions) on solo-results transition; collapsible "How have your motivators shifted?" panel in ResultsView shows previous vs current ranked rows with ↑↓ delta arrows, green/red for ≥3 position moves (issue #21)
 
 ## localStorage keys
 
@@ -44,7 +45,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#18] Feature: team session history — view past revealed sessions
 - [ ] [#19] Feature: side-by-side individual comparison in team sessions
 - [ ] [#20] Feature: facilitator timer for ranking and assessment phases
-- [ ] [#21] Feature: solo motivator shift tracking — compare sessions over time
+- [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
 - [ ] [#22] Integration: Moving Motivators ↔ Change Planner (motivator impact on change)
 
 ## Tech notes
@@ -53,6 +54,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-24 — feat: solo motivator shift tracking (issue #21)
+- Done: added `SessionEntry` type to `types.ts`; updated `goToSoloResults()` in `App.tsx` to prepend current session to `moving-motivators:sessionHistory` array (max 5, FIFO) alongside existing `lastSession` write; added `SessionShiftPanel` component in `ResultsView.tsx` — collapsible panel that reads `sessionHistory`, shows previous + current ranked card rows with ↑↓ delta arrows (green/red for ≥3 position moves); added `results.history` and `results.shift` i18n keys to all 4 locales; documented `sessionHistory` key in BRIEF.md localStorage section
+- Remaining approved issues: #22 (Change Planner integration), #20 (facilitator timer), #19 (team comparison), #12 (PWA), #11 (QR sharing), #14 (Sprint Metrics), #10 (Work Profiles)
+- Next task: check issues for human feedback; implement #22 (Moving Motivators ↔ Change Planner integration: export motivators snapshot via URL param on results share, read URL param on load in Change Planner to pre-fill change description)
 
 ### 2026-05-21 — feat: keyboard accessibility for motivator ranking (issue #17)
 - Done: imported `KeyboardSensor` from `@dnd-kit/core` and `sortableKeyboardCoordinates` from `@dnd-kit/sortable`; added `useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })` to `useSensors` in `RankingBoard.tsx`; added `useTranslation` + `aria-label` with motivator name and rank to `SortableCard`; added `focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl` to draggable div; added `rank.keyboardHint` i18n key to all 4 locale files; added keyboard hint `<p>` below the ranking board
