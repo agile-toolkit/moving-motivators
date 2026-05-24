@@ -28,6 +28,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 | Key | Written by | Shape |
 |-----|-----------|-------|
 | `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
+| `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 5 | `Array<{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
 
 ## Backlog
 

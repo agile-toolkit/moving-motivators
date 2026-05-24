@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import html2canvas from 'html2canvas'
-import type { MotivatorItem, MotivatorId } from '../types'
+import type { MotivatorItem, MotivatorId, SessionEntry } from '../types'
 import { getMotivatorMeta } from '../data/motivators'
 
 interface Props {
@@ -144,6 +144,102 @@ function InterpretationPanel({ motivators, change, onInfo }: {
   )
 }
 
+function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+
+  const history: SessionEntry[] = JSON.parse(
+    localStorage.getItem('moving-motivators:sessionHistory') || '[]'
+  )
+  if (history.length < 2) return null
+
+  const previous = history[1]
+  const prevRankMap: Record<string, number> = {}
+  previous.ranked.forEach((id, i) => { prevRankMap[id] = i + 1 })
+
+  const currentSorted = [...current].sort((a, b) => a.rank - b.rank)
+
+  return (
+    <div className="bg-white dark:bg-gray-900 rounded-2xl card-shadow overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+          📊 {t('results.shift')}
+        </span>
+        <span className="text-gray-400 dark:text-gray-600 text-xs">{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div className="px-5 pb-5 flex flex-col gap-4 border-t border-gray-100 dark:border-gray-800 pt-4">
+          {/* Previous session row */}
+          <div>
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-600 mb-2">
+              {t('results.history')} · {previous.date}
+              {previous.change && <span className="ml-1 italic">"{previous.change}"</span>}
+            </p>
+            <div className="overflow-x-auto">
+              <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+                {previous.ranked.map((id, i) => {
+                  const meta = getMotivatorMeta(id)
+                  return (
+                    <div key={id} className="flex flex-col items-center gap-1 w-14">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${meta.color} border ${meta.borderColor} opacity-50`}>
+                        {meta.emoji}
+                      </div>
+                      <span className={`text-[9px] font-medium text-center leading-tight ${meta.textColor} opacity-50`}>
+                        {t(`motivators.${id}.name`)}
+                      </span>
+                      <span className="text-[9px] text-gray-300 dark:text-gray-700">#{i + 1}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Current session row with delta arrows */}
+          <div>
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-600 mb-2">
+              {currentSorted[0] && history[0]?.date}
+            </p>
+            <div className="overflow-x-auto">
+              <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+                {currentSorted.map(item => {
+                  const meta = getMotivatorMeta(item.id)
+                  const prevRank = prevRankMap[item.id]
+                  const delta = prevRank != null ? item.rank - prevRank : 0
+                  const significant = Math.abs(delta) >= 3
+                  const deltaEl = delta === 0
+                    ? <span className="text-[9px] text-gray-300 dark:text-gray-700 h-3 flex items-center">—</span>
+                    : delta > 0
+                      ? <span className={`text-[9px] font-bold h-3 flex items-center ${significant ? 'text-green-600 dark:text-green-400' : 'text-green-400 dark:text-green-600'}`}>↑{delta}</span>
+                      : <span className={`text-[9px] font-bold h-3 flex items-center ${significant ? 'text-red-600 dark:text-red-400' : 'text-red-400 dark:text-red-600'}`}>↓{Math.abs(delta)}</span>
+
+                  return (
+                    <div key={item.id} className="flex flex-col items-center gap-1 w-14">
+                      {deltaEl}
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${meta.color} border ${meta.borderColor}`}>
+                        {meta.emoji}
+                      </div>
+                      <span className={`text-[9px] font-medium text-center leading-tight ${meta.textColor}`}>
+                        {t(`motivators.${item.id}.name`)}
+                      </span>
+                      <span className="text-[9px] text-gray-400 dark:text-gray-600">#{item.rank}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function ResultsView({ motivators, change, onReset, onInfo }: Props) {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -221,6 +317,9 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
 
       {/* Interpretation */}
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
+
+      {/* Session shift panel */}
+      <SessionShiftPanel current={motivators} />
 
       {/* Insight hint */}
       {change && negatives.length > 0 && (
