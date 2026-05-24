@@ -28,6 +28,14 @@ export interface SessionParticipant {
   motivators?: MotivatorItem[]
 }
 
+export interface SessionEntry {
+  date: string
+  savedAt: number
+  ranked: MotivatorId[]
+  change: string
+  changes: Record<string, string>
+}
+
 export interface TeamSessionData {
   pin: string
   hostId: string
