@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Screen, MotivatorItem, MotivatorId } from './types'
 import { defaultMotivatorItems } from './data/motivators'
@@ -12,12 +12,29 @@ import TeamSession from './components/TeamSession'
 import MotivatorInfo from './components/MotivatorInfo'
 import FacilitationGuide from './components/FacilitationGuide'
 
+function readChangeParam(): string {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('change')
+    return raw ? decodeURIComponent(raw) : ''
+  } catch {
+    return ''
+  }
+}
+
 function App() {
   const { t } = useTranslation()
-  const [screen, setScreen] = useState<Screen>('home')
+  const initialChange = readChangeParam()
+  const [screen, setScreen] = useState<Screen>(initialChange ? 'solo-rank' : 'home')
   const [motivators, setMotivators] = useState<MotivatorItem[]>(defaultMotivatorItems())
-  const [change, setChange] = useState('')
+  const [change, setChange] = useState(initialChange)
   const [infoMotivator, setInfoMotivator] = useState<MotivatorId | null>(null)
+
+  useEffect(() => {
+    if (initialChange) {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const reset = () => {
     setMotivators(defaultMotivatorItems())

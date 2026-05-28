@@ -23,6 +23,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Light/dark theme — darkMode:class in tailwind.config.js, anti-flash script in index.html, ThemeToggle in AppHeader, dark: variants across all src/ files (issue #25)
 - [x] Keyboard accessibility for motivator ranking — KeyboardSensor + sortableKeyboardCoordinates added to RankingBoard; aria-label on each SortableCard; focus-visible ring; keyboard hint text below board (issue #17)
 - [x] Solo motivator shift tracking — writes `moving-motivators:sessionHistory` (last 5 sessions) on solo-results transition; collapsible "How have your motivators shifted?" panel in ResultsView shows previous vs current ranked rows with ↑↓ delta arrows, green/red for ≥3 position moves (issue #21)
+- [x] Change Planner integration (Moving Motivators side) — "Assess in Change Planner" button in ResultsView encodes motivator snapshot (ranked order + change directions + change text) as base64 JSON in `?mm_snapshot=` URL param and opens Change Planner; reads `?change=` URL param on load to pre-fill change description and skip to ranking screen (issue #22, MM side)
 
 ## localStorage keys
 
@@ -46,7 +47,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#19] Feature: side-by-side individual comparison in team sessions
 - [ ] [#20] Feature: facilitator timer for ranking and assessment phases
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
-- [ ] [#22] Integration: Moving Motivators ↔ Change Planner (motivator impact on change)
+- [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
 
 ## Tech notes
 
@@ -54,6 +55,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-28 — feat: Change Planner integration — Moving Motivators side (issue #22)
+- Done: added `buildMmSnapshot()` helper in `ResultsView.tsx` that encodes ranked motivator order, change directions, change text, and date as base64 JSON; "Assess in Change Planner" button opens `https://agile-toolkit.github.io/change-planner/?mm_snapshot=<base64>` in a new tab; added `readChangeParam()` helper in `App.tsx` — reads `?change=` URL param on load, pre-fills `change` state, and navigates directly to `solo-rank` screen (skipping home); clears URL param via `history.replaceState` after reading; added `results.exportToChangePlanner` key to all 4 locales
+- Remaining work for full #22 integration: Change Planner side — read `?mm_snapshot=` on load, decode snapshot, display read-only "Motivator context" sidebar showing ranked order and impact directions
+- Next task: implement Change Planner side of issue #22 in change-planner repo (read ?mm_snapshot=, show motivator context sidebar); also check issues for human feedback
 
 ### 2026-05-24 — feat: solo motivator shift tracking (issue #21)
 - Done: added `SessionEntry` type to `types.ts`; updated `goToSoloResults()` in `App.tsx` to prepend current session to `moving-motivators:sessionHistory` array (max 5, FIFO) alongside existing `lastSession` write; added `SessionShiftPanel` component in `ResultsView.tsx` — collapsible panel that reads `sessionHistory`, shows previous + current ranked card rows with ↑↓ delta arrows (green/red for ≥3 position moves); added `results.history` and `results.shift` i18n keys to all 4 locales; documented `sessionHistory` key in BRIEF.md localStorage section
