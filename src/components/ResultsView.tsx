@@ -240,6 +240,19 @@ function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
   )
 }
 
+const CHANGE_PLANNER_URL = 'https://agile-toolkit.github.io/change-planner/'
+
+function buildMmSnapshot(motivators: MotivatorItem[], change: string): string {
+  const sorted = [...motivators].sort((a, b) => a.rank - b.rank)
+  const snapshot = {
+    ranked: sorted.map(m => m.id),
+    changes: Object.fromEntries(motivators.map(m => [m.id, m.impact])),
+    change,
+    date: new Date().toISOString().slice(0, 10),
+  }
+  return btoa(encodeURIComponent(JSON.stringify(snapshot)))
+}
+
 export default function ResultsView({ motivators, change, onReset, onInfo }: Props) {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -263,6 +276,11 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
     } finally {
       setCopying(false)
     }
+  }
+
+  function handleExportToChangePlanner() {
+    const snapshot = buildMmSnapshot(motivators, change)
+    window.open(`${CHANGE_PLANNER_URL}?mm_snapshot=${snapshot}`, '_blank', 'noopener')
   }
   const positives = sorted.filter(m => m.impact === 'positive')
   const negatives = sorted.filter(m => m.impact === 'negative')
@@ -338,6 +356,12 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
           className="px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
         >
           {copying ? '…' : `📋 ${t('results.share')}`}
+        </button>
+        <button
+          onClick={handleExportToChangePlanner}
+          className="px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+        >
+          🔗 {t('results.exportToChangePlanner')}
         </button>
       </div>
     </div>
