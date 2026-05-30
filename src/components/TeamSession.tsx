@@ -6,6 +6,8 @@ import type { Screen, MotivatorItem, MotivatorId } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
 import RankingBoard from './RankingBoard'
 import ChangeAssessment from './ChangeAssessment'
+import FacilitatorTimer from './FacilitatorTimer'
+import ParticipantTimerBar from './ParticipantTimerBar'
 
 interface Props {
   screen: Screen
@@ -190,6 +192,7 @@ export default function TeamSession({
   const [participantId, setParticipantId] = useState('')
   const [sessionPhase, setSessionPhase] = useState<'lobby' | 'ranking' | 'assessing' | 'revealed'>('lobby')
   const [participants, setParticipants] = useState<Record<string, FirebaseParticipant>>({})
+  const [sessionTimer, setSessionTimer] = useState<{ startedAt: number; durationSecs: number } | null>(null)
   const db = getFirebaseDb()
 
   // HOST: create session
@@ -227,6 +230,26 @@ export default function TeamSession({
     return () => unsub()
   }, [screen, pin, participantId])
 
+  // PARTICIPANT: listen for timer (to show progress bar)
+  useEffect(() => {
+    if (screen !== 'team-play' || !pin || !db) return
+    const unsub = onValue(ref(db, `sessions/${pin}/timer`), snap => {
+      setSessionTimer(snap.val() as { startedAt: number; durationSecs: number } | null)
+    })
+    return () => unsub()
+  }, [screen, pin])
+
+  // HOST: write/clear timer in Firebase
+  const writeTimer = (durationSecs: number) => {
+    if (!db || !pin) return
+    set(ref(db, `sessions/${pin}/timer`), { startedAt: Date.now(), durationSecs })
+  }
+
+  const clearSessionTimer = () => {
+    if (!db || !pin) return
+    set(ref(db, `sessions/${pin}/timer`), null)
+  }
+
   // PARTICIPANT: join session
   const handleJoin = async () => {
     if (!db || !joinPin || !name) return
@@ -250,9 +273,10 @@ export default function TeamSession({
     setScreen('team-results')
   }
 
-  // HOST: advance phase
+  // HOST: advance phase (also clears timer)
   const advancePhase = (next: typeof sessionPhase) => {
     if (!db || !pin) return
+    clearSessionTimer()
     set(ref(db, `sessions/${pin}/phase`), next)
     setSessionPhase(next)
     if (next === 'revealed') setScreen('team-results')
@@ -262,31 +286,76 @@ export default function TeamSession({
   if (screen === 'team-host') {
     const entries = Object.entries(participants)
     const completedCount = entries.filter(([, p]) => p.completed).length
+
     return (
-      <div className="flex flex-col items-center gap-6 max-w-md mx-auto pt-12">
-        <h2 className="text-2xl font-bold dark:text-gray-50">{t('team.pinLabel')}</h2>
-        <div className="text-6xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-8 py-4 rounded-2xl">
-          {pin}
-        </div>
-        {entries.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400">{t('team.waitingFor')}</p>
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400">
-            {completedCount}/{entries.length} {t('team.participants')} done
-          </p>
-        )}
-        {entries.map(([id, p]) => (
-          <div key={id} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <span>{p.completed ? '✅' : '⏳'}</span>
-            <span>{p.name}</span>
+      <div className="flex flex-col items-center gap-5 max-w-sm mx-auto pt-8">
+        {/* Always show PIN */}
+        <div className="flex flex-col items-center gap-1 w-full">
+          <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('team.pinLabel')}</p>
+          <div className="text-5xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-8 py-3 rounded-2xl">
+            {pin}
           </div>
-        ))}
-        <button
-          onClick={() => advancePhase('revealed')}
-          className="px-6 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
-        >
-          {t('team.reveal')}
-        </button>
+        </div>
+
+        {/* Phase: lobby — waiting for participants */}
+        {sessionPhase === 'lobby' && (
+          <>
+            {entries.length === 0 ? (
+              <p className="text-gray-500 dark:text-gray-400 text-sm">{t('team.waitingFor')}</p>
+            ) : (
+              <div className="flex flex-col gap-1.5 w-full">
+                {entries.map(([id, p]) => (
+                  <div key={id} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 rounded-xl px-3 py-2 border border-gray-100 dark:border-gray-800">
+                    <span>{p.completed ? '✅' : '⏳'}</span>
+                    <span>{p.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              onClick={() => advancePhase('ranking')}
+              disabled={entries.length === 0}
+              className="w-full py-2.5 bg-brand-500 text-white rounded-xl font-medium hover:bg-brand-600 disabled:opacity-40 transition-colors"
+            >
+              {t('team.startRanking')}
+            </button>
+          </>
+        )}
+
+        {/* Phase: ranking — timer + progress + advance button */}
+        {sessionPhase === 'ranking' && (
+          <>
+            <p className="text-xs font-medium text-brand-500 uppercase tracking-wider self-start">{t('team.phase.ranking')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 self-start">
+              {completedCount}/{entries.length} {t('team.participants')} done
+            </p>
+            <FacilitatorTimer onTimerStart={writeTimer} onTimerStop={clearSessionTimer} />
+            <button
+              onClick={() => advancePhase('assessing')}
+              className="w-full py-2.5 bg-brand-500 text-white rounded-xl font-medium hover:bg-brand-600 transition-colors"
+            >
+              {t('team.startAssessing')}
+            </button>
+          </>
+        )}
+
+        {/* Phase: assessing — timer + progress + reveal button */}
+        {sessionPhase === 'assessing' && (
+          <>
+            <p className="text-xs font-medium text-brand-500 uppercase tracking-wider self-start">{t('team.phase.assessing')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 self-start">
+              {completedCount}/{entries.length} {t('team.participants')} done
+            </p>
+            <FacilitatorTimer onTimerStart={writeTimer} onTimerStop={clearSessionTimer} />
+            <button
+              onClick={() => advancePhase('revealed')}
+              className="w-full py-2.5 bg-brand-500 text-white rounded-xl font-medium hover:bg-brand-600 transition-colors"
+            >
+              {t('team.reveal')}
+            </button>
+          </>
+        )}
+
         <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">
           {t('common.back')}
         </button>
@@ -336,12 +405,16 @@ export default function TeamSession({
         </div>
       )
     }
+    const timerBar = sessionTimer
+      ? <ParticipantTimerBar startedAt={sessionTimer.startedAt} durationSecs={sessionTimer.durationSecs} />
+      : null
     const phaseBadge = (key: string) => (
       <p className="text-xs font-medium text-brand-500 uppercase tracking-wider mb-2">{t(key)}</p>
     )
     if (sessionPhase === 'ranking') {
       return (
         <div>
+          {timerBar}
           {phaseBadge('team.phase.ranking')}
           <RankingBoard
             motivators={motivators}
@@ -356,6 +429,7 @@ export default function TeamSession({
     }
     return (
       <div>
+        {timerBar}
         {phaseBadge('team.phase.assessing')}
         <ChangeAssessment
           motivators={motivators}
