@@ -109,6 +109,14 @@
       "ranking": "Ordena tus motivadores",
       "assessing": "Evalúa el cambio",
       "revealed": "Resultados del equipo"
+    },
+    "startRanking": "Iniciar clasificación",
+    "startAssessing": "Iniciar evaluación",
+    "timer": {
+      "start": "Iniciar",
+      "pause": "Pausar",
+      "reset": "Reiniciar",
+      "timeUp": "Tiempo agotado — por favor envía"
     }
   },
   "motivators": {
