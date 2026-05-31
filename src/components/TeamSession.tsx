@@ -31,15 +31,126 @@ function generatePin(): string {
   return String(Math.floor(1000 + Math.random() * 9000))
 }
 
+// ── Individual Comparison Grid ─────────────────────────────────────────────
+const MOTIVATOR_ORDER: MotivatorId[] = [
+  'curiosity', 'honor', 'acceptance', 'mastery', 'power',
+  'freedom', 'relatedness', 'order', 'goal', 'status',
+]
+
+function IndividualComparisonGrid({
+  entries,
+  isHost,
+}: {
+  entries: [string, FirebaseParticipant][]
+  isHost: boolean
+}) {
+  const { t } = useTranslation()
+  const [anonymize, setAnonymize] = useState(false)
+
+  // Compute average rank per motivator across all participants
+  const avgRank: Record<string, number> = {}
+  for (const id of MOTIVATOR_ORDER) {
+    const ranks = entries.map(([, p]) => p.motivators?.find(m => m.id === id)?.rank ?? 5)
+    avgRank[id] = ranks.reduce((s, r) => s + r, 0) / ranks.length
+  }
+
+  const sortedMotivators = [...MOTIVATOR_ORDER].sort((a, b) => avgRank[a] - avgRank[b])
+
+  return (
+    <div className="flex flex-col gap-3">
+      {isHost && (
+        <div className="flex justify-end">
+          <button
+            onClick={() => setAnonymize(a => !a)}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+              anonymize
+                ? 'bg-brand-500 text-white border-brand-500'
+                : 'text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-600 hover:border-brand-400 dark:hover:border-brand-500'
+            }`}
+          >
+            {anonymize ? t('team.comparison.deanonymize') : t('team.comparison.anonymize')}
+          </button>
+        </div>
+      )}
+      <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-800">
+        <table className="w-full text-xs border-collapse">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-800">
+              <th className="text-left px-3 py-2 font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap sticky left-0 bg-gray-50 dark:bg-gray-800">
+                Motivator
+              </th>
+              {entries.map(([id, p], i) => (
+                <th key={id} className="text-center px-2 py-2 font-medium text-gray-700 dark:text-gray-300 max-w-[80px]">
+                  <span className="block truncate max-w-[72px]">
+                    {anonymize ? `P${i + 1}` : p.name}
+                  </span>
+                </th>
+              ))}
+              <th className="text-center px-2 py-2 font-medium text-gray-400 dark:text-gray-500">Avg</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedMotivators.map((id, rowIdx) => {
+              const meta = getMotivatorMeta(id)
+              const avg = avgRank[id]
+              return (
+                <tr
+                  key={id}
+                  className={rowIdx % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/50 dark:bg-gray-800/50'}
+                >
+                  <td className={`px-3 py-2 whitespace-nowrap sticky left-0 ${rowIdx % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/70'}`}>
+                    <span className="mr-1">{meta.emoji}</span>
+                    <span className={`font-medium ${meta.textColor}`}>{t(`motivators.${id}.name`)}</span>
+                  </td>
+                  {entries.map(([pId, p]) => {
+                    const item = p.motivators?.find(m => m.id === id)
+                    const rank = item?.rank
+                    const isTop3 = rank !== undefined && rank <= 3
+                    const isBottom3 = rank !== undefined && rank >= 8
+                    const delta = rank !== undefined ? avg - rank : 0
+                    const badge = delta >= 2 ? '↑' : delta <= -2 ? '↓' : ''
+                    const cellCls = isTop3
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                      : isBottom3
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                      : 'text-gray-600 dark:text-gray-400'
+                    return (
+                      <td key={pId} className="text-center px-2 py-1.5">
+                        <span className={`inline-flex items-center justify-center w-9 h-7 rounded-lg font-mono font-semibold ${cellCls}`}>
+                          {rank ?? '—'}
+                          {badge && <span className="text-[10px] ml-0.5 opacity-80">{badge}</span>}
+                        </span>
+                      </td>
+                    )
+                  })}
+                  <td className="text-center px-2 py-1.5 font-mono text-gray-400 dark:text-gray-500">
+                    {avg.toFixed(1)}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[11px] text-gray-400 dark:text-gray-600 leading-relaxed">
+        Green = top 3 · Red = bottom 3 · ↑↓ = ≥2 ranks from average
+      </p>
+    </div>
+  )
+}
+
 // ── Team Results View ──────────────────────────────────────────────────────
 function TeamResultsView({
   participants,
   onBack,
+  isHost,
 }: {
   participants: Record<string, FirebaseParticipant>
   onBack: () => void
+  isHost: boolean
 }) {
   const { t } = useTranslation()
+  const [showComparison, setShowComparison] = useState(false)
   const entries = Object.entries(participants).filter(([, p]) => p.completed && p.motivators)
 
   if (entries.length === 0) {
@@ -117,6 +228,22 @@ function TeamResultsView({
       {/* Overlap analysis: top-3 motivators by frequency */}
       {entries.length > 1 && (
         <OverlapPanel entries={entries} />
+      )}
+
+      {/* Individual comparison grid toggle */}
+      {entries.length > 1 && (
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={() => setShowComparison(s => !s)}
+            className="flex items-center justify-between w-full text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 hover:border-brand-400 dark:hover:border-brand-500 transition-colors"
+          >
+            <span>{showComparison ? t('team.comparison.hide') : t('team.comparison.show')}</span>
+            <span className="text-gray-400 dark:text-gray-600">{showComparison ? '▲' : '▼'}</span>
+          </button>
+          {showComparison && (
+            <IndividualComparisonGrid entries={entries} isHost={isHost} />
+          )}
+        </div>
       )}
     </div>
   )
@@ -448,6 +575,7 @@ export default function TeamSession({
   if (screen === 'team-results') {
     // Host: participants already loaded via listener
     // Participant: build a fake entry from their own data
+    const isHostView = Object.keys(participants).length > 0 && !participantId
     const displayParticipants: Record<string, FirebaseParticipant> =
       Object.keys(participants).length > 0
         ? participants
@@ -455,7 +583,7 @@ export default function TeamSession({
         ? { [participantId]: { name: name || 'You', completed: true, motivators, change } }
         : {}
 
-    return <TeamResultsView participants={displayParticipants} onBack={onBack} />
+    return <TeamResultsView participants={displayParticipants} onBack={onBack} isHost={isHostView} />
   }
 
   return null

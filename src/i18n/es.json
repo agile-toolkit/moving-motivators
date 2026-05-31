@@ -117,6 +117,12 @@
       "pause": "Pausar",
       "reset": "Reiniciar",
       "timeUp": "Tiempo agotado — por favor envía"
+    },
+    "comparison": {
+      "show": "Mostrar Rankings Individuales",
+      "hide": "Ocultar Rankings Individuales",
+      "anonymize": "Anonimizar Nombres",
+      "deanonymize": "Mostrar Nombres"
     }
   },
   "motivators": {

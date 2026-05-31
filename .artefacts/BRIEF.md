@@ -25,6 +25,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Solo motivator shift tracking — writes `moving-motivators:sessionHistory` (last 5 sessions) on solo-results transition; collapsible "How have your motivators shifted?" panel in ResultsView shows previous vs current ranked rows with ↑↓ delta arrows, green/red for ≥3 position moves (issue #21)
 - [x] Change Planner integration (Moving Motivators side) — "Assess in Change Planner" button in ResultsView encodes motivator snapshot (ranked order + change directions + change text) as base64 JSON in `?mm_snapshot=` URL param and opens Change Planner; reads `?change=` URL param on load to pre-fill change description and skip to ranking screen (issue #22, MM side)
 - [x] Facilitator timer for team sessions — phase-aware host controls (Start Ranking → Start Assessing → Reveal); `FacilitatorTimer.tsx` with circular SVG progress ring, 3/5/8 min presets + custom input, Web Audio API beep on completion, start/pause/reset; timer start time synced to Firebase so participants see a thin progress bar (`ParticipantTimerBar.tsx`) without countdown numbers (issue #20)
+- [x] Side-by-side individual comparison in team sessions — toggle below aggregate revealed view; motivator×participant grid sorted by aggregate rank; green top-3 / red bottom-3 color coding; ↑↓ badges for ranks ≥2 from average; host-controlled anonymization (P1/P2); legend line; all 4 locale keys under `team.comparison.*` (issue #19)
 
 ## localStorage keys
 
@@ -45,7 +46,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
 - [ ] [#18] Feature: team session history — view past revealed sessions
-- [ ] [#19] Feature: side-by-side individual comparison in team sessions
+- [x] [#19] Feature: side-by-side individual comparison in team sessions — implemented 2026-05-31
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
 - [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
@@ -56,6 +57,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-05-31 — feat: side-by-side individual comparison in team sessions (issue #19)
+- Done: added `IndividualComparisonGrid` component to `TeamSession.tsx` — table with motivator rows (sorted by aggregate rank average), participant columns, rank cells color-coded green (top 3) / red (bottom 3) / neutral, ↑↓ outlier badges for ranks ≥2 from average, host-only anonymize toggle (P1/P2/etc); added toggle button ("Show/Hide Individual Rankings") below OverlapPanel in `TeamResultsView`; passed `isHost` prop (true when Firebase participants loaded and viewer is not a participant); added `team.comparison.show/hide/anonymize/deanonymize` i18n keys to all 4 locales
+- Remaining approved issues: #14 (Sprint Metrics integration), #12 (PWA offline), #11 (QR code sharing), #10 (Work Profiles integration)
+- Next task: check issues for human feedback; implement #14 (Sprint Metrics integration — write moving-motivators:motivationSnapshot localStorage key from team revealed results)
 
 ### 2026-05-30 — feat: facilitator timer for team sessions (issue #20)
 - Done: created `FacilitatorTimer.tsx` — circular SVG progress ring (120px/stroke-8), 3/5/8 min presets + custom minute input, start/pause/reset controls, Web Audio API beep on completion, animates red when <20% remaining; created `ParticipantTimerBar.tsx` — thin 1.5px horizontal bar for participants (no countdown numbers) that reads timer start time from Firebase; updated `TeamSession.tsx`: host lobby is now phase-aware with "Start Ranking" → "Start Assessing" → "Reveal Results" progression, FacilitatorTimer shown during ranking and assessing phases; timer start/stop synced to Firebase under `sessions/{pin}/timer`; added `team.startRanking`, `team.startAssessing`, `team.timer.*` (start/pause/reset/timeUp) i18n keys to all 4 locales
