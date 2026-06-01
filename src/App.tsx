@@ -65,7 +65,7 @@ function App() {
   const isTeamScreen = ['team-host','team-join','team-play','team-results'].includes(screen)
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
+    <div data-accent="coral" className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
       <AppHeader title={t('app.title')} onTitleClick={reset}><ThemeToggle /></AppHeader>
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
