@@ -153,6 +153,16 @@ function TeamResultsView({
   const [showComparison, setShowComparison] = useState(false)
   const entries = Object.entries(participants).filter(([, p]) => p.completed && p.motivators)
 
+  const handleSendToSprintMetrics = () => {
+    const raw = localStorage.getItem('moving-motivators:motivationSnapshot')
+    if (!raw) return
+    window.open(
+      `https://agile-toolkit.github.io/sprint-metrics/?mm=${btoa(raw)}`,
+      '_blank',
+      'noopener,noreferrer',
+    )
+  }
+
   if (entries.length === 0) {
     return (
       <div className="flex flex-col items-center gap-6 pt-12 text-gray-400 dark:text-gray-600">
@@ -244,6 +254,17 @@ function TeamResultsView({
             <IndividualComparisonGrid entries={entries} isHost={isHost} />
           )}
         </div>
+      )}
+
+      {/* Send to Sprint Metrics */}
+      {isHost && localStorage.getItem('moving-motivators:motivationSnapshot') && (
+        <button
+          onClick={handleSendToSprintMetrics}
+          className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-brand-200 dark:border-brand-800 text-brand-600 dark:text-brand-400 text-sm font-medium hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
+        >
+          <span>📊</span>
+          <span>{t('team.sendToSprintMetrics')}</span>
+        </button>
       )}
     </div>
   )
@@ -406,7 +427,26 @@ export default function TeamSession({
     clearSessionTimer()
     set(ref(db, `sessions/${pin}/phase`), next)
     setSessionPhase(next)
-    if (next === 'revealed') setScreen('team-results')
+    if (next === 'revealed') {
+      const completedEntries = Object.values(participants).filter(p => p.completed && p.motivators)
+      if (completedEntries.length > 0) {
+        const avgRank: Record<string, number> = {}
+        for (const id of MOTIVATOR_ORDER) {
+          const ranks = completedEntries.map(p => p.motivators!.find(m => m.id === id)?.rank ?? 5)
+          avgRank[id] = ranks.reduce((s, r) => s + r, 0) / ranks.length
+        }
+        const topMotivators = [...MOTIVATOR_ORDER]
+          .sort((a, b) => avgRank[a] - avgRank[b])
+          .slice(0, 3)
+        localStorage.setItem('moving-motivators:motivationSnapshot', JSON.stringify({
+          teamName: pin,
+          date: new Date().toISOString().slice(0, 10),
+          topMotivators,
+          participantCount: completedEntries.length,
+        }))
+      }
+      setScreen('team-results')
+    }
   }
 
   // ── HOST lobby ─────────────────────────────────────────────────────────
