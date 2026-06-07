@@ -26,6 +26,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Change Planner integration (Moving Motivators side) — "Assess in Change Planner" button in ResultsView encodes motivator snapshot (ranked order + change directions + change text) as base64 JSON in `?mm_snapshot=` URL param and opens Change Planner; reads `?change=` URL param on load to pre-fill change description and skip to ranking screen (issue #22, MM side)
 - [x] Facilitator timer for team sessions — phase-aware host controls (Start Ranking → Start Assessing → Reveal); `FacilitatorTimer.tsx` with circular SVG progress ring, 3/5/8 min presets + custom input, Web Audio API beep on completion, start/pause/reset; timer start time synced to Firebase so participants see a thin progress bar (`ParticipantTimerBar.tsx`) without countdown numbers (issue #20)
 - [x] Side-by-side individual comparison in team sessions — toggle below aggregate revealed view; motivator×participant grid sorted by aggregate rank; green top-3 / red bottom-3 color coding; ↑↓ badges for ranks ≥2 from average; host-controlled anonymization (P1/P2); legend line; all 4 locale keys under `team.comparison.*` (issue #19)
+- [x] Sprint Metrics integration — writes `moving-motivators:motivationSnapshot` to localStorage when host reveals team session (top 3 motivators by aggregate rank, participant count, date, PIN as team name); "Send to Sprint Metrics" button in TeamResultsView encodes snapshot as base64 and opens Sprint Metrics with `?mm=<base64>` URL param; i18n key `team.sendToSprintMetrics` in all 4 locales (issue #14)
 
 ## localStorage keys
 
@@ -33,6 +34,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 |-----|-----------|-------|
 | `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
 | `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 5 | `Array<{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
+| `moving-motivators:motivationSnapshot` | `TeamSession.tsx` `advancePhase('revealed')` — written by host when revealing team session results | `{ teamName: string (PIN), date: "YYYY-MM-DD", topMotivators: MotivatorId[3], participantCount: number }` |
 
 ## Backlog
 
@@ -42,7 +44,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#11] Feature: QR code sharing for team sessions
 - [ ] [#12] Feature: PWA / offline support for workshop use
 - [ ] [#13] Feature: print / PDF export of results
-- [ ] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export)
+- [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
 - [ ] [#18] Feature: team session history — view past revealed sessions
@@ -57,6 +59,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-07 — feat: Sprint Metrics integration — motivationSnapshot localStorage + deep link (issue #14)
+- Done: in `TeamSession.tsx` `advancePhase('revealed')` — compute aggregate top 3 motivators by average rank across all completed participants, write `moving-motivators:motivationSnapshot` to localStorage (`{teamName: pin, date, topMotivators: MotivatorId[3], participantCount}`); added "Send to Sprint Metrics" button in `TeamResultsView` (host-only, visible only when snapshot present) — encodes snapshot as base64 JSON, opens Sprint Metrics with `?mm=<base64>`; added `team.sendToSprintMetrics` i18n key to all 4 locales
+- Remaining approved issues: #34 (named session storage), #25 (dark theme — already done), #24 (header unify — done), #12 (PWA offline), #11 (QR sharing), #10 (Work Profiles integration), #17 (keyboard a11y — done), #9 (locales — done)
+- Next task: check issues for human feedback; implement #34 (named session storage — "Save as…" button in ResultsView, label field on sessionHistory entries, cap at 20, restore to editable board)
 
 ### 2026-05-31 — feat: side-by-side individual comparison in team sessions (issue #19)
 - Done: added `IndividualComparisonGrid` component to `TeamSession.tsx` — table with motivator rows (sorted by aggregate rank average), participant columns, rank cells color-coded green (top 3) / red (bottom 3) / neutral, ↑↓ outlier badges for ranks ≥2 from average, host-only anonymize toggle (P1/P2/etc); added toggle button ("Show/Hide Individual Rankings") below OverlapPanel in `TeamResultsView`; passed `isHost` prop (true when Firebase participants loaded and viewer is not a participant); added `team.comparison.show/hide/anonymize/deanonymize` i18n keys to all 4 locales

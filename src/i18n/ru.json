@@ -123,7 +123,8 @@
       "hide": "Скрыть индивидуальные рейтинги",
       "anonymize": "Анонимизировать",
       "deanonymize": "Показать имена"
-    }
+    },
+    "sendToSprintMetrics": "Отправить в Sprint Metrics"
   },
   "motivators": {
     "curiosity": {
