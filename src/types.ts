@@ -29,6 +29,7 @@ export interface SessionParticipant {
 }
 
 export interface SessionEntry {
+  label?: string
   date: string
   savedAt: number
   ranked: MotivatorId[]

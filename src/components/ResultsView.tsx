@@ -9,6 +9,7 @@ interface Props {
   change: string
   onReset: () => void
   onInfo?: (id: MotivatorId) => void
+  onRestore: (entry: SessionEntry) => void
 }
 
 function ImpactGroup({ items, label, colorClass, onInfo }: {
@@ -144,13 +145,14 @@ function InterpretationPanel({ motivators, change, onInfo }: {
   )
 }
 
-function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
+function SessionShiftPanel({ current, history, onRestore }: {
+  current: MotivatorItem[]
+  history: SessionEntry[]
+  onRestore: (entry: SessionEntry) => void
+}) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
-  const history: SessionEntry[] = JSON.parse(
-    localStorage.getItem('moving-motivators:sessionHistory') || '[]'
-  )
   if (history.length < 2) return null
 
   const previous = history[1]
@@ -177,7 +179,7 @@ function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
           {/* Previous session row */}
           <div>
             <p className="text-xs font-medium text-gray-400 dark:text-gray-600 mb-2">
-              {t('results.history')} · {previous.date}
+              {t('results.history')} · {previous.label || previous.date}
               {previous.change && <span className="ml-1 italic">"{previous.change}"</span>}
             </p>
             <div className="overflow-x-auto">
@@ -203,7 +205,7 @@ function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
           {/* Current session row with delta arrows */}
           <div>
             <p className="text-xs font-medium text-gray-400 dark:text-gray-600 mb-2">
-              {currentSorted[0] && history[0]?.date}
+              {currentSorted[0] && history[0]?.label || history[0]?.date}
             </p>
             <div className="overflow-x-auto">
               <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
@@ -234,6 +236,40 @@ function SessionShiftPanel({ current }: { current: MotivatorItem[] }) {
               </div>
             </div>
           </div>
+
+          {/* History list with restore */}
+          <hr className="border-gray-100 dark:border-gray-800" />
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide mb-1">
+              {t('results.sessionHistory')}
+            </p>
+            {history.slice(1).map(entry => (
+              <div
+                key={entry.savedAt}
+                className="flex items-center justify-between gap-3 py-2 border-b border-gray-50 dark:border-gray-800 last:border-0"
+              >
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">
+                    {entry.label || entry.date}
+                  </span>
+                  {entry.label && (
+                    <span className="text-xs text-gray-400 dark:text-gray-600">{entry.date}</span>
+                  )}
+                  {entry.change && (
+                    <span className="text-xs text-gray-400 dark:text-gray-600 truncate italic">
+                      "{entry.change}"
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={() => onRestore(entry)}
+                  className="shrink-0 px-3 py-1 text-xs font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
+                >
+                  {t('results.restore')}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -253,11 +289,18 @@ function buildMmSnapshot(motivators: MotivatorItem[], change: string): string {
   return btoa(encodeURIComponent(JSON.stringify(snapshot)))
 }
 
-export default function ResultsView({ motivators, change, onReset, onInfo }: Props) {
+export default function ResultsView({ motivators, change, onReset, onInfo, onRestore }: Props) {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const [copying, setCopying] = useState(false)
+  const [history, setHistory] = useState<SessionEntry[]>(() =>
+    JSON.parse(localStorage.getItem('moving-motivators:sessionHistory') || '[]')
+  )
+  const [saveAsEditing, setSaveAsEditing] = useState(false)
+  const [saveAsValue, setSaveAsValue] = useState('')
+
   const sorted = [...motivators].sort((a, b) => a.rank - b.rank)
+  const currentLabel = history[0]?.label
 
   async function handleShare() {
     if (!containerRef.current || copying) return
@@ -282,6 +325,19 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
     const snapshot = buildMmSnapshot(motivators, change)
     window.open(`${CHANGE_PLANNER_URL}?mm_snapshot=${snapshot}`, '_blank', 'noopener')
   }
+
+  function commitSaveAs() {
+    const label = saveAsValue.trim()
+    if (!label) return
+    const updated = history.length > 0
+      ? [{ ...history[0], label }, ...history.slice(1)]
+      : history
+    setHistory(updated)
+    localStorage.setItem('moving-motivators:sessionHistory', JSON.stringify(updated))
+    setSaveAsEditing(false)
+    setSaveAsValue('')
+  }
+
   const positives = sorted.filter(m => m.impact === 'positive')
   const negatives = sorted.filter(m => m.impact === 'negative')
   const neutrals  = sorted.filter(m => m.impact === 'neutral')
@@ -337,7 +393,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
 
       {/* Session shift panel */}
-      <SessionShiftPanel current={motivators} />
+      <SessionShiftPanel current={motivators} history={history} onRestore={onRestore} />
 
       {/* Insight hint */}
       {change && negatives.length > 0 && (
@@ -346,23 +402,67 @@ export default function ResultsView({ motivators, change, onReset, onInfo }: Pro
         </p>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
-          ↩ {t('results.startOver')}
-        </button>
-        <button
-          onClick={handleShare}
-          disabled={copying}
-          className="px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
-        >
-          {copying ? '…' : `📋 ${t('results.share')}`}
-        </button>
-        <button
-          onClick={handleExportToChangePlanner}
-          className="px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-        >
-          🔗 {t('results.exportToChangePlanner')}
-        </button>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap gap-3">
+          <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
+            ↩ {t('results.startOver')}
+          </button>
+          <button
+            onClick={handleShare}
+            disabled={copying}
+            className="px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
+          >
+            {copying ? '…' : `📋 ${t('results.share')}`}
+          </button>
+          <button
+            onClick={handleExportToChangePlanner}
+            className="px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+          >
+            🔗 {t('results.exportToChangePlanner')}
+          </button>
+          {currentLabel ? (
+            <span className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+              🏷️ {currentLabel}
+            </span>
+          ) : !saveAsEditing ? (
+            <button
+              onClick={() => setSaveAsEditing(true)}
+              className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
+            >
+              🏷️ {t('results.saveAs')}
+            </button>
+          ) : null}
+        </div>
+
+        {saveAsEditing && (
+          <div className="flex gap-2 items-center flex-wrap">
+            <input
+              type="text"
+              value={saveAsValue}
+              onChange={e => setSaveAsValue(e.target.value)}
+              placeholder={t('results.saveAsPlaceholder')}
+              autoFocus
+              className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-[200px]"
+              onKeyDown={e => {
+                if (e.key === 'Enter') commitSaveAs()
+                if (e.key === 'Escape') { setSaveAsEditing(false); setSaveAsValue('') }
+              }}
+            />
+            <button
+              onClick={commitSaveAs}
+              disabled={!saveAsValue.trim()}
+              className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+            >
+              {t('results.saveAsSave')}
+            </button>
+            <button
+              onClick={() => { setSaveAsEditing(false); setSaveAsValue('') }}
+              className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            >
+              ✕
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

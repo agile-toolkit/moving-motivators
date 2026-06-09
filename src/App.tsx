@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { Screen, MotivatorItem, MotivatorId } from './types'
+import type { Screen, MotivatorItem, MotivatorId, SessionEntry, ImpactLevel } from './types'
 import { defaultMotivatorItems } from './data/motivators'
 import AppHeader from './components/AppHeader'
 import ThemeToggle from './components/ThemeToggle'
@@ -42,6 +42,17 @@ function App() {
     setScreen('home')
   }
 
+  const restoreSession = (entry: SessionEntry) => {
+    const restored: MotivatorItem[] = entry.ranked.map((id, i) => ({
+      id: id as MotivatorId,
+      rank: i + 1,
+      impact: ((entry.changes[id] as ImpactLevel) || 'neutral'),
+    }))
+    setMotivators(restored)
+    setChange(entry.change || '')
+    setScreen('solo-rank')
+  }
+
   const goToSoloResults = () => {
     const ranked = [...motivators].sort((a, b) => a.rank - b.rank).map(m => m.id)
     const changes: Record<string, string> = {}
@@ -57,7 +68,7 @@ function App() {
     const existing = JSON.parse(localStorage.getItem('moving-motivators:sessionHistory') || '[]')
     localStorage.setItem(
       'moving-motivators:sessionHistory',
-      JSON.stringify([session, ...existing].slice(0, 5))
+      JSON.stringify([session, ...existing].slice(0, 20))
     )
     setScreen('solo-results')
   }
@@ -107,6 +118,7 @@ function App() {
             change={change}
             onReset={reset}
             onInfo={setInfoMotivator}
+            onRestore={restoreSession}
           />
         )}
         {isTeamScreen && (

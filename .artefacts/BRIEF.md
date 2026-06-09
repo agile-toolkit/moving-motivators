@@ -27,13 +27,14 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Facilitator timer for team sessions — phase-aware host controls (Start Ranking → Start Assessing → Reveal); `FacilitatorTimer.tsx` with circular SVG progress ring, 3/5/8 min presets + custom input, Web Audio API beep on completion, start/pause/reset; timer start time synced to Firebase so participants see a thin progress bar (`ParticipantTimerBar.tsx`) without countdown numbers (issue #20)
 - [x] Side-by-side individual comparison in team sessions — toggle below aggregate revealed view; motivator×participant grid sorted by aggregate rank; green top-3 / red bottom-3 color coding; ↑↓ badges for ranks ≥2 from average; host-controlled anonymization (P1/P2); legend line; all 4 locale keys under `team.comparison.*` (issue #19)
 - [x] Sprint Metrics integration — writes `moving-motivators:motivationSnapshot` to localStorage when host reveals team session (top 3 motivators by aggregate rank, participant count, date, PIN as team name); "Send to Sprint Metrics" button in TeamResultsView encodes snapshot as base64 and opens Sprint Metrics with `?mm=<base64>` URL param; i18n key `team.sendToSprintMetrics` in all 4 locales (issue #14)
+- [x] Named session storage — "Save as…" button in ResultsView labels the current session in sessionHistory; label shown in SessionShiftPanel history list; each history entry has optional `label?: string` field; Restore button re-populates ranking board from any history entry; history cap increased from 5 to 20 (issue #34)
 
 ## localStorage keys
 
 | Key | Written by | Shape |
 |-----|-----------|-------|
 | `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
-| `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 5 | `Array<{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
+| `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 20 | `Array<{ label?: string, date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
 | `moving-motivators:motivationSnapshot` | `TeamSession.tsx` `advancePhase('revealed')` — written by host when revealing team session results | `{ teamName: string (PIN), date: "YYYY-MM-DD", topMotivators: MotivatorId[3], participantCount: number }` |
 
 ## Backlog
@@ -59,6 +60,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-09 — feat: named session storage — Save as…, Restore, history cap 20 (issue #34)
+- Done: added `label?: string` to `SessionEntry` in `types.ts`; in `App.tsx` increased history cap from 5→20 and added `restoreSession()` — reconstructs `MotivatorItem[]` from `SessionEntry.ranked`+`changes`, sets state, navigates to `solo-rank`; in `ResultsView.tsx` — local `history` state synced with localStorage, "🏷️ Save as…" button shows inline input to label the current session (updates `history[0].label`, persists to localStorage), label displayed after save; `SessionShiftPanel` now accepts `history`+`onRestore` props — history list (previous sessions) with per-entry Restore button shown below shift comparison; labels shown in both shift comparison header and history list, fallback to date; all 4 locales updated with `saveAs`, `saveAsPlaceholder`, `saveAsSave`, `restore`, `sessionHistory` keys
+- Remaining: check issues for human feedback; next approved items: #12 (PWA offline), #11 (QR sharing), #10 (Work Profiles integration)
+- Next task: check issues for human feedback; implement next approved item among #12 (PWA offline), #11 (QR sharing), #10 (Work Profiles integration)
 
 ### 2026-06-07 — feat: Sprint Metrics integration — motivationSnapshot localStorage + deep link (issue #14)
 - Done: in `TeamSession.tsx` `advancePhase('revealed')` — compute aggregate top 3 motivators by average rank across all completed participants, write `moving-motivators:motivationSnapshot` to localStorage (`{teamName: pin, date, topMotivators: MotivatorId[3], participantCount}`); added "Send to Sprint Metrics" button in `TeamResultsView` (host-only, visible only when snapshot present) — encodes snapshot as base64 JSON, opens Sprint Metrics with `?mm=<base64>`; added `team.sendToSprintMetrics` i18n key to all 4 locales
