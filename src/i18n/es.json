@@ -52,6 +52,11 @@
     "history": "Sesión anterior",
     "shift": "¿Cómo han cambiado tus motivadores?",
     "exportToChangePlanner": "Evaluar en Change Planner",
+    "saveAs": "Guardar como…",
+    "saveAsPlaceholder": "Nombre de la sesión…",
+    "saveAsSave": "Guardar",
+    "restore": "Restaurar",
+    "sessionHistory": "Historial de sesiones",
     "interpretation": {
       "topTitle": "Lo que más te impulsa",
       "topDesc": "Tus principales motivadores son tus impulsores esenciales. Los cambios que los amenazan se sentirán profundamente incómodos — incluso si el cambio es objetivamente positivo. Presta mucha atención a estos en cualquier conversación sobre este cambio.",
