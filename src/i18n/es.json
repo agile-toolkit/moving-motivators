@@ -213,5 +213,8 @@
     "back": "Atrás",
     "close": "Cerrar",
     "learnMore": "Más información"
+  },
+  "pwa": {
+    "offlineBanner": "Estás sin conexión — solo modo individual"
   }
 }

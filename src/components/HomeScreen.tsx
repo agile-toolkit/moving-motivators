@@ -7,13 +7,14 @@ interface Props {
   onHost: () => void
   onJoin: () => void
   onFacilitation: () => void
+  isOnline?: boolean
 }
 
 const ABOUT_DISMISSED_KEY = 'mm_about_dismissed'
 
-export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation }: Props) {
+export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isOnline = true }: Props) {
   const { t } = useTranslation()
-  const firebaseReady = isFirebaseConfigured()
+  const firebaseReady = isFirebaseConfigured() && isOnline
   const [aboutOpen, setAboutOpen] = useState(
     () => localStorage.getItem(ABOUT_DISMISSED_KEY) !== '1'
   )

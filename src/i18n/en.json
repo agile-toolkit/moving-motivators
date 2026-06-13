@@ -213,5 +213,8 @@
     "back": "Back",
     "close": "Close",
     "learnMore": "Learn more"
+  },
+  "pwa": {
+    "offlineBanner": "You're offline — solo mode only"
   }
 }

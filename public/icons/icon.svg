@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#FF6B5B"/>
+  <!-- Ranked cards stack: tallest on left (rank 1), descending right -->
+  <rect x="64" y="152" width="80" height="208" rx="12" fill="white" opacity="0.95"/>
+  <rect x="168" y="192" width="80" height="168" rx="12" fill="white" opacity="0.90"/>
+  <rect x="272" y="232" width="80" height="128" rx="12" fill="white" opacity="0.85"/>
+  <rect x="376" y="272" width="72" height="88" rx="12" fill="white" opacity="0.80"/>
+  <!-- Rank dots -->
+  <circle cx="104" cy="192" r="10" fill="#FF6B5B"/>
+  <circle cx="208" cy="232" r="10" fill="#FF6B5B"/>
+  <circle cx="312" cy="272" r="10" fill="#FF6B5B"/>
+  <circle cx="412" cy="312" r="10" fill="#FF6B5B"/>
+</svg>
