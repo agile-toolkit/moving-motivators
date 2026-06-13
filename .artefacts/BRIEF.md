@@ -28,6 +28,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Side-by-side individual comparison in team sessions — toggle below aggregate revealed view; motivator×participant grid sorted by aggregate rank; green top-3 / red bottom-3 color coding; ↑↓ badges for ranks ≥2 from average; host-controlled anonymization (P1/P2); legend line; all 4 locale keys under `team.comparison.*` (issue #19)
 - [x] Sprint Metrics integration — writes `moving-motivators:motivationSnapshot` to localStorage when host reveals team session (top 3 motivators by aggregate rank, participant count, date, PIN as team name); "Send to Sprint Metrics" button in TeamResultsView encodes snapshot as base64 and opens Sprint Metrics with `?mm=<base64>` URL param; i18n key `team.sendToSprintMetrics` in all 4 locales (issue #14)
 - [x] Named session storage — "Save as…" button in ResultsView labels the current session in sessionHistory; label shown in SessionShiftPanel history list; each history entry has optional `label?: string` field; Restore button re-populates ranking board from any history entry; history cap increased from 5 to 20 (issue #34)
+- [x] PWA / offline support — `vite-plugin-pwa` with `generateSW` strategy; service worker caches app shell + fonts; offline banner shown app-wide when network drops; team session buttons disabled when offline; Web App Manifest with coral theme and SVG icon (issue #12)
 
 ## localStorage keys
 
@@ -43,7 +44,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#9] Feature: ES + BE locale support (suite standard) — implemented 2026-05-01
 - [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
 - [ ] [#11] Feature: QR code sharing for team sessions
-- [ ] [#12] Feature: PWA / offline support for workshop use
+- [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
 - [ ] [#13] Feature: print / PDF export of results
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
@@ -60,6 +61,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-13 — feat: PWA / offline support (issue #12)
+- Done: installed `vite-plugin-pwa@1.3.0`; updated `vite.config.ts` with `VitePWA({ registerType: 'autoUpdate', generateSW })` — caches app shell + static assets + Google Fonts (CacheFirst, 365d TTL); Web App Manifest (`dist/manifest.webmanifest`) with name, short_name, coral theme_color `#FF6B5B`, `display: standalone`, `start_url/scope: /moving-motivators/`, SVG icon at `public/icons/icon.svg`; added `useOnlineStatus()` hook in `App.tsx` (listens to `window online/offline` events); offline amber banner shown below header when offline (`pwa.offlineBanner` i18n key in all 4 locales); `HomeScreen` accepts `isOnline` prop and short-circuits `firebaseReady` to false when offline, gracefully disabling team session buttons
+- Remaining approved: #11 (QR code sharing), #10 (Work Profiles integration)
+- Next task: check issues for human feedback; implement #11 (QR code sharing for team sessions — qrcode.react or qrjs2 library, QR code overlay in team lobby showing join URL with PIN pre-filled, visible to host)
 
 ### 2026-06-09 — feat: named session storage — Save as…, Restore, history cap 20 (issue #34)
 - Done: added `label?: string` to `SessionEntry` in `types.ts`; in `App.tsx` increased history cap from 5→20 and added `restoreSession()` — reconstructs `MotivatorItem[]` from `SessionEntry.ranked`+`changes`, sets state, navigates to `solo-rank`; in `ResultsView.tsx` — local `history` state synced with localStorage, "🏷️ Save as…" button shows inline input to label the current session (updates `history[0].label`, persists to localStorage), label displayed after save; `SessionShiftPanel` now accepts `history`+`onRestore` props — history list (previous sessions) with per-entry Restore button shown below shift comparison; labels shown in both shift comparison header and history list, fallback to date; all 4 locales updated with `saveAs`, `saveAsPlaceholder`, `saveAsSave`, `restore`, `sessionHistory` keys

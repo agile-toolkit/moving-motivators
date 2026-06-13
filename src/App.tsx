@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+function useOnlineStatus(): boolean {
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine)
+  useEffect(() => {
+    const up = () => setIsOnline(true)
+    const down = () => setIsOnline(false)
+    window.addEventListener('online', up)
+    window.addEventListener('offline', down)
+    return () => { window.removeEventListener('online', up); window.removeEventListener('offline', down) }
+  }, [])
+  return isOnline
+}
 import type { Screen, MotivatorItem, MotivatorId, SessionEntry, ImpactLevel } from './types'
 import { defaultMotivatorItems } from './data/motivators'
 import AppHeader from './components/AppHeader'
@@ -23,6 +35,7 @@ function readChangeParam(): string {
 
 function App() {
   const { t } = useTranslation()
+  const isOnline = useOnlineStatus()
   const initialChange = readChangeParam()
   const [screen, setScreen] = useState<Screen>(initialChange ? 'solo-rank' : 'home')
   const [motivators, setMotivators] = useState<MotivatorItem[]>(defaultMotivatorItems())
@@ -79,6 +92,12 @@ function App() {
     <div data-accent="coral" className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
       <AppHeader title={t('app.title')} onTitleClick={reset}><ThemeToggle /></AppHeader>
 
+      {!isOnline && (
+        <div role="status" className="bg-amber-50 dark:bg-amber-950 border-b border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 text-sm text-center py-2 px-4">
+          {t('pwa.offlineBanner')}
+        </div>
+      )}
+
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
         {screen === 'home' && (
           <HomeScreen
@@ -86,6 +105,7 @@ function App() {
             onHost={() => setScreen('team-host')}
             onJoin={() => setScreen('team-join')}
             onFacilitation={() => setScreen('facilitation')}
+            isOnline={isOnline}
           />
         )}
         {screen === 'facilitation' && (
