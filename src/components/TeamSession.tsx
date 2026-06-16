@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ref, set, onValue, push, update } from 'firebase/database'
+import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
 import type { Screen, MotivatorItem, MotivatorId } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
@@ -18,6 +19,7 @@ interface Props {
   onChange: (s: string) => void
   onBack: () => void
   onInfo?: (id: MotivatorId) => void
+  initialJoinPin?: string
 }
 
 interface FirebaseParticipant {
@@ -332,10 +334,11 @@ export default function TeamSession({
   onChange,
   onBack,
   onInfo,
+  initialJoinPin = '',
 }: Props) {
   const { t } = useTranslation()
   const [pin, setPin] = useState('')
-  const [joinPin, setJoinPin] = useState('')
+  const [joinPin, setJoinPin] = useState(initialJoinPin)
   const [name, setName] = useState('')
   const [participantId, setParticipantId] = useState('')
   const [sessionPhase, setSessionPhase] = useState<'lobby' | 'ranking' | 'assessing' | 'revealed'>('lobby')
@@ -453,6 +456,7 @@ export default function TeamSession({
   if (screen === 'team-host') {
     const entries = Object.entries(participants)
     const completedCount = entries.filter(([, p]) => p.completed).length
+    const joinUrl = `${window.location.origin}${import.meta.env.BASE_URL}?join=${pin}`
 
     return (
       <div className="flex flex-col items-center gap-5 max-w-sm mx-auto pt-8">
@@ -463,6 +467,16 @@ export default function TeamSession({
             {pin}
           </div>
         </div>
+
+        {/* QR code — hidden on small screens (< 480px) where host's phone can't be shared) */}
+        {pin && (
+          <div className="hidden min-[480px]:flex flex-col items-center gap-2">
+            <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+              <QRCodeSVG value={joinUrl} size={140} level="M" />
+            </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500">{t('team.scanToJoin')}</p>
+          </div>
+        )}
 
         {/* Phase: lobby — waiting for participants */}
         {sessionPhase === 'lobby' && (

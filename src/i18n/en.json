@@ -129,7 +129,8 @@
       "anonymize": "Anonymize Names",
       "deanonymize": "Show Names"
     },
-    "sendToSprintMetrics": "Send to Sprint Metrics"
+    "sendToSprintMetrics": "Send to Sprint Metrics",
+    "scanToJoin": "Scan to join"
   },
   "motivators": {
     "curiosity": {

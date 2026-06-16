@@ -129,7 +129,8 @@
       "anonymize": "Anonimizar Nombres",
       "deanonymize": "Mostrar Nombres"
     },
-    "sendToSprintMetrics": "Enviar a Sprint Metrics"
+    "sendToSprintMetrics": "Enviar a Sprint Metrics",
+    "scanToJoin": "Escanear para unirse"
   },
   "motivators": {
     "curiosity": {
