@@ -29,6 +29,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Sprint Metrics integration — writes `moving-motivators:motivationSnapshot` to localStorage when host reveals team session (top 3 motivators by aggregate rank, participant count, date, PIN as team name); "Send to Sprint Metrics" button in TeamResultsView encodes snapshot as base64 and opens Sprint Metrics with `?mm=<base64>` URL param; i18n key `team.sendToSprintMetrics` in all 4 locales (issue #14)
 - [x] Named session storage — "Save as…" button in ResultsView labels the current session in sessionHistory; label shown in SessionShiftPanel history list; each history entry has optional `label?: string` field; Restore button re-populates ranking board from any history entry; history cap increased from 5 to 20 (issue #34)
 - [x] PWA / offline support — `vite-plugin-pwa` with `generateSW` strategy; service worker caches app shell + fonts; offline banner shown app-wide when network drops; team session buttons disabled when offline; Web App Manifest with coral theme and SVG icon (issue #12)
+- [x] QR code sharing for team sessions — `qrcode.react` `<QRCodeSVG>` rendered in host lobby showing join URL (`?join=<PIN>`); hidden on screens < 480px; `team.scanToJoin` i18n key in all 4 locales; App.tsx reads `?join=` URL param on load and auto-navigates to join screen with PIN pre-filled (issue #11)
 
 ## localStorage keys
 
@@ -43,7 +44,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 <!-- Agent: append `needs-review` research issues here as `- [ ] #N …` -->
 - [x] [#9] Feature: ES + BE locale support (suite standard) — implemented 2026-05-01
 - [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
-- [ ] [#11] Feature: QR code sharing for team sessions
+- [x] [#11] Feature: QR code sharing for team sessions — implemented 2026-06-16
 - [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
 - [ ] [#13] Feature: print / PDF export of results
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
@@ -61,6 +62,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-16 — feat: QR code sharing for team sessions (issue #11)
+- Done: installed `qrcode.react@4.2.0`; in `TeamSession.tsx` — imported `QRCodeSVG` and added `initialJoinPin` prop; QR code block (`<QRCodeSVG>`, 140px, level M) rendered in host lobby below PIN display, hidden on screens < 480px via `hidden min-[480px]:flex`; `joinUrl` = `window.location.origin + import.meta.env.BASE_URL + '?join=' + pin`; `team.scanToJoin` label below QR in all 4 locales (EN/ES/RU/BE); in `App.tsx` — added `readJoinParam()` helper, `initialJoinPin` state, if `?join=` param present initial screen is `team-join` and PIN pre-filled in join form via prop; URL params cleared after read
+- Remaining approved: #10 (Work Profiles integration — motivator snapshot)
+- Next task: check issues for human feedback; implement #10 (Work Profiles integration — export motivator snapshot to work-profiles:motivatorSnapshot localStorage key, or deep-link to Work Profiles with snapshot encoded in URL)
 
 ### 2026-06-13 — feat: PWA / offline support (issue #12)
 - Done: installed `vite-plugin-pwa@1.3.0`; updated `vite.config.ts` with `VitePWA({ registerType: 'autoUpdate', generateSW })` — caches app shell + static assets + Google Fonts (CacheFirst, 365d TTL); Web App Manifest (`dist/manifest.webmanifest`) with name, short_name, coral theme_color `#FF6B5B`, `display: standalone`, `start_url/scope: /moving-motivators/`, SVG icon at `public/icons/icon.svg`; added `useOnlineStatus()` hook in `App.tsx` (listens to `window online/offline` events); offline amber banner shown below header when offline (`pwa.offlineBanner` i18n key in all 4 locales); `HomeScreen` accepts `isOnline` prop and short-circuits `firebaseReady` to false when offline, gracefully disabling team session buttons

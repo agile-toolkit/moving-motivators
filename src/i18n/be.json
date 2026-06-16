@@ -129,7 +129,8 @@
       "anonymize": "Ананімізаваць",
       "deanonymize": "Паказаць імёны"
     },
-    "sendToSprintMetrics": "Адправіць у Sprint Metrics"
+    "sendToSprintMetrics": "Адправіць у Sprint Metrics",
+    "scanToJoin": "Сканаваць для далучэння"
   },
   "motivators": {
     "curiosity": {

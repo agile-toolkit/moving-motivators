@@ -33,17 +33,28 @@ function readChangeParam(): string {
   }
 }
 
+function readJoinParam(): string {
+  try {
+    return new URLSearchParams(window.location.search).get('join') ?? ''
+  } catch {
+    return ''
+  }
+}
+
 function App() {
   const { t } = useTranslation()
   const isOnline = useOnlineStatus()
   const initialChange = readChangeParam()
-  const [screen, setScreen] = useState<Screen>(initialChange ? 'solo-rank' : 'home')
+  const initialJoinPin = readJoinParam()
+  const [screen, setScreen] = useState<Screen>(
+    initialChange ? 'solo-rank' : initialJoinPin ? 'team-join' : 'home'
+  )
   const [motivators, setMotivators] = useState<MotivatorItem[]>(defaultMotivatorItems())
   const [change, setChange] = useState(initialChange)
   const [infoMotivator, setInfoMotivator] = useState<MotivatorId | null>(null)
 
   useEffect(() => {
-    if (initialChange) {
+    if (initialChange || initialJoinPin) {
       window.history.replaceState({}, '', window.location.pathname)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,6 +161,7 @@ function App() {
             change={change}
             onChange={setChange}
             onBack={reset}
+            initialJoinPin={initialJoinPin}
           />
         )}
       </main>
