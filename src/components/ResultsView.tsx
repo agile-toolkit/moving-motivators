@@ -277,6 +277,18 @@ function SessionShiftPanel({ current, history, onRestore }: {
 }
 
 const CHANGE_PLANNER_URL = 'https://agile-toolkit.github.io/change-planner/'
+const WORK_PROFILES_URL = 'https://agile-toolkit.github.io/work-profiles/'
+
+function buildWorkProfilesSnapshot(motivators: MotivatorItem[]): string {
+  const sorted = [...motivators].sort((a, b) => a.rank - b.rank)
+  const snapshot = {
+    date: new Date().toISOString().slice(0, 10),
+    ranked: sorted.map(m => m.id),
+    topMotivators: sorted.slice(0, 3).map(m => m.id) as [string, string, string],
+  }
+  localStorage.setItem('work-profiles:motivatorSnapshot', JSON.stringify(snapshot))
+  return btoa(encodeURIComponent(JSON.stringify(snapshot)))
+}
 
 function buildMmSnapshot(motivators: MotivatorItem[], change: string): string {
   const sorted = [...motivators].sort((a, b) => a.rank - b.rank)
@@ -324,6 +336,11 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
   function handleExportToChangePlanner() {
     const snapshot = buildMmSnapshot(motivators, change)
     window.open(`${CHANGE_PLANNER_URL}?mm_snapshot=${snapshot}`, '_blank', 'noopener')
+  }
+
+  function handleExportToWorkProfiles() {
+    const snapshot = buildWorkProfilesSnapshot(motivators)
+    window.open(`${WORK_PROFILES_URL}?motivators=${snapshot}`, '_blank', 'noopener')
   }
 
   function commitSaveAs() {
@@ -419,6 +436,12 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
             className="px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
             🔗 {t('results.exportToChangePlanner')}
+          </button>
+          <button
+            onClick={handleExportToWorkProfiles}
+            className="px-6 py-2 text-sm font-medium bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
+          >
+            👤 {t('results.exportToWorkProfiles')}
           </button>
           {currentLabel ? (
             <span className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
