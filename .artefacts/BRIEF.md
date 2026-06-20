@@ -46,11 +46,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
 - [x] [#11] Feature: QR code sharing for team sessions — implemented 2026-06-16
 - [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
-- [ ] [#13] Feature: print / PDF export of results
+- [ ] [#13] Feature: print / PDF export of results — auto-approved 2026-06-20
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
-- [ ] [#18] Feature: team session history — view past revealed sessions
+- [ ] [#18] Feature: team session history — view past revealed sessions — auto-approved 2026-06-20
 - [x] [#19] Feature: side-by-side individual comparison in team sessions — implemented 2026-05-31
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
@@ -62,6 +62,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-20 — research: human feedback check + auto-approvals
+- Done: checked open issues; auto-approved #13 (print/PDF, 54 days stale Feature from BRIEF — CSS @media print approach, zero deps) and #18 (team session history, 37 days stale Feature from BRIEF — localStorage-only, last 10 sessions, aggregate data only, key: moving-motivators:teamSessionHistory); added research-complete comment to #5 (favicon, research-more — SVG design ready, teal #0d9488); set project statuses: #5 → In Review, #10/#13/#18 → In Progress
+- Remaining: implement #10 (Work Profiles integration)
+- Next task: implement #10 (Work Profiles integration — in ResultsView.tsx add "Export to Work Profiles" button below "Assess in Change Planner"; snapshot {date, ranked: MotivatorId[], topMotivators: MotivatorId[3]}; write to localStorage key work-profiles:motivatorSnapshot; encode as base64 JSON in ?motivators= URL param; open https://agile-toolkit.github.io/work-profiles/ in new tab; add results.exportToWorkProfiles i18n key to all 4 locales)
 
 ### 2026-06-16 — feat: QR code sharing for team sessions (issue #11)
 - Done: installed `qrcode.react@4.2.0`; in `TeamSession.tsx` — imported `QRCodeSVG` and added `initialJoinPin` prop; QR code block (`<QRCodeSVG>`, 140px, level M) rendered in host lobby below PIN display, hidden on screens < 480px via `hidden min-[480px]:flex`; `joinUrl` = `window.location.origin + import.meta.env.BASE_URL + '?join=' + pin`; `team.scanToJoin` label below QR in all 4 locales (EN/ES/RU/BE); in `App.tsx` — added `readJoinParam()` helper, `initialJoinPin` state, if `?join=` param present initial screen is `team-join` and PIN pre-filled in join form via prop; URL params cleared after read
