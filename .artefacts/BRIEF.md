@@ -38,12 +38,13 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 | `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
 | `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 20 | `Array<{ label?: string, date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
 | `moving-motivators:motivationSnapshot` | `TeamSession.tsx` `advancePhase('revealed')` — written by host when revealing team session results | `{ teamName: string (PIN), date: "YYYY-MM-DD", topMotivators: MotivatorId[3], participantCount: number }` |
+| `work-profiles:motivatorSnapshot` | `ResultsView.tsx` `handleExportToWorkProfiles()` — written on "Export to Work Profiles" button click | `{ date: "YYYY-MM-DD", ranked: MotivatorId[], topMotivators: MotivatorId[3] }` |
 
 ## Backlog
 
 <!-- Agent: append `needs-review` research issues here as `- [ ] #N …` -->
 - [x] [#9] Feature: ES + BE locale support (suite standard) — implemented 2026-05-01
-- [ ] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot)
+- [x] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot) — implemented 2026-06-20
 - [x] [#11] Feature: QR code sharing for team sessions — implemented 2026-06-16
 - [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
 - [ ] [#13] Feature: print / PDF export of results — auto-approved 2026-06-20
@@ -62,6 +63,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-20 — feat: Work Profiles integration — Export to Work Profiles button (issue #10)
+- Done: added `buildWorkProfilesSnapshot()` in `ResultsView.tsx` — sorts motivators by rank, creates `{date, ranked, topMotivators[3]}` snapshot, writes to `work-profiles:motivatorSnapshot` localStorage key, encodes as base64 JSON; added `handleExportToWorkProfiles()` handler that calls builder and opens `https://agile-toolkit.github.io/work-profiles/?motivators=<base64>` in new tab; added "Export to Work Profiles" button (violet) below "Assess in Change Planner" in the actions row; added `results.exportToWorkProfiles` i18n key to all 4 locales (EN/ES/BE/RU); solo mode only (button lives in ResultsView.tsx)
+- Remaining: #13 (print/PDF export), #18 (team session history)
+- Next task: check issues for human feedback; implement #13 (print/PDF export of results — CSS @media print approach, add print button in ResultsView.tsx, zero new deps) or #18 (team session history — last 10 sessions in localStorage moving-motivators:teamSessionHistory, list in TeamSession.tsx revealed view)
 
 ### 2026-06-20 — research: human feedback check + auto-approvals
 - Done: checked open issues; auto-approved #13 (print/PDF, 54 days stale Feature from BRIEF — CSS @media print approach, zero deps) and #18 (team session history, 37 days stale Feature from BRIEF — localStorage-only, last 10 sessions, aggregate data only, key: moving-motivators:teamSessionHistory); added research-complete comment to #5 (favicon, research-more — SVG design ready, teal #0d9488); set project statuses: #5 → In Review, #10/#13/#18 → In Progress
