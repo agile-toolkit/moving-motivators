@@ -45,3 +45,11 @@ export interface TeamSessionData {
   phase: 'lobby' | 'ranking' | 'assessing' | 'revealed'
   createdAt: number
 }
+
+export interface TeamSessionHistoryEntry {
+  sessionId: string
+  teamName: string
+  date: string
+  topMotivators: MotivatorId[]
+  participantCount: number
+}

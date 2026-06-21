@@ -132,7 +132,10 @@
       "deanonymize": "Показать имена"
     },
     "sendToSprintMetrics": "Отправить в Sprint Metrics",
-    "scanToJoin": "Сканировать для входа"
+    "scanToJoin": "Сканировать для входа",
+    "sessionHistory": {
+      "title": "Прошлые командные сессии"
+    }
   },
   "motivators": {
     "curiosity": {

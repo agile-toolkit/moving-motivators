@@ -132,7 +132,10 @@
       "deanonymize": "Show Names"
     },
     "sendToSprintMetrics": "Send to Sprint Metrics",
-    "scanToJoin": "Scan to join"
+    "scanToJoin": "Scan to join",
+    "sessionHistory": {
+      "title": "Past Team Sessions"
+    }
   },
   "motivators": {
     "curiosity": {
