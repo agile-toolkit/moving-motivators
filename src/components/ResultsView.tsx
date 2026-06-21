@@ -419,7 +419,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
         </p>
       )}
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 print:hidden">
         <div className="flex flex-wrap gap-3">
           <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
             ↩ {t('results.startOver')}
@@ -430,6 +430,12 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
             className="px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
           >
             {copying ? '…' : `📋 ${t('results.share')}`}
+          </button>
+          <button
+            onClick={() => window.print()}
+            className="px-6 py-2 text-sm font-medium bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            🖨️ {t('results.print')}
           </button>
           <button
             onClick={handleExportToChangePlanner}

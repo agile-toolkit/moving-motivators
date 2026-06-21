@@ -47,7 +47,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#10] Integration: Moving Motivators → Work Profiles (motivator snapshot) — implemented 2026-06-20
 - [x] [#11] Feature: QR code sharing for team sessions — implemented 2026-06-16
 - [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
-- [ ] [#13] Feature: print / PDF export of results — auto-approved 2026-06-20
+- [x] [#13] Feature: print / PDF export of results — implemented 2026-06-21
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
@@ -63,6 +63,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-21 — feat: print / PDF export of results (issue #13)
+- Done: added `@media print` CSS to `src/index.css` — hides `<header>` and `[role="status"]` (offline banner), removes box-shadows, forces white background, makes `.overflow-x-auto` visible so ranked card row doesn't clip; added `print:hidden` class to action buttons section in `ResultsView.tsx` so buttons don't appear in printout; added "🖨️ Print / Save as PDF" button that calls `window.print()`, placed between share and Change Planner buttons; added `results.print` i18n key to all 4 locales (EN/ES/RU/BE); installed `qrcode.react` (was missing from node_modules, needed for build)
+- Remaining: #18 (team session history)
+- Next task: check issues for human feedback; implement #18 (team session history — last 10 revealed team sessions in localStorage moving-motivators:teamSessionHistory key, aggregate data only: PIN/teamName, date, topMotivators, participantCount; SessionHistoryPanel in TeamSession.tsx revealed view for host)
 
 ### 2026-06-20 — feat: Work Profiles integration — Export to Work Profiles button (issue #10)
 - Done: added `buildWorkProfilesSnapshot()` in `ResultsView.tsx` — sorts motivators by rank, creates `{date, ranked, topMotivators[3]}` snapshot, writes to `work-profiles:motivatorSnapshot` localStorage key, encodes as base64 JSON; added `handleExportToWorkProfiles()` handler that calls builder and opens `https://agile-toolkit.github.io/work-profiles/?motivators=<base64>` in new tab; added "Export to Work Profiles" button (violet) below "Assess in Change Planner" in the actions row; added `results.exportToWorkProfiles` i18n key to all 4 locales (EN/ES/BE/RU); solo mode only (button lives in ResultsView.tsx)
