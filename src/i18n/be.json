@@ -132,7 +132,10 @@
       "deanonymize": "Паказаць імёны"
     },
     "sendToSprintMetrics": "Адправіць у Sprint Metrics",
-    "scanToJoin": "Сканаваць для далучэння"
+    "scanToJoin": "Сканаваць для далучэння",
+    "sessionHistory": {
+      "title": "Мінулыя камандныя сесіі"
+    }
   },
   "motivators": {
     "curiosity": {

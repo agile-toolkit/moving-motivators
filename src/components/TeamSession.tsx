@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ref, set, onValue, push, update } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
-import type { Screen, MotivatorItem, MotivatorId } from '../types'
+import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
 import RankingBoard from './RankingBoard'
 import ChangeAssessment from './ChangeAssessment'
@@ -141,6 +141,61 @@ function IndividualComparisonGrid({
   )
 }
 
+// ── Session History Panel ──────────────────────────────────────────────────
+function SessionHistoryPanel() {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+  const history: TeamSessionHistoryEntry[] = JSON.parse(
+    localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
+  )
+  if (history.length === 0) return null
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center justify-between w-full text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 hover:border-brand-400 dark:hover:border-brand-500 transition-colors"
+      >
+        <span>🕐 {t('team.sessionHistory.title')} ({history.length})</span>
+        <span className="text-gray-400 dark:text-gray-600">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="flex flex-col gap-2">
+          {history.map((entry, i) => (
+            <div
+              key={`${entry.sessionId}-${i}`}
+              className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 flex flex-col gap-1.5"
+            >
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="font-mono text-sm font-semibold text-brand-600 dark:text-brand-400">
+                  PIN {entry.teamName}
+                </span>
+                <span className="text-xs text-gray-400 dark:text-gray-600">{entry.date}</span>
+              </div>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {entry.topMotivators.map(id => {
+                  const meta = getMotivatorMeta(id)
+                  return (
+                    <span
+                      key={id}
+                      className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${meta.color} ${meta.textColor} border ${meta.borderColor}`}
+                    >
+                      {meta.emoji} {t(`motivators.${id}.name`)}
+                    </span>
+                  )
+                })}
+              </div>
+              <span className="text-xs text-gray-400 dark:text-gray-600">
+                {entry.participantCount} {t('team.participants')}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Team Results View ──────────────────────────────────────────────────────
 function TeamResultsView({
   participants,
@@ -268,6 +323,9 @@ function TeamResultsView({
           <span>{t('team.sendToSprintMetrics')}</span>
         </button>
       )}
+
+      {/* Past sessions — host only */}
+      {isHost && <SessionHistoryPanel />}
     </div>
   )
 }
@@ -440,13 +498,29 @@ export default function TeamSession({
         }
         const topMotivators = [...MOTIVATOR_ORDER]
           .sort((a, b) => avgRank[a] - avgRank[b])
-          .slice(0, 3)
-        localStorage.setItem('moving-motivators:motivationSnapshot', JSON.stringify({
+          .slice(0, 3) as MotivatorId[]
+        const date = new Date().toISOString().slice(0, 10)
+        const snapshot = {
           teamName: pin,
-          date: new Date().toISOString().slice(0, 10),
+          date,
           topMotivators,
           participantCount: completedEntries.length,
-        }))
+        }
+        localStorage.setItem('moving-motivators:motivationSnapshot', JSON.stringify(snapshot))
+        const historyEntry: TeamSessionHistoryEntry = {
+          sessionId: pin,
+          teamName: pin,
+          date,
+          topMotivators,
+          participantCount: completedEntries.length,
+        }
+        const existing: TeamSessionHistoryEntry[] = JSON.parse(
+          localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
+        )
+        localStorage.setItem(
+          'moving-motivators:teamSessionHistory',
+          JSON.stringify([historyEntry, ...existing].slice(0, 10))
+        )
       }
       setScreen('team-results')
     }

@@ -30,6 +30,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Named session storage — "Save as…" button in ResultsView labels the current session in sessionHistory; label shown in SessionShiftPanel history list; each history entry has optional `label?: string` field; Restore button re-populates ranking board from any history entry; history cap increased from 5 to 20 (issue #34)
 - [x] PWA / offline support — `vite-plugin-pwa` with `generateSW` strategy; service worker caches app shell + fonts; offline banner shown app-wide when network drops; team session buttons disabled when offline; Web App Manifest with coral theme and SVG icon (issue #12)
 - [x] QR code sharing for team sessions — `qrcode.react` `<QRCodeSVG>` rendered in host lobby showing join URL (`?join=<PIN>`); hidden on screens < 480px; `team.scanToJoin` i18n key in all 4 locales; App.tsx reads `?join=` URL param on load and auto-navigates to join screen with PIN pre-filled (issue #11)
+- [x] Team session history — `advancePhase('revealed')` appends to `moving-motivators:teamSessionHistory` (max 10, FIFO); `SessionHistoryPanel` collapsible below Send-to-Sprint-Metrics in host-only TeamResultsView; each entry: PIN, date, top 3 motivators as chips, participant count (issue #18)
 
 ## localStorage keys
 
@@ -38,6 +39,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 | `moving-motivators:lastSession` | `App.tsx` `goToSoloResults()` — called on solo-results transition from both RankingBoard (skip) and ChangeAssessment (next) | `{ date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }` |
 | `moving-motivators:sessionHistory` | `App.tsx` `goToSoloResults()` — prepends current session, keeps last 20 | `Array<{ label?: string, date: "YYYY-MM-DD", savedAt: number, ranked: MotivatorId[], change: string, changes: Record<MotivatorId, ImpactLevel> }>` — index 0 = most recent |
 | `moving-motivators:motivationSnapshot` | `TeamSession.tsx` `advancePhase('revealed')` — written by host when revealing team session results | `{ teamName: string (PIN), date: "YYYY-MM-DD", topMotivators: MotivatorId[3], participantCount: number }` |
+| `moving-motivators:teamSessionHistory` | `TeamSession.tsx` `advancePhase('revealed')` — prepends entry, keeps last 10 | `Array<{ sessionId: string (PIN), teamName: string (PIN), date: "YYYY-MM-DD", topMotivators: MotivatorId[3], participantCount: number }>` |
 | `work-profiles:motivatorSnapshot` | `ResultsView.tsx` `handleExportToWorkProfiles()` — written on "Export to Work Profiles" button click | `{ date: "YYYY-MM-DD", ranked: MotivatorId[], topMotivators: MotivatorId[3] }` |
 
 ## Backlog
@@ -51,7 +53,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
 - [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
 - [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
-- [ ] [#18] Feature: team session history — view past revealed sessions — auto-approved 2026-06-20
+- [x] [#18] Feature: team session history — view past revealed sessions — implemented 2026-06-21
 - [x] [#19] Feature: side-by-side individual comparison in team sessions — implemented 2026-05-31
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
@@ -63,6 +65,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-21 — feat: team session history (issue #18)
+- Done: added `TeamSessionHistoryEntry` type to `types.ts`; in `TeamSession.tsx` `advancePhase('revealed')` now appends entry to `moving-motivators:teamSessionHistory` (max 10 FIFO) alongside existing `motivationSnapshot` write; added `SessionHistoryPanel` component — collapsible panel reading history from localStorage, shows each past session's PIN, date, top-3 motivator chips, and participant count; wired into `TeamResultsView` for host only (below "Send to Sprint Metrics"); i18n key `team.sessionHistory.title` in all 4 locales
+- Remaining: many approved issues pending (#24 header unification, #16 Dashboard reader, etc.)
+- Next task: check issues for human feedback; implement #16 (Dashboard card reader for moving-motivators — add readMovingMotivators() in agile-toolkit.github.io/src/readers.ts reading moving-motivators:lastSession, show top 3 motivators + change + date chip in Dashboard card)
 
 ### 2026-06-21 — feat: print / PDF export of results (issue #13)
 - Done: added `@media print` CSS to `src/index.css` — hides `<header>` and `[role="status"]` (offline banner), removes box-shadows, forces white background, makes `.overflow-x-auto` visible so ranked card row doesn't clip; added `print:hidden` class to action buttons section in `ResultsView.tsx` so buttons don't appear in printout; added "🖨️ Print / Save as PDF" button that calls `window.print()`, placed between share and Change Planner buttons; added `results.print` i18n key to all 4 locales (EN/ES/RU/BE); installed `qrcode.react` (was missing from node_modules, needed for build)
