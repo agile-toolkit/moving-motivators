@@ -51,8 +51,8 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#12] Feature: PWA / offline support for workshop use — implemented 2026-06-13
 - [x] [#13] Feature: print / PDF export of results — implemented 2026-06-21
 - [x] [#14] Integration: Moving Motivators → Sprint Metrics (motivation snapshot export) — implemented 2026-06-07
-- [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader
-- [ ] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor)
+- [ ] [#16] Feature: persist solo results to localStorage + Dashboard card reader (MM side done; Dashboard reader pending in agile-toolkit.github.io)
+- [x] [#17] Feature: keyboard accessibility for motivator ranking (KeyboardSensor) — implemented 2026-05-21
 - [x] [#18] Feature: team session history — view past revealed sessions — implemented 2026-06-21
 - [x] [#19] Feature: side-by-side individual comparison in team sessions — implemented 2026-05-31
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
@@ -65,6 +65,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-21 — chore: housekeeping — transition to stable
+- Done: fixed BRIEF.md backlog (#17 marked [x] — was implemented 2026-05-21 but backlog checkbox was stale); updated project status for issue #25 (Backlog → In Review); all moving-motivators features now complete and checked
+- Remaining: #16 Dashboard card reader (needs agile-toolkit.github.io run); #22 Change Planner side (needs change-planner run)
+- Next task: check issues for human feedback; research cycle — market/UX/integration improvements
 
 ### 2026-06-21 — feat: team session history (issue #18)
 - Done: added `TeamSessionHistoryEntry` type to `types.ts`; in `TeamSession.tsx` `advancePhase('revealed')` now appends entry to `moving-motivators:teamSessionHistory` (max 10 FIFO) alongside existing `motivationSnapshot` write; added `SessionHistoryPanel` component — collapsible panel reading history from localStorage, shows each past session's PIN, date, top-3 motivator chips, and participant count; wired into `TeamResultsView` for host only (below "Send to Sprint Metrics"); i18n key `team.sessionHistory.title` in all 4 locales
