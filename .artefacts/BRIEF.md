@@ -58,6 +58,9 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
 - [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
+- [ ] [#46] Research: team motivator trend visualization across sessions
+- [ ] [#47] Research: export session history as JSON download
+- [ ] [#48] Research: multi-session motivator rank trend chart for solo mode
 
 ## Tech notes
 
@@ -65,6 +68,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-23 — research: closed stale issues, created data visualization research items
+- Done: closed 12 fully-implemented approved issues (#9, #10, #11, #13, #14, #18, #19, #20, #21, #24, #25, #34); issue #5 (favicon, research-more) set to In Review — research complete; created 3 new research issues (#46 team trend, #47 JSON export, #48 solo rank trend) added to project Backlog
+- Remaining: #16 (Dashboard reader pending in agile-toolkit.github.io), #22 (Change Planner side pending), #5 (favicon awaiting approval), #46–#48 (new research awaiting review)
+- Next task: check issues for human feedback; if #5 (favicon), #46, #47, or #48 approved, implement first approved; else research cycle
 
 ### 2026-06-21 — chore: housekeeping — transition to stable
 - Done: fixed BRIEF.md backlog (#17 marked [x] — was implemented 2026-05-21 but backlog checkbox was stale); updated project status for issue #25 (Backlog → In Review); all moving-motivators features now complete and checked
