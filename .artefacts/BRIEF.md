@@ -61,6 +61,9 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#46] Research: team motivator trend visualization across sessions
 - [ ] [#47] Research: export session history as JSON download
 - [ ] [#48] Research: multi-session motivator rank trend chart for solo mode
+- [ ] [#49] Research: first-run onboarding overlay for new users
+- [ ] [#50] Research: import session history from JSON (companion to #47 export)
+- [ ] [#51] Integration: Team Identity → Moving Motivators (pre-populate team name in team sessions)
 
 ## Tech notes
 
@@ -68,6 +71,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-26 — research: feedback triage + new research issues #49–51
+- Done: commented on approved #22 (Change Planner integration — MM side fully done; remaining work in change-planner repo) and #16 (Dashboard card reader — MM side fully done; remaining work in agile-toolkit.github.io); added implementation-ready findings comment to research-more #5 (favicon SVG finalized, contrast ratio verified at 4.4:1, passes WCAG 3:1 for graphical icons); created 3 new research issues — #49 (first-run onboarding overlay for new users), #50 (JSON import companion to #47 export), #51 (Team Identity → MM pre-populate team name)
+- Remaining: #5 (favicon, awaiting human approval after research-more); #16 (Dashboard side, agile-toolkit.github.io run); #22 (Change Planner side, change-planner run); #46–#51 (all needs-review, awaiting feedback)
+- Next task: check issues for human feedback; if #5 (favicon), #46, #47, #48, #49, #50, or #51 approved, implement first approved; else research cycle
 
 ### 2026-06-23 — research: closed stale issues, created data visualization research items
 - Done: closed 12 fully-implemented approved issues (#9, #10, #11, #13, #14, #18, #19, #20, #21, #24, #25, #34); issue #5 (favicon, research-more) set to In Review — research complete; created 3 new research issues (#46 team trend, #47 JSON export, #48 solo rank trend) added to project Backlog
