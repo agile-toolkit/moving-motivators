@@ -64,6 +64,8 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [ ] [#49] Research: first-run onboarding overlay for new users
 - [ ] [#50] Research: import session history from JSON (companion to #47 export)
 - [ ] [#51] Integration: Team Identity → Moving Motivators (pre-populate team name in team sessions)
+- [ ] [#52] Research: motivator coaching tips panel in solo results
+- [ ] [#53] Integration: Improvement Board → Moving Motivators deep link (motivation context for improvements)
 
 ## Tech notes
 
@@ -71,6 +73,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-06-29 — research: #5 body update, new research issues #52–53
+- Done: updated #5 (favicon, research-more) issue body with finalized SVG design and clear implementation steps — all research questions resolved, awaiting `approved` label; created #52 (motivator coaching tips panel — personalized tips based on top 3 motivators in solo results, ~80 LOC new component); created #53 (Improvement Board → MM deep link — IB improvement card links to MM with `?change=<title>` pre-filled, zero MM-side changes needed as `?change=` param already implemented in #22); #22 and #16 both `approved` but MM-side is complete — remaining work is in change-planner and agile-toolkit.github.io repos respectively
+- Remaining: #5 (favicon, awaiting approval); #16 (Dashboard side in agile-toolkit.github.io); #22 (Change Planner side in change-planner); #46–#53 (all needs-review)
+- Next task: check issues for human feedback; if #5 (favicon) approved implement single-file SVG replacement in public/favicon.svg; if any of #46–#53 approved implement first approved; else research cycle
 
 ### 2026-06-26 — research: feedback triage + new research issues #49–51
 - Done: commented on approved #22 (Change Planner integration — MM side fully done; remaining work in change-planner repo) and #16 (Dashboard card reader — MM side fully done; remaining work in agile-toolkit.github.io); added implementation-ready findings comment to research-more #5 (favicon SVG finalized, contrast ratio verified at 4.4:1, passes WCAG 3:1 for graphical icons); created 3 new research issues — #49 (first-run onboarding overlay for new users), #50 (JSON import companion to #47 export), #51 (Team Identity → MM pre-populate team name)
