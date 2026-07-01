@@ -58,9 +58,9 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#20] Feature: facilitator timer for ranking and assessment phases — implemented 2026-05-30
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
 - [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
-- [ ] [#46] Research: team motivator trend visualization across sessions
-- [ ] [#47] Research: export session history as JSON download
-- [ ] [#48] Research: multi-session motivator rank trend chart for solo mode
+- [x] [#46] Feature: team motivator trend visualization across sessions — implemented 2026-07-01
+- [ ] [#47] Research: export session history as JSON download — auto-approved 2026-07-01
+- [ ] [#48] Research: multi-session motivator rank trend chart for solo mode — auto-approved 2026-07-01
 - [ ] [#49] Research: first-run onboarding overlay for new users
 - [ ] [#50] Research: import session history from JSON (companion to #47 export)
 - [ ] [#51] Integration: Team Identity → Moving Motivators (pre-populate team name in team sessions)
@@ -73,6 +73,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-07-01 — feat: team motivator trend view in SessionHistoryPanel (issue #46)
+- Done: added List/Trend toggle to `SessionHistoryPanel` in `TeamSession.tsx`; trend view computes top-3 appearance frequency per motivator across all stored `moving-motivators:teamSessionHistory` entries and renders a frequency bar chart sorted by count descending; bars use each motivator's brand color; zero appearances shown greyed out; added 4 i18n keys (`team.history.list/trend/topMotivators/sessions`) in all 4 locales (EN/ES/BE/RU); auto-approved #47 and #48 (8 days stale research issues)
+- Remaining: #5 (favicon, awaiting `approved`); #16 (Dashboard side, agile-toolkit.github.io); #22 (Change Planner side, change-planner); #47 (JSON export, approved); #48 (solo rank trend table, approved); #49–#53 (needs-review)
+- Next task: implement #47 (JSON export — export button in SessionShiftPanel and SessionHistoryPanel using Blob/URL.createObjectURL, `results.exportHistory` + `team.history.export` i18n keys in all 4 locales) or #48 (solo rank trend table in SessionShiftPanel — compact motivator×session grid, last 6 sessions, green/red color coding)
 
 ### 2026-06-29 — research: #5 body update, new research issues #52–53
 - Done: updated #5 (favicon, research-more) issue body with finalized SVG design and clear implementation steps — all research questions resolved, awaiting `approved` label; created #52 (motivator coaching tips panel — personalized tips based on top 3 motivators in solo results, ~80 LOC new component); created #53 (Improvement Board → MM deep link — IB improvement card links to MM with `?change=<title>` pre-filled, zero MM-side changes needed as `?change=` param already implemented in #22); #22 and #16 both `approved` but MM-side is complete — remaining work is in change-planner and agile-toolkit.github.io repos respectively
