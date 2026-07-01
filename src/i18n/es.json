@@ -135,6 +135,12 @@
     "scanToJoin": "Escanear para unirse",
     "sessionHistory": {
       "title": "Sesiones de equipo anteriores"
+    },
+    "history": {
+      "list": "Lista",
+      "trend": "Tendencia",
+      "topMotivators": "Frecuencia de motivadores principales",
+      "sessions": "sesiones"
     }
   },
   "motivators": {

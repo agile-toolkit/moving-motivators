@@ -145,10 +145,23 @@ function IndividualComparisonGrid({
 function SessionHistoryPanel() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const [view, setView] = useState<'list' | 'trend'>('list')
   const history: TeamSessionHistoryEntry[] = JSON.parse(
     localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
   )
   if (history.length === 0) return null
+
+  // Compute top-3 appearance frequency per motivator across all stored sessions
+  const freq: Partial<Record<MotivatorId, number>> = {}
+  for (const entry of history) {
+    for (const id of entry.topMotivators) {
+      freq[id] = (freq[id] ?? 0) + 1
+    }
+  }
+  const trendRows = MOTIVATOR_ORDER
+    .map(id => ({ id, count: freq[id] ?? 0 }))
+    .sort((a, b) => b.count - a.count)
+  const maxCount = trendRows[0]?.count || 1
 
   return (
     <div className="flex flex-col gap-2">
@@ -160,36 +173,95 @@ function SessionHistoryPanel() {
         <span className="text-gray-400 dark:text-gray-600">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
-        <div className="flex flex-col gap-2">
-          {history.map((entry, i) => (
-            <div
-              key={`${entry.sessionId}-${i}`}
-              className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 flex flex-col gap-1.5"
+        <div className="flex flex-col gap-3">
+          {/* View toggle */}
+          <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+            <button
+              onClick={() => setView('list')}
+              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
+                view === 'list'
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
             >
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="font-mono text-sm font-semibold text-brand-600 dark:text-brand-400">
-                  PIN {entry.teamName}
-                </span>
-                <span className="text-xs text-gray-400 dark:text-gray-600">{entry.date}</span>
-              </div>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                {entry.topMotivators.map(id => {
-                  const meta = getMotivatorMeta(id)
-                  return (
-                    <span
-                      key={id}
-                      className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${meta.color} ${meta.textColor} border ${meta.borderColor}`}
-                    >
-                      {meta.emoji} {t(`motivators.${id}.name`)}
+              {t('team.history.list')}
+            </button>
+            <button
+              onClick={() => setView('trend')}
+              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
+                view === 'trend'
+                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              {t('team.history.trend')}
+            </button>
+          </div>
+
+          {view === 'list' && (
+            <div className="flex flex-col gap-2">
+              {history.map((entry, i) => (
+                <div
+                  key={`${entry.sessionId}-${i}`}
+                  className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 flex flex-col gap-1.5"
+                >
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="font-mono text-sm font-semibold text-brand-600 dark:text-brand-400">
+                      PIN {entry.teamName}
                     </span>
-                  )
-                })}
-              </div>
-              <span className="text-xs text-gray-400 dark:text-gray-600">
-                {entry.participantCount} {t('team.participants')}
-              </span>
+                    <span className="text-xs text-gray-400 dark:text-gray-600">{entry.date}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {entry.topMotivators.map(id => {
+                      const meta = getMotivatorMeta(id)
+                      return (
+                        <span
+                          key={id}
+                          className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${meta.color} ${meta.textColor} border ${meta.borderColor}`}
+                        >
+                          {meta.emoji} {t(`motivators.${id}.name`)}
+                        </span>
+                      )
+                    })}
+                  </div>
+                  <span className="text-xs text-gray-400 dark:text-gray-600">
+                    {entry.participantCount} {t('team.participants')}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {view === 'trend' && (
+            <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-3 flex flex-col gap-1">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+                {t('team.history.topMotivators')} ({history.length} {t('team.history.sessions')})
+              </p>
+              {trendRows.map(({ id, count }) => {
+                const meta = getMotivatorMeta(id)
+                const pct = count === 0 ? 0 : Math.round((count / maxCount) * 100)
+                return (
+                  <div key={id} className="flex items-center gap-2 py-0.5">
+                    <span className="w-5 text-center text-base">{meta.emoji}</span>
+                    <span className={`w-20 text-xs font-medium truncate ${count > 0 ? meta.textColor : 'text-gray-300 dark:text-gray-700'}`}>
+                      {t(`motivators.${id}.name`)}
+                    </span>
+                    <div className="flex-1 h-4 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                      {count > 0 && (
+                        <div
+                          className={`h-full rounded-full ${meta.color}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      )}
+                    </div>
+                    <span className={`w-6 text-right text-xs font-mono font-semibold ${count > 0 ? meta.textColor : 'text-gray-300 dark:text-gray-700'}`}>
+                      {count}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>

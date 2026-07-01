@@ -135,6 +135,12 @@
     "scanToJoin": "Сканаваць для далучэння",
     "sessionHistory": {
       "title": "Мінулыя камандныя сесіі"
+    },
+    "history": {
+      "list": "Спіс",
+      "trend": "Трэнд",
+      "topMotivators": "Частата топ-матыватараў",
+      "sessions": "сесій"
     }
   },
   "motivators": {

@@ -135,6 +135,12 @@
     "scanToJoin": "Scan to join",
     "sessionHistory": {
       "title": "Past Team Sessions"
+    },
+    "history": {
+      "list": "List",
+      "trend": "Trend",
+      "topMotivators": "Top motivator frequency",
+      "sessions": "sessions"
     }
   },
   "motivators": {

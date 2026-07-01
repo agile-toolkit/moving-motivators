@@ -135,6 +135,12 @@
     "scanToJoin": "Сканировать для входа",
     "sessionHistory": {
       "title": "Прошлые командные сессии"
+    },
+    "history": {
+      "list": "Список",
+      "trend": "Тренд",
+      "topMotivators": "Частота топ-мотиваторов",
+      "sessions": "сессий"
     }
   },
   "motivators": {
