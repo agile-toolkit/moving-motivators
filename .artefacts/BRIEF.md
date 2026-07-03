@@ -31,6 +31,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] PWA / offline support — `vite-plugin-pwa` with `generateSW` strategy; service worker caches app shell + fonts; offline banner shown app-wide when network drops; team session buttons disabled when offline; Web App Manifest with coral theme and SVG icon (issue #12)
 - [x] QR code sharing for team sessions — `qrcode.react` `<QRCodeSVG>` rendered in host lobby showing join URL (`?join=<PIN>`); hidden on screens < 480px; `team.scanToJoin` i18n key in all 4 locales; App.tsx reads `?join=` URL param on load and auto-navigates to join screen with PIN pre-filled (issue #11)
 - [x] Team session history — `advancePhase('revealed')` appends to `moving-motivators:teamSessionHistory` (max 10, FIFO); `SessionHistoryPanel` collapsible below Send-to-Sprint-Metrics in host-only TeamResultsView; each entry: PIN, date, top 3 motivators as chips, participant count (issue #18)
+- [x] JSON export of session history — "Export history" button in `SessionShiftPanel` (ResultsView.tsx) downloads `moving-motivators-solo-history.json` from full `sessionHistory` array; "Export" button in `SessionHistoryPanel` (TeamSession.tsx) downloads `moving-motivators-team-history.json` from `teamSessionHistory`; both use `Blob` + `URL.createObjectURL`, zero new deps; `results.exportHistory` / `team.history.export` i18n keys in all 4 locales (issue #47)
 
 ## localStorage keys
 
@@ -59,7 +60,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#21] Feature: solo motivator shift tracking — compare sessions over time (implemented)
 - [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
 - [x] [#46] Feature: team motivator trend visualization across sessions — implemented 2026-07-01
-- [ ] [#47] Research: export session history as JSON download — auto-approved 2026-07-01
+- [x] [#47] Research: export session history as JSON download — implemented 2026-07-03
 - [ ] [#48] Research: multi-session motivator rank trend chart for solo mode — auto-approved 2026-07-01
 - [ ] [#49] Research: first-run onboarding overlay for new users
 - [ ] [#50] Research: import session history from JSON (companion to #47 export)
@@ -73,6 +74,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-07-03 — feat: JSON export of session history (issue #47)
+- Done: added `downloadJson()` helper in `ResultsView.tsx` and `downloadTeamHistoryJson()` in `TeamSession.tsx` (Blob + `URL.createObjectURL(...)` pattern, zero new deps); "Export history" button in `SessionShiftPanel`'s history-list header downloads full `moving-motivators:sessionHistory` array as `moving-motivators-solo-history.json`; "Export" button next to the List/Trend toggle in `SessionHistoryPanel` downloads full `moving-motivators:teamSessionHistory` array as `moving-motivators-team-history.json`; added `results.exportHistory` and `team.history.export` i18n keys to all 4 locales (EN/ES/BE/RU)
+- Remaining: #48 (solo rank trend table, approved); #5 (favicon, awaiting `approved`); #16 (Dashboard side, agile-toolkit.github.io); #22 (Change Planner side, change-planner); #49–#51 reached 7-day auto-approve threshold today — next research run should auto-approve if still `needs-review`; #52/#53 (needs-review, not yet stale)
+- Next task: check issues for human feedback; implement #48 (solo rank trend table in SessionShiftPanel — compact motivator×session grid, last 6 sessions, green/red color coding) if still approved; else auto-approve #49/#50/#51 (7+ days stale) and implement first approved, else research cycle
 
 ### 2026-07-01 — feat: team motivator trend view in SessionHistoryPanel (issue #46)
 - Done: added List/Trend toggle to `SessionHistoryPanel` in `TeamSession.tsx`; trend view computes top-3 appearance frequency per motivator across all stored `moving-motivators:teamSessionHistory` entries and renders a frequency bar chart sorted by count descending; bars use each motivator's brand color; zero appearances shown greyed out; added 4 i18n keys (`team.history.list/trend/topMotivators/sessions`) in all 4 locales (EN/ES/BE/RU); auto-approved #47 and #48 (8 days stale research issues)

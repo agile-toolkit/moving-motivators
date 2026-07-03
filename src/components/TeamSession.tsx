@@ -142,6 +142,16 @@ function IndividualComparisonGrid({
 }
 
 // ── Session History Panel ──────────────────────────────────────────────────
+function downloadTeamHistoryJson(history: TeamSessionHistoryEntry[]) {
+  const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'moving-motivators-team-history.json'
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
 function SessionHistoryPanel() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -175,26 +185,34 @@ function SessionHistoryPanel() {
       {open && (
         <div className="flex flex-col gap-3">
           {/* View toggle */}
-          <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center gap-2">
+            <div className="flex flex-1 gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+              <button
+                onClick={() => setView('list')}
+                className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
+                  view === 'list'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                {t('team.history.list')}
+              </button>
+              <button
+                onClick={() => setView('trend')}
+                className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
+                  view === 'trend'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                {t('team.history.trend')}
+              </button>
+            </div>
             <button
-              onClick={() => setView('list')}
-              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
-                view === 'list'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
+              onClick={() => downloadTeamHistoryJson(history)}
+              className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
             >
-              {t('team.history.list')}
-            </button>
-            <button
-              onClick={() => setView('trend')}
-              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-colors ${
-                view === 'trend'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              {t('team.history.trend')}
+              ⬇️ {t('team.history.export')}
             </button>
           </div>
 
