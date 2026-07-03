@@ -68,7 +68,8 @@
       "negativePattern": "Este cambio corre el riesgo de socavar motivadores que son fundamentales para ti. Nómbralo explícitamente en las conversaciones con tu gerente o equipo — las preocupaciones no expresadas rara vez se resuelven.",
       "mixedPattern": "Este cambio tiene un impacto mixto en tus motivadores. Centra la conversación en los negativos: ¿qué tendría que ser verdad para que esos se vuelvan neutros o positivos?",
       "noChangeNote": "Aún no has evaluado un cambio. Ordena tus motivadores y luego describe un cambio al que te enfrentes para ver cómo afecta a lo que más te importa."
-    }
+    },
+    "exportHistory": "Exportar historial"
   },
   "facilitation": {
     "title": "Guía de Facilitación",
@@ -140,7 +141,8 @@
       "list": "Lista",
       "trend": "Tendencia",
       "topMotivators": "Frecuencia de motivadores principales",
-      "sessions": "sesiones"
+      "sessions": "sesiones",
+      "export": "Exportar"
     }
   },
   "motivators": {

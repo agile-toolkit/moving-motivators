@@ -145,6 +145,16 @@ function InterpretationPanel({ motivators, change, onInfo }: {
   )
 }
 
+function downloadJson(filename: string, data: unknown) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
 function SessionShiftPanel({ current, history, onRestore }: {
   current: MotivatorItem[]
   history: SessionEntry[]
@@ -240,9 +250,17 @@ function SessionShiftPanel({ current, history, onRestore }: {
           {/* History list with restore */}
           <hr className="border-gray-100 dark:border-gray-800" />
           <div className="flex flex-col gap-1">
-            <p className="text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide mb-1">
-              {t('results.sessionHistory')}
-            </p>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide">
+                {t('results.sessionHistory')}
+              </p>
+              <button
+                onClick={() => downloadJson('moving-motivators-solo-history.json', history)}
+                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+              >
+                ⬇️ {t('results.exportHistory')}
+              </button>
+            </div>
             {history.slice(1).map(entry => (
               <div
                 key={entry.savedAt}
