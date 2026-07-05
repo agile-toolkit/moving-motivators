@@ -69,7 +69,10 @@
       "mixedPattern": "This change has mixed impact on your motivators. Focus the conversation on the negatives: what would need to be true for those to become neutral or positive?",
       "noChangeNote": "You have not assessed a change yet. Rank your motivators, then describe a change you are facing to see how it affects what matters most to you."
     },
-    "exportHistory": "Export history"
+    "exportHistory": "Export history",
+    "trendView": "Rank trend",
+    "trendShow": "Show rank trend",
+    "trendHide": "Hide rank trend"
   },
   "facilitation": {
     "title": "Facilitation Guide",

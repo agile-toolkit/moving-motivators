@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import html2canvas from 'html2canvas'
 import type { MotivatorItem, MotivatorId, SessionEntry } from '../types'
-import { getMotivatorMeta } from '../data/motivators'
+import { getMotivatorMeta, MOTIVATORS } from '../data/motivators'
 
 interface Props {
   motivators: MotivatorItem[]
@@ -155,6 +155,73 @@ function downloadJson(filename: string, data: unknown) {
   URL.revokeObjectURL(url)
 }
 
+const TREND_SESSION_COUNT = 6
+
+function RankTrendTable({ history }: { history: SessionEntry[] }) {
+  const { t } = useTranslation()
+  const [trendOpen, setTrendOpen] = useState(false)
+  const sessions = history.slice(0, TREND_SESSION_COUNT)
+
+  function rankClass(rank: number) {
+    if (rank <= 3) return 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400'
+    if (rank >= 8) return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'
+    return 'bg-gray-50 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+  }
+
+  return (
+    <div>
+      <button
+        className="flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+        onClick={() => setTrendOpen(o => !o)}
+        aria-expanded={trendOpen}
+      >
+        <span>{trendOpen ? '▲' : '▼'}</span>
+        {trendOpen ? t('results.trendHide') : t('results.trendShow')}
+      </button>
+
+      {trendOpen && (
+        <div className="overflow-x-auto mt-2">
+          <table className="text-[10px] border-collapse" style={{ minWidth: 'max-content' }}>
+            <thead>
+              <tr>
+                <th className="text-left font-medium text-gray-400 dark:text-gray-600 pr-3 pb-1">
+                  {t('results.trendView')}
+                </th>
+                {sessions.map(entry => (
+                  <th key={entry.savedAt} className="font-medium text-gray-400 dark:text-gray-600 px-1 pb-1 text-center w-10 truncate">
+                    {entry.label || entry.date}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {MOTIVATORS.map(meta => (
+                <tr key={meta.id}>
+                  <td className={`pr-3 py-0.5 whitespace-nowrap ${meta.textColor}`}>
+                    {meta.emoji} {t(`motivators.${meta.id}.name`)}
+                  </td>
+                  {sessions.map(entry => {
+                    const rank = entry.ranked.indexOf(meta.id) + 1
+                    return (
+                      <td key={entry.savedAt} className="px-1 py-0.5 text-center">
+                        {rank > 0 && (
+                          <span className={`inline-flex items-center justify-center w-5 h-5 rounded ${rankClass(rank)}`}>
+                            {rank}
+                          </span>
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function SessionShiftPanel({ current, history, onRestore }: {
   current: MotivatorItem[]
   history: SessionEntry[]
@@ -246,6 +313,9 @@ function SessionShiftPanel({ current, history, onRestore }: {
               </div>
             </div>
           </div>
+
+          {/* Multi-session rank trend */}
+          <RankTrendTable history={history} />
 
           {/* History list with restore */}
           <hr className="border-gray-100 dark:border-gray-800" />

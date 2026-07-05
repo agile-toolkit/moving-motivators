@@ -32,6 +32,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] QR code sharing for team sessions — `qrcode.react` `<QRCodeSVG>` rendered in host lobby showing join URL (`?join=<PIN>`); hidden on screens < 480px; `team.scanToJoin` i18n key in all 4 locales; App.tsx reads `?join=` URL param on load and auto-navigates to join screen with PIN pre-filled (issue #11)
 - [x] Team session history — `advancePhase('revealed')` appends to `moving-motivators:teamSessionHistory` (max 10, FIFO); `SessionHistoryPanel` collapsible below Send-to-Sprint-Metrics in host-only TeamResultsView; each entry: PIN, date, top 3 motivators as chips, participant count (issue #18)
 - [x] JSON export of session history — "Export history" button in `SessionShiftPanel` (ResultsView.tsx) downloads `moving-motivators-solo-history.json` from full `sessionHistory` array; "Export" button in `SessionHistoryPanel` (TeamSession.tsx) downloads `moving-motivators-team-history.json` from `teamSessionHistory`; both use `Blob` + `URL.createObjectURL`, zero new deps; `results.exportHistory` / `team.history.export` i18n keys in all 4 locales (issue #47)
+- [x] Solo motivator rank-trend table — collapsible `RankTrendTable` below the shift delta view in `SessionShiftPanel` (ResultsView.tsx); 10 motivator rows × up to 6 most-recent sessions (`sessionHistory`, newest-first); each cell shows the motivator's rank (1–10) in that session, color-coded green (rank 1–3) / red (rank 8–10) / neutral (4–7); toggle button defaults to collapsed; `results.trendView` / `results.trendShow` / `results.trendHide` i18n keys in all 4 locales; zero new deps (issue #48)
 
 ## localStorage keys
 
@@ -61,7 +62,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#22] Integration: Moving Motivators ↔ Change Planner — MM side implemented; Change Planner side (read ?mm_snapshot= and show motivator context sidebar) pending
 - [x] [#46] Feature: team motivator trend visualization across sessions — implemented 2026-07-01
 - [x] [#47] Research: export session history as JSON download — implemented 2026-07-03
-- [ ] [#48] Research: multi-session motivator rank trend chart for solo mode — auto-approved 2026-07-01
+- [x] [#48] Research: multi-session motivator rank trend chart for solo mode — implemented 2026-07-05
 - [ ] [#49] Research: first-run onboarding overlay for new users
 - [ ] [#50] Research: import session history from JSON (companion to #47 export)
 - [ ] [#51] Integration: Team Identity → Moving Motivators (pre-populate team name in team sessions)
@@ -74,6 +75,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-07-05 — feat: solo motivator rank-trend table (issue #48)
+- Done: added `RankTrendTable` component in `ResultsView.tsx`, rendered below the current-session delta row in `SessionShiftPanel`; reads the `history` array already loaded from `moving-motivators:sessionHistory` (index 0 = current, newest-first), slices to the 6 most recent sessions; renders a compact table (motivator rows × session columns) using `MOTIVATORS` order for row labels (emoji + name), each cell shows `entry.ranked.indexOf(id) + 1`; rank 1–3 green / 8–10 red / 4–7 neutral badge via Tailwind classes with dark-mode variants; own collapsible toggle (default collapsed) independent from the outer shift panel; added `results.trendView`/`results.trendShow`/`results.trendHide` i18n keys to all 4 locales (EN/ES/BE/RU); bumped `package.json`/`package-lock.json` to 0.1.2; zero new dependencies
+- Remaining: #5 (favicon, awaiting `approved` after research-more); #16 (Dashboard side, agile-toolkit.github.io); #22 (Change Planner side, change-planner); #49/#50/#51 reached 7-day auto-approve threshold 2026-07-03 — next research run should auto-approve if still `needs-review`; #52/#53 (needs-review, not yet stale)
+- Next task: check issues for human feedback; auto-approve #49/#50/#51 (7+ days stale) if still `needs-review` and implement first approved; else research cycle for new findings
 
 ### 2026-07-03 — feat: JSON export of session history (issue #47)
 - Done: added `downloadJson()` helper in `ResultsView.tsx` and `downloadTeamHistoryJson()` in `TeamSession.tsx` (Blob + `URL.createObjectURL(...)` pattern, zero new deps); "Export history" button in `SessionShiftPanel`'s history-list header downloads full `moving-motivators:sessionHistory` array as `moving-motivators-solo-history.json`; "Export" button next to the List/Trend toggle in `SessionHistoryPanel` downloads full `moving-motivators:teamSessionHistory` array as `moving-motivators-team-history.json`; added `results.exportHistory` and `team.history.export` i18n keys to all 4 locales (EN/ES/BE/RU)
