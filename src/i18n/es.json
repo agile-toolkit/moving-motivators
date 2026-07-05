@@ -69,7 +69,10 @@
       "mixedPattern": "Este cambio tiene un impacto mixto en tus motivadores. Centra la conversación en los negativos: ¿qué tendría que ser verdad para que esos se vuelvan neutros o positivos?",
       "noChangeNote": "Aún no has evaluado un cambio. Ordena tus motivadores y luego describe un cambio al que te enfrentes para ver cómo afecta a lo que más te importa."
     },
-    "exportHistory": "Exportar historial"
+    "exportHistory": "Exportar historial",
+    "trendView": "Tendencia de clasificación",
+    "trendShow": "Mostrar tendencia de clasificación",
+    "trendHide": "Ocultar tendencia de clasificación"
   },
   "facilitation": {
     "title": "Guía de Facilitación",
