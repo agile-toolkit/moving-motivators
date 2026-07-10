@@ -96,6 +96,10 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
               <p>{t('home.about.how')}</p>
             </div>
             <div>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">{t('home.about.nextTitle')}</h3>
+              <p>{t('home.about.next')}</p>
+            </div>
+            <div>
               <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">{t('home.about.usesTitle')}</h3>
               <p>{t('home.about.uses')}</p>
             </div>
