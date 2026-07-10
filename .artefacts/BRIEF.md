@@ -33,6 +33,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] Team session history — `advancePhase('revealed')` appends to `moving-motivators:teamSessionHistory` (max 10, FIFO); `SessionHistoryPanel` collapsible below Send-to-Sprint-Metrics in host-only TeamResultsView; each entry: PIN, date, top 3 motivators as chips, participant count (issue #18)
 - [x] JSON export of session history — "Export history" button in `SessionShiftPanel` (ResultsView.tsx) downloads `moving-motivators-solo-history.json` from full `sessionHistory` array; "Export" button in `SessionHistoryPanel` (TeamSession.tsx) downloads `moving-motivators-team-history.json` from `teamSessionHistory`; both use `Blob` + `URL.createObjectURL`, zero new deps; `results.exportHistory` / `team.history.export` i18n keys in all 4 locales (issue #47)
 - [x] Solo motivator rank-trend table — collapsible `RankTrendTable` below the shift delta view in `SessionShiftPanel` (ResultsView.tsx); 10 motivator rows × up to 6 most-recent sessions (`sessionHistory`, newest-first); each cell shows the motivator's rank (1–10) in that session, color-coded green (rank 1–3) / red (rank 8–10) / neutral (4–7); toggle button defaults to collapsed; `results.trendView` / `results.trendShow` / `results.trendHide` i18n keys in all 4 locales; zero new deps (issue #48)
+- [x] First-run onboarding content in the HomeScreen "About this exercise" panel — extended the existing collapsible panel (default-open until dismissed via `mm_about_dismissed` localStorage key) with a new "What happens after" section between "How it works" and "When to use it", and added drag/keyboard ranking mechanics to the "How it works" text; `home.about.nextTitle` / `home.about.next` i18n keys in all 4 locales; zero new components, zero new localStorage keys (issue #49)
 
 ## localStorage keys
 
@@ -63,7 +64,7 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - [x] [#46] Feature: team motivator trend visualization across sessions — implemented 2026-07-01
 - [x] [#47] Research: export session history as JSON download — implemented 2026-07-03
 - [x] [#48] Research: multi-session motivator rank trend chart for solo mode — implemented 2026-07-05
-- [ ] [#49] Research: first-run onboarding overlay for new users
+- [x] [#49] Research: first-run onboarding overlay for new users — implemented 2026-07-10 (via existing About panel, not a new overlay)
 - [ ] [#50] Research: import session history from JSON (companion to #47 export)
 - [ ] [#51] Integration: Team Identity → Moving Motivators (pre-populate team name in team sessions)
 - [ ] [#52] Research: motivator coaching tips panel in solo results
@@ -75,6 +76,11 @@ Interactive [Management 3.0 Moving Motivators](https://management30.com/practice
 - `.gitmodules` references `agentic-kit` (dev pipeline tooling, not used in build). CI workflow does not fetch submodules.
 
 ## Agent Log
+
+### 2026-07-10 — feat: first-run onboarding content in About panel (issue #49)
+- Done: auto-approved #49 (research/UX-improvement, `needs-review` since 2026-06-26, past the 7-day threshold; comment posted on the issue, no label change, matching sibling-repo precedent). Rather than building the proposed new `OnboardingOverlay.tsx` component (3-step carousel + new `moving-motivators:onboarded` localStorage key), reused the existing "About this exercise" collapsible panel on `HomeScreen.tsx` — it already defaults to open for first-time visitors (hidden only after explicit dismiss via `mm_about_dismissed`), which is exactly the issue's own "Alternative: simpler approach" option. Closed the two remaining content gaps: appended a sentence on drag/keyboard ranking mechanics to `home.about.how`, and added a new "What happens after" section (`home.about.nextTitle` / `home.about.next`) covering results + sharing + history, inserted between "How it works" and "When to use it". All 4 locales (EN/ES/BE/RU) updated. Avoided a second, redundant onboarding mechanism and a new localStorage key. Bumped `package.json`/`package-lock.json` to 0.1.3.
+- Remaining: #5 (favicon, awaiting `approved` after research-more); #16 (Dashboard side, agile-toolkit.github.io); #22 (Change Planner side, change-planner); #50/#51 also past 7-day threshold (since 2026-06-26) — auto-approve and implement next if still `needs-review`; #52/#53 past threshold too (since 2026-06-29) — auto-approve after #50/#51 if reached
+- Next task: check issues for human feedback; auto-approve #50 (JSON import companion to #47 export) next in issue-number order if still `needs-review`, else #51/#52/#53 in order; else research cycle for new findings
 
 ### 2026-07-05 — feat: solo motivator rank-trend table (issue #48)
 - Done: added `RankTrendTable` component in `ResultsView.tsx`, rendered below the current-session delta row in `SessionShiftPanel`; reads the `history` array already loaded from `moving-motivators:sessionHistory` (index 0 = current, newest-first), slices to the 6 most recent sessions; renders a compact table (motivator rows × session columns) using `MOTIVATORS` order for row labels (emoji + name), each cell shows `entry.ranked.indexOf(id) + 1`; rank 1–3 green / 8–10 red / 4–7 neutral badge via Tailwind classes with dark-mode variants; own collapsible toggle (default collapsed) independent from the outer shift panel; added `results.trendView`/`results.trendShow`/`results.trendHide` i18n keys to all 4 locales (EN/ES/BE/RU); bumped `package.json`/`package-lock.json` to 0.1.2; zero new dependencies
