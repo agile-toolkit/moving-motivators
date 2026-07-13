@@ -74,7 +74,8 @@
     "exportHistory": "Export history",
     "trendView": "Rank trend",
     "trendShow": "Show rank trend",
-    "trendHide": "Hide rank trend"
+    "trendHide": "Hide rank trend",
+    "importHistory": "Import history"
   },
   "facilitation": {
     "title": "Facilitation Guide",
@@ -147,7 +148,8 @@
       "trend": "Trend",
       "topMotivators": "Top motivator frequency",
       "sessions": "sessions",
-      "export": "Export"
+      "export": "Export",
+      "import": "Import"
     }
   },
   "motivators": {

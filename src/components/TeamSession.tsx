@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ref, set, onValue, push, update } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
@@ -152,13 +152,44 @@ function downloadTeamHistoryJson(history: TeamSessionHistoryEntry[]) {
   URL.revokeObjectURL(url)
 }
 
+function isValidTeamHistoryEntry(v: unknown): v is TeamSessionHistoryEntry {
+  if (!v || typeof v !== 'object') return false
+  const e = v as Record<string, unknown>
+  return typeof e.sessionId === 'string' && typeof e.date === 'string' &&
+    Array.isArray(e.topMotivators) && typeof e.participantCount === 'number'
+}
+
 function SessionHistoryPanel() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [view, setView] = useState<'list' | 'trend'>('list')
-  const history: TeamSessionHistoryEntry[] = JSON.parse(
-    localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
+  const [history, setHistory] = useState<TeamSessionHistoryEntry[]>(() =>
+    JSON.parse(localStorage.getItem('moving-motivators:teamSessionHistory') || '[]')
   )
+  const importRef = useRef<HTMLInputElement>(null)
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result as string) as unknown[]
+        if (!Array.isArray(parsed)) return
+        const valid = parsed.filter(isValidTeamHistoryEntry) as TeamSessionHistoryEntry[]
+        if (valid.length === 0) return
+        setHistory(existing => {
+          const seen = new Set(existing.map(en => en.sessionId))
+          const merged = [...existing, ...valid.filter(en => !seen.has(en.sessionId))].slice(0, 10)
+          localStorage.setItem('moving-motivators:teamSessionHistory', JSON.stringify(merged))
+          return merged
+        })
+      } catch { /* ignore malformed JSON */ }
+      e.target.value = ''
+    }
+    reader.readAsText(file)
+  }
+
   if (history.length === 0) return null
 
   // Compute top-3 appearance frequency per motivator across all stored sessions
@@ -208,12 +239,27 @@ function SessionHistoryPanel() {
                 {t('team.history.trend')}
               </button>
             </div>
-            <button
-              onClick={() => downloadTeamHistoryJson(history)}
-              className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
-            >
-              ⬇️ {t('team.history.export')}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => importRef.current?.click()}
+                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
+              >
+                ⬆️ {t('team.history.import')}
+              </button>
+              <button
+                onClick={() => downloadTeamHistoryJson(history)}
+                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
+              >
+                ⬇️ {t('team.history.export')}
+              </button>
+              <input
+                ref={importRef}
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={handleImportFile}
+              />
+            </div>
           </div>
 
           {view === 'list' && (
