@@ -74,7 +74,8 @@
     "exportHistory": "Exportar historial",
     "trendView": "Tendencia de clasificación",
     "trendShow": "Mostrar tendencia de clasificación",
-    "trendHide": "Ocultar tendencia de clasificación"
+    "trendHide": "Ocultar tendencia de clasificación",
+    "importHistory": "Importar historial"
   },
   "facilitation": {
     "title": "Guía de Facilitación",
@@ -147,7 +148,8 @@
       "trend": "Tendencia",
       "topMotivators": "Frecuencia de motivadores principales",
       "sessions": "sesiones",
-      "export": "Exportar"
+      "export": "Exportar",
+      "import": "Importar"
     }
   },
   "motivators": {

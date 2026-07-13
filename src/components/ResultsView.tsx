@@ -222,13 +222,37 @@ function RankTrendTable({ history }: { history: SessionEntry[] }) {
   )
 }
 
-function SessionShiftPanel({ current, history, onRestore }: {
+function isValidSessionEntry(v: unknown): v is SessionEntry {
+  if (!v || typeof v !== 'object') return false
+  const e = v as Record<string, unknown>
+  return typeof e.date === 'string' && typeof e.savedAt === 'number' && Array.isArray(e.ranked)
+}
+
+function SessionShiftPanel({ current, history, onRestore, onImport }: {
   current: MotivatorItem[]
   history: SessionEntry[]
   onRestore: (entry: SessionEntry) => void
+  onImport: (entries: SessionEntry[]) => void
 }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+  const importRef = useRef<HTMLInputElement>(null)
+
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result as string) as unknown[]
+        if (!Array.isArray(parsed)) return
+        const valid = parsed.filter(isValidSessionEntry) as SessionEntry[]
+        if (valid.length > 0) onImport(valid)
+      } catch { /* ignore malformed JSON */ }
+      e.target.value = ''
+    }
+    reader.readAsText(file)
+  }
 
   if (history.length < 2) return null
 
@@ -324,12 +348,27 @@ function SessionShiftPanel({ current, history, onRestore }: {
               <p className="text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wide">
                 {t('results.sessionHistory')}
               </p>
-              <button
-                onClick={() => downloadJson('moving-motivators-solo-history.json', history)}
-                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
-              >
-                ⬇️ {t('results.exportHistory')}
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => importRef.current?.click()}
+                  className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                >
+                  ⬆️ {t('results.importHistory')}
+                </button>
+                <button
+                  onClick={() => downloadJson('moving-motivators-solo-history.json', history)}
+                  className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                >
+                  ⬇️ {t('results.exportHistory')}
+                </button>
+              </div>
+              <input
+                ref={importRef}
+                type="file"
+                accept=".json,application/json"
+                className="hidden"
+                onChange={handleImportFile}
+              />
             </div>
             {history.slice(1).map(entry => (
               <div
@@ -431,6 +470,16 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
     window.open(`${WORK_PROFILES_URL}?motivators=${snapshot}`, '_blank', 'noopener')
   }
 
+  function handleImportSoloHistory(incoming: SessionEntry[]) {
+    const existing: SessionEntry[] = JSON.parse(localStorage.getItem('moving-motivators:sessionHistory') || '[]')
+    const seen = new Set(existing.map(e => e.savedAt))
+    const merged = [...existing, ...incoming.filter(e => !seen.has(e.savedAt))]
+      .sort((a, b) => b.savedAt - a.savedAt)
+      .slice(0, 20)
+    localStorage.setItem('moving-motivators:sessionHistory', JSON.stringify(merged))
+    setHistory(merged)
+  }
+
   function commitSaveAs() {
     const label = saveAsValue.trim()
     if (!label) return
@@ -498,7 +547,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
 
       {/* Session shift panel */}
-      <SessionShiftPanel current={motivators} history={history} onRestore={onRestore} />
+      <SessionShiftPanel current={motivators} history={history} onRestore={onRestore} onImport={handleImportSoloHistory} />
 
       {/* Insight hint */}
       {change && negatives.length > 0 && (
