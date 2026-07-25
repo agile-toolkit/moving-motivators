@@ -25,3 +25,11 @@ A team mode that works over a shared link is the whole gap.
 - The card set stays faithful to the original exercise.
 
 *Repo: `agile-toolkit/moving-motivators`*
+
+---
+
+## Latitude
+
+Every goal above names an outcome, not a mechanism. Any roadmap that moves a
+signal without crossing a boundary is fair game — including approaches nobody
+in this category has tried. Invention is expected, not merely permitted.
