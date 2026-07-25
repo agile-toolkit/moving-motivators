@@ -7,7 +7,7 @@
 
 **Live app:** https://bthos.github.io/moving-motivators/
 
-> See [`.artefacts/GOAL.md`](.artefacts/GOAL.md) for why this app exists and [`.artefacts/ROADMAP.md`](.artefacts/ROADMAP.md) for what's next.
+> See [`GOAL.md`](GOAL.md) for why this app exists and [`ROADMAP.md`](ROADMAP.md) for what's next.
 
 ---
 
