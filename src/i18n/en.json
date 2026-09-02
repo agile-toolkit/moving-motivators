@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Moving Motivators",
-    "subtitle": "A Management 3.0 practice",
+    "subtitle": "A motivator-ranking exercise",
     "tagline": "Rank what drives you. See how change affects it."
   },
   "home": {
@@ -15,7 +15,7 @@
     "about": {
       "toggle": "About this exercise",
       "title": "What is Moving Motivators?",
-      "body": "Moving Motivators is a Management 3.0 practice developed by Jurgen Appelo. It is built on the CHAMPFROGS model — ten intrinsic motivators that research suggests drive most of our engagement and satisfaction at work. Unlike external rewards (salary, perks), these are internal drivers: the things that make work feel meaningful and energizing, or deeply frustrating when absent.",
+      "body": "Moving Motivators is built on the CHAMPFROGS model, developed by Jurgen Appelo — ten intrinsic motivators that research suggests drive most of our engagement and satisfaction at work. Unlike external rewards (salary, perks), these are internal drivers: the things that make work feel meaningful and energizing, or deeply frustrating when absent.",
       "howTitle": "How it works",
       "how": "The exercise has two phases. First, rank the ten motivators by personal importance — most important on the right. Drag the cards, or use the keyboard (Tab to a card, arrow keys to move it). Then describe a change you are facing (a new manager, a restructure, a move to remote work) and assess whether it positively or negatively affects each motivator. The result is an honest map of what matters to you and whether the change threatens it.",
       "nextTitle": "What happens after",

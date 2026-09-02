@@ -97,18 +97,6 @@ export default function MotivatorInfo({ id, onClose }: Props) {
           </section>
 
         </div>
-
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 dark:border-gray-800">
-          <a
-            href="https://management30.com/practice/moving-motivators/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`text-xs ${meta.textColor} hover:underline`}
-          >
-            Management 3.0 — Moving Motivators ↗
-          </a>
-        </div>
       </div>
     </>
   )

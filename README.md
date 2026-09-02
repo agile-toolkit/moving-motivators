@@ -1,6 +1,6 @@
 # Moving Motivators
 
-> An interactive [Management 3.0](https://management30.com/practice/moving-motivators/) tool for exploring what motivates you and your team — built with React, TypeScript, and Vite.
+> An interactive Moving Motivators tool for exploring what motivates you and your team — built with React, TypeScript, and Vite.
 
 [![Deploy](https://github.com/bthos/moving-motivators/actions/workflows/deploy.yml/badge.svg)](https://github.com/bthos/moving-motivators/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
@@ -13,7 +13,7 @@
 
 ## What is Moving Motivators?
 
-Moving Motivators is a Management 3.0 practice based on the **CHAMPFROGS** model — ten intrinsic motivators:
+Moving Motivators is built on the **CHAMPFROGS** model, developed by Jurgen Appelo — ten intrinsic motivators:
 
 | # | Motivator | Description |
 |---|-----------|-------------|
@@ -145,7 +145,7 @@ All keys are namespaced `moving-motivators:*` except two shared-pattern keys (`t
 ## Part of the Agile Tools Suite
 
 Moving Motivators is **App 1** of the [bthos Agile Tools](https://github.com/bthos) open-source suite — free,
-team-focused implementations of Agile and Management 3.0 practices.
+team-focused implementations of Agile facilitation practices.
 
 ---
 

@@ -52,17 +52,17 @@ practitioners link to wins the community.
 target for this app):** become the default digital Moving Motivators — the
 version practitioners link to when they explain or run the exercise. The
 physical card exercise breaks down the moment a team is distributed, and the
-Management 3.0 community has no free digital version worth linking to. A
+practice's community has no free digital version worth linking to. A
 team mode that works over a shared link is the whole gap.
 
 **App-specific signals:**
-1. Inbound links from coaching blogs, trainings, and Management 3.0 material.
+1. Inbound links from coaching blogs, trainings, and facilitation material.
 2. Ratio of team sessions to solo sessions — team use is the advocacy signal.
 3. GitHub stars.
 4. Sessions that end in a shared or exported result.
 
 **App-specific boundaries:**
-- Not a full Management 3.0 suite.
+- Not a full facilitation-methods suite.
 - Not a coaching marketplace or directory.
 - The card set stays faithful to the original exercise.
 

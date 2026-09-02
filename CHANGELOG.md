@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.2 — Remove Management 3.0 trademark references (2026-09-02)
+
+- **content**: removed "Management 3.0" text and the outbound
+  `management30.com` link (app subtitle, the "About this exercise" body
+  copy, `index.html`'s meta description, `README.md`, `GOAL.md`). Kept
+  everything else as-is — the CHAMPFROGS model name, Jurgen Appelo
+  attribution, and the app's own name are descriptive practice
+  references, not the registered "Management 3.0" mark itself.
+
 ## 0.2.1 — Fix broken test suite (2026-09-02)
 
 - **fix**: `npm test` was broken — `vitest` was declared but its `jsdom`

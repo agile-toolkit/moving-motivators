@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Moving Motivators",
-    "subtitle": "Una práctica de Management 3.0",
+    "subtitle": "Un ejercicio de clasificación de motivadores",
     "tagline": "Ordena lo que te impulsa. Ve cómo el cambio lo afecta."
   },
   "home": {
@@ -15,7 +15,7 @@
     "about": {
       "toggle": "Acerca de este ejercicio",
       "title": "¿Qué son los Moving Motivators?",
-      "body": "Moving Motivators es una práctica de Management 3.0 desarrollada por Jurgen Appelo. Se basa en el modelo CHAMPFROGS — diez motivadores intrínsecos que la investigación sugiere que impulsan la mayor parte de nuestro compromiso y satisfacción en el trabajo. A diferencia de las recompensas externas (salario, beneficios), estos son impulsores internos: las cosas que hacen que el trabajo se sienta significativo y energizante, o profundamente frustrante cuando están ausentes.",
+      "body": "Moving Motivators se basa en el modelo CHAMPFROGS, desarrollado por Jurgen Appelo — diez motivadores intrínsecos que la investigación sugiere que impulsan la mayor parte de nuestro compromiso y satisfacción en el trabajo. A diferencia de las recompensas externas (salario, beneficios), estos son impulsores internos: las cosas que hacen que el trabajo se sienta significativo y energizante, o profundamente frustrante cuando están ausentes.",
       "howTitle": "Cómo funciona",
       "how": "El ejercicio tiene dos fases. Primero, ordena los diez motivadores por importancia personal — el más importante a la derecha. Arrastra las tarjetas, o usa el teclado (Tab para seleccionar una tarjeta, flechas para moverla). Luego describe un cambio al que te enfrentas (un nuevo gerente, una reestructuración, un paso al trabajo remoto) y evalúa si afecta positiva o negativamente a cada motivador. El resultado es un mapa honesto de lo que te importa y si el cambio lo amenaza.",
       "nextTitle": "Qué sucede después",

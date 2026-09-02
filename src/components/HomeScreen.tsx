@@ -103,15 +103,7 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
               <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-1">{t('home.about.usesTitle')}</h3>
               <p>{t('home.about.uses')}</p>
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
-              <a
-                href="https://management30.com/practice/moving-motivators/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-brand-500 hover:underline"
-              >
-                Management 3.0 — Moving Motivators ↗
-              </a>
+            <div className="flex items-center justify-end pt-2 border-t border-gray-100 dark:border-gray-800">
               <button
                 onClick={dismissAbout}
                 className="text-xs text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
