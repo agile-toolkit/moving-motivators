@@ -6,10 +6,10 @@ Derived from GOAL.md. Rebuilt when GOAL changes or an epic ships.
 None — idle. See `## Next epics` below.
 
 ## Next epics
-1. **E1: Team Identity name handoff** — serves #2. Read `team-identity:draft` on host mount and offer a one-click "use this team's name" suggestion in the team session lobby, replacing the raw PIN as the display name in stored history. [#51](https://github.com/agile-toolkit/moving-motivators/issues/51)
-2. **E2: Personalized results coaching** — serves #1. Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52)
+1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
 
-Both issues are `needs-review` and past the 7-day staleness threshold (open since 2026-06-26 and 2026-06-29 respectively, as of 2026-07-25) — eligible for auto-approval on the next research/build cycle per the pipeline's stale-issue convention.
+## Recently shipped
+**E1: Team Identity name handoff** (2026-09-01) — see `## Shipped`. Adopted `agile-toolkit:activeTeam` (the Dashboard's new cross-app team-identity contract, GOAL's "shared team object" thesis) instead of reading `team-identity:draft` directly, per the auto-approval comment on [#51](https://github.com/agile-toolkit/moving-motivators/issues/51) — same outcome, but the mechanism now round-trips through the suite contract instead of a point-to-point read.
 
 ## Polish backlog
 - Favicon fix — `public/favicon.svg` is corrupted; a finalized teal `#0d9488` descending-bars SVG design is ready, awaiting the `approved` label. [#5](https://github.com/agile-toolkit/moving-motivators/issues/5)
@@ -26,3 +26,12 @@ Both issues are `needs-review` and past the 7-day staleness threshold (open sinc
 - ~~PWA / offline support for workshop use~~
 - ~~Suite integrations: Work Profiles, Sprint Metrics, Change Planner (Moving Motivators side)~~
 - ~~First-run onboarding content in the "About this exercise" panel~~
+
+**v0.2.0 — [E1: Team Identity name handoff](https://github.com/agile-toolkit/moving-motivators/issues/51)** (2026-09-01):
+- ~~`src/activeTeam.ts` reads/writes the suite-wide `agile-toolkit:activeTeam`
+  contract~~
+- ~~Host lobby offers a one-click "use this team's name" suggestion, plus a
+  plain text field for typing one directly~~
+- ~~The accepted/typed name replaces the raw session PIN in
+  `motivationSnapshot` / `teamSessionHistory`, falling back to the PIN only
+  when no name was entered~~

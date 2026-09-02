@@ -150,7 +150,9 @@
       "sessions": "сессий",
       "export": "Экспортировать",
       "import": "Импорт"
-    }
+    },
+    "namePlaceholder": "Название команды (необязательно)",
+    "useSuggestedName": "Использовать \"{{name}}\""
   },
   "motivators": {
     "curiosity": {

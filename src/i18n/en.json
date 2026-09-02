@@ -150,7 +150,9 @@
       "sessions": "sessions",
       "export": "Export",
       "import": "Import"
-    }
+    },
+    "namePlaceholder": "Team name (optional)",
+    "useSuggestedName": "Use \"{{name}}\""
   },
   "motivators": {
     "curiosity": {

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ref, set, onValue, push, update } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
+import { readActiveTeam, writeActiveTeam } from '../activeTeam'
 import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
 import RankingBoard from './RankingBoard'
@@ -538,6 +539,8 @@ export default function TeamSession({
   const [sessionPhase, setSessionPhase] = useState<'lobby' | 'ranking' | 'assessing' | 'revealed'>('lobby')
   const [participants, setParticipants] = useState<Record<string, FirebaseParticipant>>({})
   const [sessionTimer, setSessionTimer] = useState<{ startedAt: number; durationSecs: number } | null>(null)
+  const [teamName, setTeamName] = useState('')
+  const [teamNameSuggestion, setTeamNameSuggestion] = useState<string | null>(null)
   const db = getFirebaseDb()
 
   // HOST: create session
@@ -554,6 +557,25 @@ export default function TeamSession({
       createdAt: Date.now(),
     })
   }, [screen])
+
+  // HOST: offer the suite-wide active team name (E1 #51) instead of asking
+  // again — read once on mount, never overwrite what the host types.
+  useEffect(() => {
+    if (screen !== 'team-host') return
+    const active = readActiveTeam()
+    if (active?.name) setTeamNameSuggestion(active.name)
+  }, [screen])
+
+  const acceptTeamNameSuggestion = () => {
+    if (!teamNameSuggestion) return
+    setTeamName(teamNameSuggestion)
+    writeActiveTeam(teamNameSuggestion, 'moving-motivators')
+  }
+
+  const commitTeamName = (value: string) => {
+    setTeamName(value)
+    if (value.trim()) writeActiveTeam(value, 'moving-motivators')
+  }
 
   // HOST: listen for all participant data (including motivators)
   useEffect(() => {
@@ -636,8 +658,9 @@ export default function TeamSession({
           .sort((a, b) => avgRank[a] - avgRank[b])
           .slice(0, 3) as MotivatorId[]
         const date = new Date().toISOString().slice(0, 10)
+        const resolvedTeamName = teamName.trim() || pin
         const snapshot = {
-          teamName: pin,
+          teamName: resolvedTeamName,
           date,
           topMotivators,
           participantCount: completedEntries.length,
@@ -645,7 +668,7 @@ export default function TeamSession({
         localStorage.setItem('moving-motivators:motivationSnapshot', JSON.stringify(snapshot))
         const historyEntry: TeamSessionHistoryEntry = {
           sessionId: pin,
-          teamName: pin,
+          teamName: resolvedTeamName,
           date,
           topMotivators,
           participantCount: completedEntries.length,
@@ -677,6 +700,29 @@ export default function TeamSession({
             {pin}
           </div>
         </div>
+
+        {/* Optional team name — replaces the raw PIN in saved history */}
+        {sessionPhase === 'lobby' && (
+          <div className="flex flex-col items-center gap-1.5 w-full">
+            <input
+              type="text"
+              value={teamName}
+              onChange={e => commitTeamName(e.target.value)}
+              placeholder={t('team.namePlaceholder')}
+              maxLength={40}
+              className="w-full text-center text-sm px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
+            />
+            {teamNameSuggestion && teamNameSuggestion !== teamName && (
+              <button
+                type="button"
+                onClick={acceptTeamNameSuggestion}
+                className="text-xs text-brand-600 dark:text-brand-400 hover:underline"
+              >
+                {t('team.useSuggestedName', { name: teamNameSuggestion })}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* QR code — hidden on small screens (< 480px) where host's phone can't be shared) */}
         {pin && (

@@ -150,7 +150,9 @@
       "sessions": "сесій",
       "export": "Экспартаваць",
       "import": "Імпартаваць"
-    }
+    },
+    "namePlaceholder": "Назва каманды (неабавязкова)",
+    "useSuggestedName": "Выкарыстаць \"{{name}}\""
   },
   "motivators": {
     "curiosity": {
