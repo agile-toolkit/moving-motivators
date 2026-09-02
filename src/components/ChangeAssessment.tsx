@@ -70,7 +70,7 @@ export default function ChangeAssessment({ motivators, change, onChangeText, onM
                     <button
                       onClick={() => onInfo(item.id)}
                       title={t('common.learnMore')}
-                      className="text-[11px] text-gray-300 hover:text-gray-500 dark:text-gray-700 dark:hover:text-gray-500 transition-colors leading-none py-0.5"
+                      className="text-[11px] text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors leading-none py-0.5"
                     >
                       ⓘ
                     </button>

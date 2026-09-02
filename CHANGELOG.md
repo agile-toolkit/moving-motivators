@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.3 — Fix low-contrast unranked/unselected controls (2026-09-02)
+
+- **fix**: the unselected-state text for impact-vote controls and
+  unranked-motivator drag handles used `text-gray-300` (light mode) /
+  `text-gray-700` (dark mode) against a near-white/near-black background —
+  well below WCAG AA contrast, making the control nearly invisible until
+  hover. Bumped to `gray-400`/`gray-600` (light) and `gray-600`/`gray-400`
+  (dark) in `MotivatorCard.tsx`, `RankingBoard.tsx`, and
+  `ChangeAssessment.tsx`. Found via a suite-wide UX audit.
+
 ## 0.2.2 — Remove Management 3.0 trademark references (2026-09-02)
 
 - **content**: removed "Management 3.0" text and the outbound

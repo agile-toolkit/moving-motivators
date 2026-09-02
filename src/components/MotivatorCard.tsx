@@ -61,7 +61,7 @@ export default function MotivatorCard({ item, showRank, showImpact, onImpact, is
               onClick={() => onImpact(item.id, lvl)}
               title={t(`assess.${lvl}`)}
               className={`flex-1 py-1 text-xs font-bold transition-colors
-                ${item.impact === lvl ? impactBg[lvl] : 'text-gray-300 hover:text-gray-500 dark:text-gray-700 dark:hover:text-gray-500'}`}
+                ${item.impact === lvl ? impactBg[lvl] : 'text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400'}`}
             >
               {impactIcon[lvl]}
             </button>
