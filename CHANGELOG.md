@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.1 — Fix broken test suite (2026-09-02)
+
+- **fix**: `npm test` was broken — `vitest` was declared but its `jsdom`
+  environment dependency was never installed, and zero test files existed,
+  so the command failed outright with no coverage. Added `jsdom`, plus
+  real unit tests for `src/activeTeam.ts` (the suite-wide team-name
+  contract's read/write/no-op logic) and `src/data/motivators.ts` (the
+  CHAMPFROGS motivator table and default-ranking helper). `npm test` now
+  passes cleanly: 2 files, 12 tests.
+
 ## 0.2.0 — E1: Team Identity name handoff (2026-09-01)
 
 - **feat**: the host lobby now offers a one-click "use this team's name"
