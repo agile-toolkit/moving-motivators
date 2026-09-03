@@ -28,6 +28,17 @@ All notable changes to this project are documented here.
 - **perf**: entry chunk 230 kB gz → 119 kB gz (lazy Firebase + html2canvas).
 - **ci**: `npm test` now runs before `npm run build` in `deploy.yml`.
 
+## 0.2.10 — Facilitator Mode persists across suite apps (2026-09-03)
+
+- **fix**: `useFacilitatorMode`'s storage key changed from
+  `'moving-motivators:facilitatorMode'` to the shared
+  `'agile-toolkit:facilitatorMode'` — user-requested so Facilitator Mode
+  survives navigating to another suite app in the same tab instead of
+  resetting. sessionStorage is already shared per-origin-per-tab; this
+  was previously app-prefixed specifically to keep it isolated, which
+  turned out to be the wrong default for a cross-app presentation
+  session.
+
 ## 0.2.9 — Fix MotivatorInfo close button using the × variant (2026-09-03)
 
 - **fix (follow-up)**: the motivator-info drawer's close button used `×`

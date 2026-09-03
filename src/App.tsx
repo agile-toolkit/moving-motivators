@@ -60,7 +60,7 @@ function readJoinParam(): string {
 function App() {
   const { t } = useTranslation()
   const isOnline = useOnlineStatus()
-  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('moving-motivators:facilitatorMode')
+  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('agile-toolkit:facilitatorMode')
   const initialChange = readChangeParam()
   const initialJoinPin = readJoinParam()
   const [screen, setScreen] = useState<Screen>(

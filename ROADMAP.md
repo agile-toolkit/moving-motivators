@@ -9,6 +9,8 @@ None — idle. See `## Next epics` below.
 1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
 
 ## Recently shipped
+**Facilitator Mode persists across suite apps** (2026-09-03) — see `## Shipped`. `useFacilitatorMode`'s storage key changed to the shared `agile-toolkit:facilitatorMode` so the mode survives switching to another suite app in the same tab, per direct user request.
+
 **Fix MotivatorInfo close button using the × variant** (2026-09-03) — see `## Shipped`. Follow-up to the emoji→SVG sweep — this button used `×` (multiplication sign) rather than `✕`, missed by the original grep. `TeamSession.tsx`'s `×{count}` badge is genuine multiplication, left as text.
 
 **Replace decorative ✕ emoji with SVG icons** (2026-09-03) — see `## Shipped`. Part of a suite-wide emoji→SVG sweep the user asked for.
@@ -30,6 +32,7 @@ None — idle. See `## Next epics` below.
 - Two open issues have no remaining work in *this* repo: [#16](https://github.com/agile-toolkit/moving-motivators/issues/16) (Dashboard card reader lives in `agile-toolkit.github.io`) and [#53](https://github.com/agile-toolkit/moving-motivators/issues/53) (Improvement Board deep link needs zero Moving Motivators changes — `?change=` param already exists from #22). [#22](https://github.com/agile-toolkit/moving-motivators/issues/22)'s Change Planner-side sidebar is likewise pending in the `change-planner` repo, not here.
 
 ## Shipped
+- ~~Unify Facilitator Mode's storage key to the shared `agile-toolkit:facilitatorMode` so it persists across suite apps~~
 - ~~Fix MotivatorInfo's close button using the × variant instead of ✕~~
 - ~~Replace decorative ✕ back/close text glyphs with a shared SVG icon~~
 - ~~Hide Home's Facilitation guide link and About panel in Facilitator Mode~~
