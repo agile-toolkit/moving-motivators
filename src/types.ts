@@ -33,6 +33,8 @@ export interface SessionEntry {
   date: string
   savedAt: number
   ranked: MotivatorId[]
+  /** First 3 of `ranked`, duplicated for consumers that only want the top motivators (e.g. Sprint Metrics' loadMotivatorSnapshot). Optional: absent on entries saved before this field existed. */
+  topMotivators?: MotivatorId[]
   change: string
   changes: Record<string, string>
 }

@@ -4,6 +4,20 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.5 — Fix Sprint Metrics never receiving motivator data (2026-09-03)
+
+- **fix (broken integration, missing field)**: `moving-motivators:lastSession`
+  never included a `topMotivators` field — only `ranked` (the full,
+  ordered list). Sprint Metrics' `loadMotivatorSnapshot()` fallback
+  specifically checks `Array.isArray(parsed?.topMotivators)` before
+  using this key, so that check was always false and the whole
+  fallback path was dead: Sprint Metrics could only ever pick up
+  motivator context via a manual file import, never automatically from
+  a solo session here. Found by a suite-wide cross-app link audit.
+  Added `topMotivators` (first 3 of `ranked`) alongside the existing
+  field. Extracted session-building into `src/sessionEntry.ts`
+  (tested) while fixing it.
+
 ## 0.2.4 — Fix LanguagePicker dark mode (2026-09-02)
 
 - **fix**: `LanguagePicker.tsx` had zero `dark:` classes, so the

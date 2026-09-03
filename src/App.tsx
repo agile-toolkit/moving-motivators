@@ -14,6 +14,7 @@ function useOnlineStatus(): boolean {
 }
 import type { Screen, MotivatorItem, MotivatorId, SessionEntry, ImpactLevel } from './types'
 import { defaultMotivatorItems } from './data/motivators'
+import { buildSessionEntry } from './sessionEntry'
 import AppHeader from './components/AppHeader'
 import ThemeToggle from './components/ThemeToggle'
 import HomeScreen from './components/HomeScreen'
@@ -78,16 +79,7 @@ function App() {
   }
 
   const goToSoloResults = () => {
-    const ranked = [...motivators].sort((a, b) => a.rank - b.rank).map(m => m.id)
-    const changes: Record<string, string> = {}
-    motivators.forEach(m => { changes[m.id] = m.impact })
-    const session = {
-      date: new Date().toISOString().slice(0, 10),
-      savedAt: Date.now(),
-      ranked,
-      change,
-      changes,
-    }
+    const session = buildSessionEntry(motivators, change)
     localStorage.setItem('moving-motivators:lastSession', JSON.stringify(session))
     const existing = JSON.parse(localStorage.getItem('moving-motivators:sessionHistory') || '[]')
     localStorage.setItem(

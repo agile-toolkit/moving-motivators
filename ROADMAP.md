@@ -9,6 +9,8 @@ None — idle. See `## Next epics` below.
 1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
 
 ## Recently shipped
+**Fix Sprint Metrics never receiving motivator data** (2026-09-03) — see `## Shipped`. A suite-wide cross-app link audit found `moving-motivators:lastSession` never had a `topMotivators` field — Sprint Metrics' fallback read specifically checked for it and always came up empty. Added the field.
+
 **Fix LanguagePicker dark mode** (2026-09-02) — see `## Shipped`. The design-system's canonical `LanguagePicker.tsx` had never been given dark-mode classes; this app's copy inherited that gap. Synced with the now-fixed design-system source.
 
 **Fix low-contrast unranked/unselected controls** (2026-09-02) — see `## Shipped`. A suite-wide UX audit flagged `text-gray-300`/`gray-700` unselected-state text (impact-vote buttons, unranked drag handles) as failing WCAG AA contrast; bumped to `gray-400`/`gray-600` in both themes.
@@ -20,6 +22,7 @@ None — idle. See `## Next epics` below.
 - Two open issues have no remaining work in *this* repo: [#16](https://github.com/agile-toolkit/moving-motivators/issues/16) (Dashboard card reader lives in `agile-toolkit.github.io`) and [#53](https://github.com/agile-toolkit/moving-motivators/issues/53) (Improvement Board deep link needs zero Moving Motivators changes — `?change=` param already exists from #22). [#22](https://github.com/agile-toolkit/moving-motivators/issues/22)'s Change Planner-side sidebar is likewise pending in the `change-planner` repo, not here.
 
 ## Shipped
+- ~~Add `topMotivators` to `moving-motivators:lastSession` so Sprint Metrics' fallback read actually fires~~
 - ~~Solo mode: rank CHAMPFROGS motivators, assess a change's impact, interpreted results~~
 - ~~Team mode: host/join via PIN, Firebase realtime sync, phase-aware facilitator timer~~
 - ~~4-language i18n (EN/ES/BE/RU) with header language picker~~
