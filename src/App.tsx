@@ -17,6 +17,8 @@ import { defaultMotivatorItems } from './data/motivators'
 import { buildSessionEntry } from './sessionEntry'
 import AppHeader from './components/AppHeader'
 import ThemeToggle from './components/ThemeToggle'
+import FacilitatorToggle from './components/FacilitatorToggle'
+import { useFacilitatorMode } from './components/useFacilitatorMode'
 import HomeScreen from './components/HomeScreen'
 import RankingBoard from './components/RankingBoard'
 import ChangeAssessment from './components/ChangeAssessment'
@@ -45,6 +47,7 @@ function readJoinParam(): string {
 function App() {
   const { t } = useTranslation()
   const isOnline = useOnlineStatus()
+  const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('moving-motivators:facilitatorMode')
   const initialChange = readChangeParam()
   const initialJoinPin = readJoinParam()
   const [screen, setScreen] = useState<Screen>(
@@ -93,7 +96,15 @@ function App() {
 
   return (
     <div data-accent="coral" className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50">
-      <AppHeader title={t('app.title')} onTitleClick={reset}><ThemeToggle /></AppHeader>
+      <AppHeader title={t('app.title')} onTitleClick={reset} hideLanguagePicker={facilitatorMode}>
+        <ThemeToggle />
+        <FacilitatorToggle
+          active={facilitatorMode}
+          onToggle={toggleFacilitatorMode}
+          labelOn={t('facilitator.toggle_on')}
+          labelOff={t('facilitator.toggle_off')}
+        />
+      </AppHeader>
 
       {!isOnline && (
         <div role="status" className="bg-amber-50 dark:bg-amber-950 border-b border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 text-sm text-center py-2 px-4">

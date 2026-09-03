@@ -16,6 +16,10 @@ import LanguagePicker from './LanguagePicker'
  *       { key: 'settings', label: t('nav.settings'), active: screen === 'settings', onClick: () => setScreen('settings') },
  *     ]}
  *   />
+ *
+ * hideLanguagePicker: pass the app's facilitatorMode boolean (see
+ * useFacilitatorMode.ts) to hide the language picker while in facilitator
+ * mode, alongside navItems={facilitatorMode ? [] : [...]}.
  */
 
 interface NavItem {
@@ -29,6 +33,8 @@ interface AppHeaderProps {
   title: string
   onTitleClick?: () => void
   navItems?: NavItem[]
+  /** Hide the language picker — pass the app's facilitatorMode boolean. */
+  hideLanguagePicker?: boolean
   children?: React.ReactNode
 }
 
@@ -43,7 +49,7 @@ const GridIcon = () => (
   </svg>
 )
 
-export default function AppHeader({ title, onTitleClick, navItems, children }: AppHeaderProps) {
+export default function AppHeader({ title, onTitleClick, navItems, hideLanguagePicker, children }: AppHeaderProps) {
   return (
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
@@ -91,7 +97,7 @@ export default function AppHeader({ title, onTitleClick, navItems, children }: A
             </nav>
           )}
 
-          <LanguagePicker />
+          {!hideLanguagePicker && <LanguagePicker />}
 
           {children}
         </div>

@@ -128,6 +128,7 @@ All keys are namespaced `moving-motivators:*` except two shared-pattern keys (`t
 | `agile-toolkit:activeTeam` | `{ name: string, source: string, updatedAt: number }` | Cross-app team identity contract, defined by the Dashboard (`agile-toolkit.github.io`). Read on host mount to suggest a team name in the lobby instead of asking again; written back (`source: "moving-motivators"`) when the host accepts the suggestion or types their own name, so the suite-wide value stays current. See `src/activeTeam.ts`. |
 | `theme` | `'light' \| 'dark'` | Shared `ThemeToggle` component's stored preference (same key pattern used by other suite apps, scoped per-origin). |
 | `mm_about_dismissed` | `'1'` once dismissed | Marks the HomeScreen "About this exercise" panel as dismissed so it doesn't default open on return visits. |
+| `moving-motivators:facilitatorMode` (`sessionStorage`) | `'1' \| '0'` | Facilitator (projector) mode toggle — per-tab, not persisted across sessions. See `src/components/useFacilitatorMode.ts`. |
 
 ## Tech notes
 

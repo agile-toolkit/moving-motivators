@@ -239,5 +239,9 @@
   },
   "pwa": {
     "offlineBanner": "Estás sin conexión — solo modo individual"
+  },
+  "facilitator": {
+    "toggle_on": "Modo Facilitador",
+    "toggle_off": "Salir del Modo Facilitador"
   }
 }
