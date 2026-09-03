@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.4 — Fix LanguagePicker dark mode (2026-09-02)
+
+- **fix**: `LanguagePicker.tsx` had zero `dark:` classes, so the
+  language dropdown stayed light-themed (white background, dark text
+  invisible against the app's dark canvas in places) in dark mode.
+  Brought it in sync with the design-system's canonical (now fixed)
+  copy — full `dark:` coverage on the trigger, chevron, dropdown, and
+  each option. Found via a suite-wide audit after a user report.
+
 ## 0.2.3 — Fix low-contrast unranked/unselected controls (2026-09-02)
 
 - **fix**: the unselected-state text for impact-vote controls and

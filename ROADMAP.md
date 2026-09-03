@@ -9,6 +9,8 @@ None — idle. See `## Next epics` below.
 1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
 
 ## Recently shipped
+**Fix LanguagePicker dark mode** (2026-09-02) — see `## Shipped`. The design-system's canonical `LanguagePicker.tsx` had never been given dark-mode classes; this app's copy inherited that gap. Synced with the now-fixed design-system source.
+
 **Fix low-contrast unranked/unselected controls** (2026-09-02) — see `## Shipped`. A suite-wide UX audit flagged `text-gray-300`/`gray-700` unselected-state text (impact-vote buttons, unranked drag handles) as failing WCAG AA contrast; bumped to `gray-400`/`gray-600` in both themes.
 
 **E1: Team Identity name handoff** (2026-09-01) — see `## Shipped`. Adopted `agile-toolkit:activeTeam` (the Dashboard's new cross-app team-identity contract, GOAL's "shared team object" thesis) instead of reading `team-identity:draft` directly, per the auto-approval comment on [#51](https://github.com/agile-toolkit/moving-motivators/issues/51) — same outcome, but the mechanism now round-trips through the suite contract instead of a point-to-point read.
@@ -41,3 +43,7 @@ None — idle. See `## Next epics` below.
 **v0.2.3 — Fix low-contrast unranked/unselected controls** (2026-09-02):
 - ~~Bumped unselected-state text (impact votes, unranked drag handles) from
   `gray-300`/`gray-700` to `gray-400`/`gray-600` in both themes~~
+
+**v0.2.4 — Fix LanguagePicker dark mode** (2026-09-02):
+- ~~Synced `LanguagePicker.tsx` with the design-system's now-fixed
+  canonical copy — full `dark:` coverage~~
