@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import html2canvas from 'html2canvas'
 import type { MotivatorItem, MotivatorId, SessionEntry } from '../types'
 import { getMotivatorMeta, MOTIVATORS } from '../data/motivators'
+import { CloseIcon } from './icons'
 
 interface Props {
   motivators: MotivatorItem[]
@@ -625,7 +626,7 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
               onClick={() => { setSaveAsEditing(false); setSaveAsValue('') }}
               className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
-              ✕
+              <CloseIcon className="w-3.5 h-3.5" />
             </button>
           </div>
         )}

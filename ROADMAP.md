@@ -9,6 +9,8 @@ None — idle. See `## Next epics` below.
 1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
 
 ## Recently shipped
+**Replace decorative ✕ emoji with SVG icons** (2026-09-03) — see `## Shipped`. Part of a suite-wide emoji→SVG sweep the user asked for.
+
 **Hide informational elements in Facilitator Mode** (2026-09-03) — see `## Shipped`. A follow-up user request found the Facilitation guide link and About panel on Home were untouched by Facilitator Mode — `HomeScreen` never even received the flag. Fixed.
 
 **Facilitator Mode** (2026-09-03) — see `## Shipped`. A user asked for the presentation/projector mode already built for Team Identity to be adopted suite-wide; this is repo 2 of an 11-repo rollout, adopting the pattern now shared in `design-system/`.
@@ -26,6 +28,7 @@ None — idle. See `## Next epics` below.
 - Two open issues have no remaining work in *this* repo: [#16](https://github.com/agile-toolkit/moving-motivators/issues/16) (Dashboard card reader lives in `agile-toolkit.github.io`) and [#53](https://github.com/agile-toolkit/moving-motivators/issues/53) (Improvement Board deep link needs zero Moving Motivators changes — `?change=` param already exists from #22). [#22](https://github.com/agile-toolkit/moving-motivators/issues/22)'s Change Planner-side sidebar is likewise pending in the `change-planner` repo, not here.
 
 ## Shipped
+- ~~Replace decorative ✕ back/close text glyphs with a shared SVG icon~~
 - ~~Hide Home's Facilitation guide link and About panel in Facilitator Mode~~
 - ~~Facilitator Mode — bigger UI + hidden language picker for in-room presentation, adopted from the shared design-system pattern~~
 - ~~Add `topMotivators` to `moving-motivators:lastSession` so Sprint Metrics' fallback read actually fires~~

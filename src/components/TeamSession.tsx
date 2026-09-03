@@ -4,6 +4,7 @@ import { ref, set, onValue, push, update } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
 import { readActiveTeam, writeActiveTeam } from '../activeTeam'
+import { CloseIcon } from './icons'
 import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
 import RankingBoard from './RankingBoard'
@@ -371,8 +372,8 @@ function TeamResultsView({
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{t('team.phase.revealed')}</h2>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">
-          ✕ {t('common.back')}
+        <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 inline-flex items-center gap-1">
+          <CloseIcon className="w-3.5 h-3.5" /> {t('common.back')}
         </button>
       </div>
 

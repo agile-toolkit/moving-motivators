@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { CloseIcon } from './icons'
 
 interface Props {
   onBack: () => void
@@ -17,9 +18,9 @@ export default function FacilitationGuide({ onBack }: Props) {
         </div>
         <button
           onClick={onBack}
-          className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors inline-flex items-center gap-1"
         >
-          ✕ {t('common.back')}
+          <CloseIcon className="w-3.5 h-3.5" /> {t('common.back')}
         </button>
       </div>
 

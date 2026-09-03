@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.8 — Replace decorative ✕ emoji with SVG icons (2026-09-03)
+
+- **feat**: replaced 3 decorative `✕` back/close text glyphs
+  (FacilitationGuide's back button, ResultsView's save-as cancel,
+  TeamSession's revealed-phase back button) with `CloseIcon` from the
+  new shared `icons.tsx`, `currentColor` throughout. Part of a
+  suite-wide emoji→SVG sweep the user asked for.
+
 ## 0.2.7 — Hide informational elements in Facilitator Mode (2026-09-03)
 
 - **fix (follow-up)**: the Home screen's "Facilitation guide" link and
