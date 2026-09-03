@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.9 — Fix MotivatorInfo close button using the × variant (2026-09-03)
+
+- **fix (follow-up)**: the motivator-info drawer's close button used `×`
+  (multiplication sign, U+00D7) rather than `✕`, a variant the original
+  emoji→SVG sweep's grep missed. Replaced with `CloseIcon`. `TeamSession.tsx`'s
+  `×{count}` repeat-count badge is genuine multiplication notation, left
+  as plain text.
+
 ## 0.2.8 — Replace decorative ✕ emoji with SVG icons (2026-09-03)
 
 - **feat**: replaced 3 decorative `✕` back/close text glyphs

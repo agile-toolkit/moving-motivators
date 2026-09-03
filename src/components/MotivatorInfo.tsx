@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getMotivatorMeta } from '../data/motivators'
 import type { MotivatorId } from '../types'
+import { CloseIcon } from './icons'
 
 interface Props {
   id: MotivatorId
@@ -59,9 +60,9 @@ export default function MotivatorInfo({ id, onClose }: Props) {
           <button
             onClick={onClose}
             aria-label={t('common.close')}
-            className={`rounded-full w-8 h-8 flex items-center justify-center ${meta.textColor} hover:bg-black/10 transition-colors text-lg font-bold`}
+            className={`rounded-full w-8 h-8 flex items-center justify-center ${meta.textColor} hover:bg-black/10 transition-colors`}
           >
-            ×
+            <CloseIcon className="w-4 h-4" />
           </button>
         </div>
 
