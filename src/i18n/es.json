@@ -152,7 +152,10 @@
       "import": "Importar"
     },
     "namePlaceholder": "Nombre del equipo (opcional)",
-    "useSuggestedName": "Usar \"{{name}}\""
+    "useSuggestedName": "Usar \"{{name}}\"",
+    "join_error": "Sesión no encontrada. Verifica el PIN e inténtalo de nuevo.",
+    "host_error": "No se pudo iniciar una sesión ahora mismo. Inténtalo de nuevo.",
+    "loading": "Cargando sesión de equipo…"
   },
   "motivators": {
     "curiosity": {

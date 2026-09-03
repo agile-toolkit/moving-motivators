@@ -152,7 +152,10 @@
       "import": "Import"
     },
     "namePlaceholder": "Team name (optional)",
-    "useSuggestedName": "Use \"{{name}}\""
+    "useSuggestedName": "Use \"{{name}}\"",
+    "join_error": "Session not found. Check the PIN and try again.",
+    "host_error": "Could not start a session right now. Please try again.",
+    "loading": "Loading team session…"
   },
   "motivators": {
     "curiosity": {

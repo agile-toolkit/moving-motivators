@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function useOnlineStatus(): boolean {
@@ -23,7 +23,10 @@ import HomeScreen from './components/HomeScreen'
 import RankingBoard from './components/RankingBoard'
 import ChangeAssessment from './components/ChangeAssessment'
 import ResultsView from './components/ResultsView'
-import TeamSession from './components/TeamSession'
+// Lazy: TeamSession is the only thing that needs the Firebase SDK, and most
+// visitors never open a team session. Loading it on demand keeps ~450 kB out
+// of the entry chunk for everyone else.
+const TeamSession = lazy(() => import('./components/TeamSession'))
 import MotivatorInfo from './components/MotivatorInfo'
 import FacilitationGuide from './components/FacilitationGuide'
 
@@ -36,9 +39,19 @@ function readChangeParam(): string {
   }
 }
 
+/**
+ * The PIN from a join link, or '' if there isn't a usable one.
+ *
+ * This value is interpolated into a Realtime Database path, so it is
+ * constrained here rather than trusted: anything that is not a bare run of
+ * digits is dropped, and the length cap matches the six-digit PINs
+ * `session.ts` mints. The security rules reject the rest, but a link should
+ * not be able to steer a query at a path of its choosing in the first place.
+ */
 function readJoinParam(): string {
   try {
-    return new URLSearchParams(window.location.search).get('join') ?? ''
+    const raw = new URLSearchParams(window.location.search).get('join') ?? ''
+    return /^[0-9]{1,6}$/.test(raw) ? raw : ''
   } catch {
     return ''
   }
@@ -157,6 +170,7 @@ function App() {
           />
         )}
         {isTeamScreen && (
+          <Suspense fallback={<p className="pt-12 text-center text-gray-500 dark:text-gray-400">{t('team.loading')}</p>}>
           <TeamSession
             screen={screen}
             setScreen={setScreen}
@@ -167,6 +181,7 @@ function App() {
             onBack={reset}
             initialJoinPin={initialJoinPin}
           />
+          </Suspense>
         )}
       </main>
 

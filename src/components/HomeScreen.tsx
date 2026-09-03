@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isFirebaseConfigured } from '../firebase'
+import { isFirebaseConfigured } from '../firebaseConfig'
 
 interface Props {
   onSolo: () => void

@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import html2canvas from 'html2canvas'
 import type { MotivatorItem, MotivatorId, SessionEntry } from '../types'
 import { getMotivatorMeta, MOTIVATORS } from '../data/motivators'
 import { CloseIcon } from './icons'
@@ -446,6 +445,9 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
     if (!containerRef.current || copying) return
     setCopying(true)
     try {
+      // Loaded on demand: html2canvas is ~200 kB and only the "save as image"
+      // button needs it, so it stays out of the entry chunk.
+      const { default: html2canvas } = await import('html2canvas')
       const canvas = await html2canvas(containerRef.current, { useCORS: true, backgroundColor: '#f9fafb' })
       const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'))
       if (blob && navigator.clipboard?.write) {

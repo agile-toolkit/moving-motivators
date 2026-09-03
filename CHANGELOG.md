@@ -4,6 +4,30 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.3.0 — Session integrity, error boundary, code-splitting (2026-09-03)
+
+- **fix**: session PINs could silently destroy a live session — including a
+  Planning Poker one. Both apps minted 4-digit `Math.random()` PINs, wrote them
+  with `set()` without checking, and shared the path `sessions/<pin>` in the
+  *same* Firebase project. New `src/session.ts`: 900,000 PINs from
+  `crypto.getRandomValues`, `claimSession` checks-then-writes with retry, path
+  namespaced to `sessions/moving-motivators/<pin>`.
+- **fix**: joining never verified the session existed. Pushing a participant
+  into a mistyped PIN *created* that node, leaving the joiner waiting in a lobby
+  with no host and no indication anything was wrong.
+- **fix**: no session was ever deleted. `createdAt` is now server-set and drives
+  a 24h TTL in the security rules; the session is released once results are
+  captured locally.
+- **fix**: `?join=` was interpolated into a database path unvalidated.
+- **fix**: appending to `teamSessionHistory` spread the parsed value without
+  checking it was an array — a non-array left by an older version or a
+  half-restored workspace threw inside a click handler and took the session
+  down.
+- **feat**: `ErrorBoundary` at the root, with a scoped "clear this app's saved
+  data" recovery path.
+- **perf**: entry chunk 230 kB gz → 119 kB gz (lazy Firebase + html2canvas).
+- **ci**: `npm test` now runs before `npm run build` in `deploy.yml`.
+
 ## 0.2.9 — Fix MotivatorInfo close button using the × variant (2026-09-03)
 
 - **fix (follow-up)**: the motivator-info drawer's close button used `×`

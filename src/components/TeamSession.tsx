@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ref, set, onValue, push, update } from 'firebase/database'
+import { ref, set, onValue, push, update, get } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
+import { claimSession, releaseSession, sessionPath, isReclaimable } from '../session'
 import { readActiveTeam, writeActiveTeam } from '../activeTeam'
 import { CloseIcon } from './icons'
 import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
@@ -29,10 +30,6 @@ interface FirebaseParticipant {
   completed: boolean
   motivators?: MotivatorItem[]
   change?: string
-}
-
-function generatePin(): string {
-  return String(Math.floor(1000 + Math.random() * 9000))
 }
 
 // ── Individual Comparison Grid ─────────────────────────────────────────────
@@ -542,22 +539,38 @@ export default function TeamSession({
   const [sessionTimer, setSessionTimer] = useState<{ startedAt: number; durationSecs: number } | null>(null)
   const [teamName, setTeamName] = useState('')
   const [teamNameSuggestion, setTeamNameSuggestion] = useState<string | null>(null)
+  const [sessionError, setSessionError] = useState('')
   const db = getFirebaseDb()
 
-  // HOST: create session
+  // HOST: create session.
+  //
+  // claimSession picks a PIN nobody is using; the previous code minted a
+  // 4-digit one and wrote straight over whatever was there — including, since
+  // both apps shared `sessions/<pin>` in one Firebase project, a live Planning
+  // Poker session. `hosting` guards against the effect running twice (React
+  // StrictMode does exactly that in development) and stranding a session.
+  const hosting = useRef(false)
   useEffect(() => {
-    if (screen !== 'team-host' || !db) return
-    const newPin = generatePin()
-    setPin(newPin)
-    set(ref(db, `sessions/${newPin}`), {
+    if (screen !== 'team-host' || !db || hosting.current) return
+    hosting.current = true
+    let cancelled = false
+    claimSession(db, newPin => ({
       pin: newPin,
       hostId: 'host',
       change: '',
       phase: 'lobby',
-      participants: {},
-      createdAt: Date.now(),
-    })
-  }, [screen])
+    }))
+      .then(newPin => {
+        if (cancelled) return releaseSession(db, newPin)
+        setPin(newPin)
+      })
+      .catch(() => {
+        if (!cancelled) setSessionError(t('team.host_error'))
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [screen, db])
 
   // HOST: offer the suite-wide active team name (E1 #51) instead of asking
   // again — read once on mount, never overwrite what the host types.
@@ -581,7 +594,7 @@ export default function TeamSession({
   // HOST: listen for all participant data (including motivators)
   useEffect(() => {
     if (screen !== 'team-host' || !pin || !db) return
-    const unsub = onValue(ref(db, `sessions/${pin}/participants`), snap => {
+    const unsub = onValue(ref(db, `${sessionPath(pin)}/participants`), snap => {
       setParticipants(snap.val() ?? {})
     })
     return () => unsub()
@@ -591,7 +604,7 @@ export default function TeamSession({
   useEffect(() => {
     if (!['team-play'].includes(screen) || !pin || !db || participantId) return
     // guest-only: listen to phase changes
-    const unsub = onValue(ref(db, `sessions/${pin}/phase`), snap => {
+    const unsub = onValue(ref(db, `${sessionPath(pin)}/phase`), snap => {
       const phase = snap.val() as typeof sessionPhase
       if (phase) setSessionPhase(phase)
     })
@@ -601,7 +614,7 @@ export default function TeamSession({
   // PARTICIPANT: listen for timer (to show progress bar)
   useEffect(() => {
     if (screen !== 'team-play' || !pin || !db) return
-    const unsub = onValue(ref(db, `sessions/${pin}/timer`), snap => {
+    const unsub = onValue(ref(db, `${sessionPath(pin)}/timer`), snap => {
       setSessionTimer(snap.val() as { startedAt: number; durationSecs: number } | null)
     })
     return () => unsub()
@@ -610,18 +623,29 @@ export default function TeamSession({
   // HOST: write/clear timer in Firebase
   const writeTimer = (durationSecs: number) => {
     if (!db || !pin) return
-    set(ref(db, `sessions/${pin}/timer`), { startedAt: Date.now(), durationSecs })
+    set(ref(db, `${sessionPath(pin)}/timer`), { startedAt: Date.now(), durationSecs })
   }
 
   const clearSessionTimer = () => {
     if (!db || !pin) return
-    set(ref(db, `sessions/${pin}/timer`), null)
+    set(ref(db, `${sessionPath(pin)}/timer`), null)
   }
 
   // PARTICIPANT: join session
   const handleJoin = async () => {
     if (!db || !joinPin || !name) return
-    const pRef = push(ref(db, `sessions/${joinPin}/participants`))
+    setSessionError('')
+    // Check the session is really there first. Pushing a participant into a
+    // mistyped PIN used to *create* that node, leaving the joiner waiting in a
+    // lobby with no host and no way to tell that had happened. A session past
+    // its TTL counts as gone, so a recycled PIN never lands someone in
+    // yesterday's session either.
+    const snap = await get(ref(db, sessionPath(joinPin)))
+    if (!snap.exists() || isReclaimable(snap.val())) {
+      setSessionError(t('team.join_error'))
+      return
+    }
+    const pRef = push(ref(db, `${sessionPath(joinPin)}/participants`))
     const id = pRef.key!
     setParticipantId(id)
     await set(pRef, { name, completed: false, motivators: defaultMotivatorItems() })
@@ -632,7 +656,7 @@ export default function TeamSession({
   // PARTICIPANT: save final results to Firebase
   const handleParticipantDone = async () => {
     if (db && pin && participantId) {
-      await update(ref(db, `sessions/${pin}/participants/${participantId}`), {
+      await update(ref(db, `${sessionPath(pin)}/participants/${participantId}`), {
         completed: true,
         motivators,
         change,
@@ -645,7 +669,7 @@ export default function TeamSession({
   const advancePhase = (next: typeof sessionPhase) => {
     if (!db || !pin) return
     clearSessionTimer()
-    set(ref(db, `sessions/${pin}/phase`), next)
+    set(ref(db, `${sessionPath(pin)}/phase`), next)
     setSessionPhase(next)
     if (next === 'revealed') {
       const completedEntries = Object.values(participants).filter(p => p.completed && p.motivators)
@@ -674,14 +698,27 @@ export default function TeamSession({
           topMotivators,
           participantCount: completedEntries.length,
         }
-        const existing: TeamSessionHistoryEntry[] = JSON.parse(
-          localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
-        )
+        // Guarded rather than cast: spreading a non-array here (a key another
+        // app or an older version left behind) throws during a click handler
+        // and takes the whole session down with it.
+        let existing: TeamSessionHistoryEntry[] = []
+        try {
+          const parsed: unknown = JSON.parse(
+            localStorage.getItem('moving-motivators:teamSessionHistory') || '[]'
+          )
+          if (Array.isArray(parsed)) existing = parsed as TeamSessionHistoryEntry[]
+        } catch {
+          /* keep the empty list */
+        }
         localStorage.setItem(
           'moving-motivators:teamSessionHistory',
           JSON.stringify([historyEntry, ...existing].slice(0, 10))
         )
       }
+      // Results are captured locally now, so the Firebase session is spent.
+      // Dropping it frees the PIN and a connection slot immediately instead of
+      // leaving it to age out — nothing was ever deleted before this.
+      void releaseSession(db, pin)
       setScreen('team-results')
     }
   }
@@ -698,8 +735,13 @@ export default function TeamSession({
         <div className="flex flex-col items-center gap-1 w-full">
           <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('team.pinLabel')}</p>
           <div className="text-5xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-8 py-3 rounded-2xl">
-            {pin}
+            {/* Claiming a PIN is a round-trip now, so there is a moment before
+                one exists. An ellipsis beats rendering an empty box. */}
+            {pin || '……'}
           </div>
+          {sessionError && (
+            <p className="text-sm text-red-600 dark:text-red-400 text-center pt-2">{sessionError}</p>
+          )}
         </div>
 
         {/* Optional team name — replaces the raw PIN in saved history */}
@@ -811,14 +853,19 @@ export default function TeamSession({
           onChange={e => setJoinPin(e.target.value)}
           placeholder={t('team.joinPin')}
           className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-center text-2xl font-mono tracking-widest bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
-          maxLength={4}
+          maxLength={6}
+          inputMode="numeric"
         />
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder={t('team.yourName')}
+          maxLength={40}
           className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
         />
+        {sessionError && (
+          <p className="text-sm text-red-600 dark:text-red-400 text-center">{sessionError}</p>
+        )}
         <button
           onClick={handleJoin}
           disabled={!joinPin || !name}
