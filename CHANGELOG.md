@@ -19,8 +19,8 @@ All notable changes to this project are documented here.
   a 24h TTL in the security rules; the session is released once results are
   captured locally.
 - **fix**: `?join=` was interpolated into a database path unvalidated.
-- **fix**: appending to `teamSessionHistory` spread the parsed value without
-  checking it was an array — a non-array left by an older version or a
+- **fix**: appending to `sessionHistory` and `teamSessionHistory` spread the
+  parsed value without checking it was an array — a non-array left by an older version or a
   half-restored workspace threw inside a click handler and took the session
   down.
 - **feat**: `ErrorBoundary` at the root, with a scoped "clear this app's saved

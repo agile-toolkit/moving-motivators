@@ -97,7 +97,19 @@ function App() {
   const goToSoloResults = () => {
     const session = buildSessionEntry(motivators, change)
     localStorage.setItem('moving-motivators:lastSession', JSON.stringify(session))
-    const existing = JSON.parse(localStorage.getItem('moving-motivators:sessionHistory') || '[]')
+    // Guarded rather than spread blind: a non-array left by an older version or
+    // a half-restored workspace makes `...existing` throw inside a click
+    // handler, which loses the session the user just finished. Same defect as
+    // the team-session history append.
+    let existing: unknown[] = []
+    try {
+      const parsed: unknown = JSON.parse(
+        localStorage.getItem('moving-motivators:sessionHistory') || '[]'
+      )
+      if (Array.isArray(parsed)) existing = parsed
+    } catch {
+      /* keep the empty list */
+    }
     localStorage.setItem(
       'moving-motivators:sessionHistory',
       JSON.stringify([session, ...existing].slice(0, 20))
