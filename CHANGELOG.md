@@ -4,6 +4,15 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.2.7 — Hide informational elements in Facilitator Mode (2026-09-03)
+
+- **fix (follow-up)**: the Home screen's "Facilitation guide" link and
+  "About this exercise" panel — the latter defaulting open on first
+  visit — weren't gated by Facilitator Mode at all (`HomeScreen` never
+  received the prop). Both now hide while presenting; nothing else on
+  Home was reachable outside the standard nav-hiding pattern already
+  applied everywhere else.
+
 ## 0.2.6 — Facilitator Mode (2026-09-03)
 
 - **feat**: added Facilitator (projector) Mode — a presentation toggle for

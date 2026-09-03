@@ -8,11 +8,12 @@ interface Props {
   onJoin: () => void
   onFacilitation: () => void
   isOnline?: boolean
+  facilitatorMode?: boolean
 }
 
 const ABOUT_DISMISSED_KEY = 'mm_about_dismissed'
 
-export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isOnline = true }: Props) {
+export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isOnline = true, facilitatorMode = false }: Props) {
   const { t } = useTranslation()
   const firebaseReady = isFirebaseConfigured() && isOnline
   const [aboutOpen, setAboutOpen] = useState(
@@ -67,15 +68,18 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
         </div>
       </div>
 
-      {/* Facilitation guide link */}
-      <button
-        onClick={onFacilitation}
-        className="text-sm text-brand-500 hover:text-brand-700 hover:underline transition-colors"
-      >
-        📋 {t('team.facilitationGuide')}
-      </button>
+      {/* Facilitation guide link — not needed once presenting live */}
+      {!facilitatorMode && (
+        <button
+          onClick={onFacilitation}
+          className="text-sm text-brand-500 hover:text-brand-700 hover:underline transition-colors"
+        >
+          📋 {t('team.facilitationGuide')}
+        </button>
+      )}
 
-      {/* About panel */}
+      {/* About panel — not needed once presenting live */}
+      {!facilitatorMode && (
       <div className="w-full max-w-lg">
         <button
           onClick={() => setAboutOpen(v => !v)}
@@ -114,6 +118,7 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }

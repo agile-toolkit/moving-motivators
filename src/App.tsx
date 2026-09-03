@@ -120,6 +120,7 @@ function App() {
             onJoin={() => setScreen('team-join')}
             onFacilitation={() => setScreen('facilitation')}
             isOnline={isOnline}
+            facilitatorMode={facilitatorMode}
           />
         )}
         {screen === 'facilitation' && (
