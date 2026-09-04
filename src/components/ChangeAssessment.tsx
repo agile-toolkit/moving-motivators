@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MotivatorItem, ImpactLevel, MotivatorId } from '../types'
 import MotivatorCard from './MotivatorCard'
+import { ArrowLeftIcon, ArrowRightIcon } from './icons'
 
 interface Props {
   motivators: MotivatorItem[]
@@ -40,15 +41,15 @@ export default function ChangeAssessment({ motivators, change, onChangeText, onM
             className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400 resize-none"
           />
           <div className="flex gap-3 justify-end">
-            <button onClick={onBack} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              ← {t('common.back')}
+            <button onClick={onBack} className="inline-flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+              <ArrowLeftIcon className="w-3.5 h-3.5" /> {t('common.back')}
             </button>
             <button
               onClick={() => { if (change.trim()) setPhase('assess') }}
               disabled={!change.trim()}
-              className="px-6 py-2 text-sm font-medium bg-brand-500 text-white rounded-lg hover:bg-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium bg-brand-500 text-white rounded-lg hover:bg-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              {t('rank.next')} →
+              {t('rank.next')} <ArrowRightIcon className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -81,8 +82,8 @@ export default function ChangeAssessment({ motivators, change, onChangeText, onM
           </div>
 
           <div className="flex gap-3 justify-end">
-            <button onClick={() => setPhase('describe')} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              ← {t('common.back')}
+            <button onClick={() => setPhase('describe')} className="inline-flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+              <ArrowLeftIcon className="w-3.5 h-3.5" /> {t('common.back')}
             </button>
             <button onClick={onNext} className="px-6 py-2 text-sm font-medium bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors">
               {t('assess.seeResults')}

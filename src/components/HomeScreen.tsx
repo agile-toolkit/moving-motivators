@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isFirebaseConfigured } from '../firebaseConfig'
+import { CompassIcon, TeamIcon, ClipboardIcon } from './icons'
 
 interface Props {
   onSolo: () => void
@@ -39,14 +40,16 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
           onClick={onSolo}
           className="group flex flex-col items-start gap-2 p-6 bg-white dark:bg-gray-900 rounded-2xl card-shadow hover:card-shadow-lg transition-all border-2 border-transparent hover:border-brand-500 dark:border-gray-700 dark:hover:border-brand-500"
         >
-          <span className="text-3xl">🧭</span>
+          <CompassIcon className="w-8 h-8 text-gray-400 dark:text-gray-600" />
           <span className="font-semibold text-gray-900 dark:text-gray-50 text-lg">{t('home.solo')}</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">{t('home.soloDesc')}</span>
         </button>
 
         {/* Team */}
         <div className="flex flex-col gap-2">
-          <span className="font-semibold text-gray-900 dark:text-gray-50 text-lg px-1">🤝 {t('home.team')}</span>
+          <span className="inline-flex items-center gap-1.5 font-semibold text-gray-900 dark:text-gray-50 text-lg px-1">
+            <TeamIcon className="w-5 h-5" /> {t('home.team')}
+          </span>
           <button
             onClick={firebaseReady ? onHost : undefined}
             disabled={!firebaseReady}
@@ -72,9 +75,9 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
       {!facilitatorMode && (
         <button
           onClick={onFacilitation}
-          className="text-sm text-brand-500 hover:text-brand-700 hover:underline transition-colors"
+          className="inline-flex items-center gap-1 text-sm text-brand-500 hover:text-brand-700 hover:underline transition-colors"
         >
-          📋 {t('team.facilitationGuide')}
+          <ClipboardIcon className="w-3.5 h-3.5" /> {t('team.facilitationGuide')}
         </button>
       )}
 

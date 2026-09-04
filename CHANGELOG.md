@@ -3,6 +3,24 @@
 All notable changes to this project are documented here.
 
 ## Unreleased
+- **ui**: decorative emoji across `HomeScreen`, `FacilitationGuide`,
+  `ResultsView`, and `TeamSession` replaced with SVG icons from the shared
+  `icons.tsx` set (compass, team, clipboard, tip, warning/check-circle,
+  chart, upload/download, undo, print, link, person, tag, clock, hourglass) —
+  icons inherit `currentColor` and render at consistent sizes instead of
+  relying on the viewer's emoji font. `icons.tsx` synced from the design
+  system (64 icons total); `HandshakeIcon` was retired in favor of `TeamIcon`
+  (unused in this app, so nothing broke). Motivator card emoji and the
+  ↑ / ↓ impact-instruction prose are unchanged — those are product content,
+  not decoration.
+- **ui**: the `←`/`→` back/next chrome glyphs in `ChangeAssessment` (both
+  phases' back buttons, the describe-phase next button) and `RankingBoard`
+  (back button) swapped for `ArrowLeftIcon`/`ArrowRightIcon` on the side the
+  glyph was on. `MotivatorCard`'s `↑`/`↓` impact-vote glyphs and
+  `TeamSession`'s rank-delta badge with its "↑↓ = ≥2 ranks from average"
+  legend are deliberately left as text — each pairs a glyph with prose that
+  names that exact character, so converting one side without the other would
+  desync them.
 - **ci**: CI Node bumped 20 → 22 and `engines` declared. `jsdom@30` requires
   Node `^22.22.2 || ^24.15.0 || >=26`, so the test step could never have passed
   on the pinned Node 20 — invisible until this release started running the
