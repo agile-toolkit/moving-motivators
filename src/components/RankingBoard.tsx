@@ -10,6 +10,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import type { MotivatorItem, MotivatorId } from '../types'
 import MotivatorCard from './MotivatorCard'
+import { ArrowLeftIcon } from './icons'
 
 interface Props {
   motivators: MotivatorItem[]
@@ -95,8 +96,8 @@ export default function RankingBoard({ motivators, onChange, onNext, onSkip, onB
       </p>
 
       <div className="flex flex-wrap gap-3">
-        <button onClick={onBack} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
-          ← {t('common.back')}
+        <button onClick={onBack} className="inline-flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
+          <ArrowLeftIcon className="w-3.5 h-3.5" /> {t('common.back')}
         </button>
         <div className="flex-1" />
         <button onClick={onSkip} className="px-4 py-2 text-sm text-gray-500 border border-gray-200 rounded-lg hover:bg-gray-50 dark:text-gray-400 dark:border-gray-700 dark:hover:bg-gray-800 transition-colors">
