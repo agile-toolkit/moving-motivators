@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 
 ## Unreleased
+
+## 0.3.2 — Add glass effect to the header (2026-09-04)
+
+- **fix**: `AppHeader.tsx`'s background changed from opaque
+  `bg-white`/`dark:bg-gray-900` to `bg-[var(--glass)] backdrop-blur-sm` —
+  the Dashboard's own nav has always had this translucent blur effect,
+  but the shared header every app copies did not. User-reported
+  inconsistency. Uses the `--glass` token already sitting in this app's
+  own `tokens.css` but never actually consumed. Verified in both themes.
+
 - **ui**: decorative emoji across `HomeScreen`, `FacilitationGuide`,
   `ResultsView`, and `TeamSession` replaced with SVG icons from the shared
   `icons.tsx` set (compass, team, clipboard, tip, warning/check-circle,
