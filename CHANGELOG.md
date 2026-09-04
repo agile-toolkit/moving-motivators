@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 
 ## Unreleased
+- **ui**: decorative emoji across `HomeScreen`, `FacilitationGuide`,
+  `ResultsView`, and `TeamSession` replaced with SVG icons from the shared
+  `icons.tsx` set (compass, team, clipboard, tip, warning/check-circle,
+  chart, upload/download, undo, print, link, person, tag, clock, hourglass) —
+  icons inherit `currentColor` and render at consistent sizes instead of
+  relying on the viewer's emoji font. `icons.tsx` synced from the design
+  system (64 icons total); `HandshakeIcon` was retired in favor of `TeamIcon`
+  (unused in this app, so nothing broke). Motivator card emoji and the
+  ↑ / ↓ impact-instruction prose are unchanged — those are product content,
+  not decoration.
 - **ci**: CI Node bumped 20 → 22 and `engines` declared. `jsdom@30` requires
   Node `^22.22.2 || ^24.15.0 || >=26`, so the test step could never have passed
   on the pinned Node 20 — invisible until this release started running the

@@ -2,7 +2,21 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MotivatorItem, MotivatorId, SessionEntry } from '../types'
 import { getMotivatorMeta, MOTIVATORS } from '../data/motivators'
-import { CloseIcon } from './icons'
+import {
+  CloseIcon,
+  WarningIcon,
+  CheckCircleIcon,
+  TipIcon,
+  ChartIcon,
+  UploadIcon,
+  DownloadIcon,
+  UndoIcon,
+  ClipboardIcon,
+  PrintIcon,
+  LinkIcon,
+  PersonIcon,
+  TagIcon,
+} from './icons'
 
 interface Props {
   motivators: MotivatorItem[]
@@ -100,16 +114,16 @@ function InterpretationPanel({ motivators, change, onInfo }: {
       </div>
 
       {/* Pattern insight */}
-      <div className={`rounded-xl px-4 py-3 text-sm leading-relaxed
+      <div className={`rounded-xl px-4 py-3 text-sm leading-relaxed flex items-start gap-1.5
         ${patternKey === 'negativePattern' ? 'bg-red-50 border border-red-200 text-red-700'
           : patternKey === 'positivePattern' ? 'bg-green-50 border border-green-200 text-green-700'
           : patternKey === 'noChangeNote' ? 'bg-gray-50 border border-gray-200 text-gray-500'
           : 'bg-amber-50 border border-amber-200 text-amber-700'}`}
       >
-        {patternKey === 'negativePattern' && '⚠️ '}
-        {patternKey === 'positivePattern' && '✅ '}
-        {patternKey === 'mixedPattern' && '💡 '}
-        {t(`results.interpretation.${patternKey}`)}
+        {patternKey === 'negativePattern' && <WarningIcon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />}
+        {patternKey === 'positivePattern' && <CheckCircleIcon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />}
+        {patternKey === 'mixedPattern' && <TipIcon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />}
+        <span>{t(`results.interpretation.${patternKey}`)}</span>
       </div>
 
       {/* Lower-ranked note */}
@@ -269,8 +283,8 @@ function SessionShiftPanel({ current, history, onRestore, onImport }: {
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
-          📊 {t('results.shift')}
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          <ChartIcon className="w-3.5 h-3.5" /> {t('results.shift')}
         </span>
         <span className="text-gray-400 dark:text-gray-600 text-xs">{open ? '▲' : '▼'}</span>
       </button>
@@ -351,15 +365,15 @@ function SessionShiftPanel({ current, history, onRestore, onImport }: {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => importRef.current?.click()}
-                  className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
                 >
-                  ⬆️ {t('results.importHistory')}
+                  <UploadIcon className="w-3 h-3" /> {t('results.importHistory')}
                 </button>
                 <button
                   onClick={() => downloadJson('moving-motivators-solo-history.json', history)}
-                  className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
                 >
-                  ⬇️ {t('results.exportHistory')}
+                  <DownloadIcon className="w-3 h-3" /> {t('results.exportHistory')}
                 </button>
               </div>
               <input
@@ -554,51 +568,51 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
 
       {/* Insight hint */}
       {change && negatives.length > 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed px-1">
-          💡 {t('results.insight')}
+        <p className="inline-flex items-start gap-1.5 text-sm text-gray-500 dark:text-gray-400 leading-relaxed px-1">
+          <TipIcon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> {t('results.insight')}
         </p>
       )}
 
       <div className="flex flex-col gap-3 print:hidden">
         <div className="flex flex-wrap gap-3">
-          <button onClick={onReset} className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
-            ↩ {t('results.startOver')}
+          <button onClick={onReset} className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors">
+            <UndoIcon className="w-3.5 h-3.5" /> {t('results.startOver')}
           </button>
           <button
             onClick={handleShare}
             disabled={copying}
-            className="px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60"
           >
-            {copying ? '…' : `📋 ${t('results.share')}`}
+            {copying ? '…' : <><ClipboardIcon className="w-3.5 h-3.5" /> {t('results.share')}</>}
           </button>
           <button
             onClick={() => window.print()}
-            className="px-6 py-2 text-sm font-medium bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition-colors"
           >
-            🖨️ {t('results.print')}
+            <PrintIcon className="w-3.5 h-3.5" /> {t('results.print')}
           </button>
           <button
             onClick={handleExportToChangePlanner}
-            className="px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
-            🔗 {t('results.exportToChangePlanner')}
+            <LinkIcon className="w-3.5 h-3.5" /> {t('results.exportToChangePlanner')}
           </button>
           <button
             onClick={handleExportToWorkProfiles}
-            className="px-6 py-2 text-sm font-medium bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
+            className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors"
           >
-            👤 {t('results.exportToWorkProfiles')}
+            <PersonIcon className="w-3.5 h-3.5" /> {t('results.exportToWorkProfiles')}
           </button>
           {currentLabel ? (
             <span className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-              🏷️ {currentLabel}
+              <TagIcon className="w-3.5 h-3.5" /> {currentLabel}
             </span>
           ) : !saveAsEditing ? (
             <button
               onClick={() => setSaveAsEditing(true)}
-              className="px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
+              className="inline-flex items-center gap-1 px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
             >
-              🏷️ {t('results.saveAs')}
+              <TagIcon className="w-3.5 h-3.5" /> {t('results.saveAs')}
             </button>
           ) : null}
         </div>

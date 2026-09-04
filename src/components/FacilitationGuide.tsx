@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { CloseIcon } from './icons'
+import { CloseIcon, TipIcon, UndoIcon } from './icons'
 
 interface Props {
   onBack: () => void
@@ -39,17 +39,17 @@ export default function FacilitationGuide({ onBack }: Props) {
       </div>
 
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-        <p className="text-sm text-amber-800 leading-relaxed">
-          <span className="font-semibold">💡 </span>
+        <p className="inline-flex items-start gap-1.5 text-sm text-amber-800 leading-relaxed">
+          <TipIcon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
           {t('facilitation.tip')}
         </p>
       </div>
 
       <button
         onClick={onBack}
-        className="self-start px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
+        className="self-start inline-flex items-center gap-1 px-6 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-200 transition-colors"
       >
-        ↩ {t('common.back')}
+        <UndoIcon className="w-3.5 h-3.5" /> {t('common.back')}
       </button>
     </div>
   )

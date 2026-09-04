@@ -5,7 +5,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { getFirebaseDb } from '../firebase'
 import { claimSession, releaseSession, sessionPath, isReclaimable } from '../session'
 import { readActiveTeam, writeActiveTeam } from '../activeTeam'
-import { CloseIcon } from './icons'
+import { CloseIcon, ClockIcon, UploadIcon, DownloadIcon, ChartIcon, TeamIcon, CheckCircleIcon, HourglassIcon } from './icons'
 import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
 import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
 import RankingBoard from './RankingBoard'
@@ -209,7 +209,7 @@ function SessionHistoryPanel() {
         onClick={() => setOpen(o => !o)}
         className="flex items-center justify-between w-full text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 hover:border-brand-400 dark:hover:border-brand-500 transition-colors"
       >
-        <span>🕐 {t('team.sessionHistory.title')} ({history.length})</span>
+        <span className="inline-flex items-center gap-1"><ClockIcon className="w-3.5 h-3.5" /> {t('team.sessionHistory.title')} ({history.length})</span>
         <span className="text-gray-400 dark:text-gray-600">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
@@ -241,15 +241,15 @@ function SessionHistoryPanel() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => importRef.current?.click()}
-                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
+                className="inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
               >
-                ⬆️ {t('team.history.import')}
+                <UploadIcon className="w-3 h-3" /> {t('team.history.import')}
               </button>
               <button
                 onClick={() => downloadTeamHistoryJson(history)}
-                className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
+                className="inline-flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors px-1"
               >
-                ⬇️ {t('team.history.export')}
+                <DownloadIcon className="w-3 h-3" /> {t('team.history.export')}
               </button>
               <input
                 ref={importRef}
@@ -454,7 +454,7 @@ function TeamResultsView({
           onClick={handleSendToSprintMetrics}
           className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-brand-200 dark:border-brand-800 text-brand-600 dark:text-brand-400 text-sm font-medium hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
         >
-          <span>📊</span>
+          <ChartIcon className="w-3.5 h-3.5" />
           <span>{t('team.sendToSprintMetrics')}</span>
         </button>
       )}
@@ -491,8 +491,8 @@ function OverlapPanel({
 
   return (
     <div className="bg-brand-50 dark:bg-gray-800 border border-brand-100 dark:border-gray-700 rounded-2xl p-5">
-      <h3 className="text-sm font-semibold text-brand-700 dark:text-brand-400 mb-3">
-        🤝 Shared top motivators
+      <h3 className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-400 mb-3">
+        <TeamIcon className="w-4 h-4" /> Shared top motivators
       </h3>
       <div className="flex flex-wrap gap-2">
         {shared.map(([id, count]) => {
@@ -786,7 +786,7 @@ export default function TeamSession({
               <div className="flex flex-col gap-1.5 w-full">
                 {entries.map(([id, p]) => (
                   <div key={id} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 rounded-xl px-3 py-2 border border-gray-100 dark:border-gray-800">
-                    <span>{p.completed ? '✅' : '⏳'}</span>
+                    {p.completed ? <CheckCircleIcon className="w-3.5 h-3.5" /> : <HourglassIcon className="w-3.5 h-3.5 text-gray-400 dark:text-gray-600" />}
                     <span>{p.name}</span>
                   </div>
                 ))}
