@@ -75,7 +75,13 @@
     "trendView": "Rank trend",
     "trendShow": "Show rank trend",
     "trendHide": "Hide rank trend",
-    "importHistory": "Import history"
+    "importHistory": "Import history",
+    "coachingTips": {
+      "title": "Coaching tips",
+      "positiveTip": "This change plays to your strength in {{name}} — {{reflection}}",
+      "negativeTip": "This change may put pressure on your need for {{name}} — {{reflection}}",
+      "neutralTip": "{{name}} is one of your top drivers — {{reflection}}"
+    }
   },
   "facilitation": {
     "title": "Facilitation Guide",

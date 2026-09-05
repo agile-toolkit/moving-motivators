@@ -417,6 +417,46 @@ function SessionShiftPanel({ current, history, onRestore, onImport }: {
   )
 }
 
+function CoachingTipsPanel({ motivators }: { motivators: MotivatorItem[] }) {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+  const top3 = [...motivators].sort((a, b) => a.rank - b.rank).slice(0, 3)
+
+  return (
+    <div className="bg-white dark:bg-gray-900 rounded-2xl card-shadow overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+      >
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-gray-700 dark:text-gray-200">
+          <TipIcon className="w-3.5 h-3.5" /> {t('results.coachingTips.title')}
+        </span>
+        <span className="text-gray-400 dark:text-gray-600 text-xs">{open ? '▲' : '▼'}</span>
+      </button>
+
+      {open && (
+        <div className="px-5 pb-5 flex flex-col gap-3 border-t border-gray-100 dark:border-gray-800 pt-4">
+          {top3.map(item => {
+            const meta = getMotivatorMeta(item.id)
+            const templateKey = item.impact === 'positive' ? 'positiveTip' : item.impact === 'negative' ? 'negativeTip' : 'neutralTip'
+            const tip = t(`results.coachingTips.${templateKey}`, {
+              name: t(`motivators.${item.id}.name`),
+              reflection: t(`motivators.${item.id}.reflection`),
+            })
+            return (
+              <div key={item.id} className="flex items-start gap-2.5">
+                <span className="text-lg leading-none flex-shrink-0" aria-hidden="true">{meta.emoji}</span>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{tip}</p>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 const CHANGE_PLANNER_URL = 'https://agile-toolkit.github.io/change-planner/'
 const WORK_PROFILES_URL = 'https://agile-toolkit.github.io/work-profiles/'
 
@@ -562,6 +602,9 @@ export default function ResultsView({ motivators, change, onReset, onInfo, onRes
 
       {/* Interpretation */}
       <InterpretationPanel motivators={motivators} change={change} onInfo={onInfo} />
+
+      {/* Coaching tips (collapsed by default) */}
+      <CoachingTipsPanel motivators={motivators} />
 
       {/* Session shift panel */}
       <SessionShiftPanel current={motivators} history={history} onRestore={onRestore} onImport={handleImportSoloHistory} />
