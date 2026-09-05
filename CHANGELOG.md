@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+## 0.3.3 — Coaching tips panel in solo results (2026-09-05)
+
+- **feat**: a collapsible "Coaching tips" panel in `ResultsView.tsx`
+  (collapsed by default), showing one personalized tip per top-3
+  motivator. Each tip wraps that motivator's existing `reflection`
+  question (already in `src/i18n/*.json`, no new content file) in one of
+  three impact-aware templates depending on how the user assessed that
+  motivator's impact (positive/negative/neutral) during change
+  assessment.
+- **context**: closes [#52](https://github.com/agile-toolkit/moving-motivators/issues/52). The existing `InterpretationPanel` already surfaces
+  aggregate pattern-level insight (e.g. "this change risks undermining
+  motivators that are core to you"); this panel is per-motivator and
+  personalized, addressing the issue's specific ask rather than
+  duplicating what `InterpretationPanel` already covers.
+- **chore**: closed [#49](https://github.com/agile-toolkit/moving-motivators/issues/49) (first-run onboarding), which had already
+  shipped in PR #57 back in July but was never formally closed.
+
 ## 0.3.2 — Add glass effect to the header (2026-09-04)
 
 - **fix**: `AppHeader.tsx`'s background changed from opaque

@@ -6,9 +6,13 @@ Derived from GOAL.md. Rebuilt when GOAL changes or an epic ships.
 None — idle. See `## Next epics` below.
 
 ## Next epics
-1. **E2: Personalized results coaching** — serves signal #1 (inbound links/advocacy via richer content). Add a collapsible tips panel in `ResultsView` that surfaces 2-3 short, personalized coaching notes based on the user's top 3 motivators and their change-assessment outcome, so solo results give interpretation, not just a raw ranking. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52) — `needs-review`, past the 7-day staleness threshold, eligible for auto-approval on the next cycle.
+None open right now.
 
 ## Recently shipped
+**E2: Personalized results coaching** (2026-09-05) — see `## Shipped`. A collapsible "Coaching tips" panel in `ResultsView.tsx`, collapsed by default, showing one tip per top-3 motivator. Reuses each motivator's existing `reflection` question from `src/i18n/*.json` (no new content file, per the issue's own scoping) wrapped in one of three impact-aware templates (positive/negative/neutral) depending on how the user assessed that motivator in the change-assessment step. [#52](https://github.com/agile-toolkit/moving-motivators/issues/52).
+
+**First-run onboarding content in About panel** (2026-07-10) — see `## Shipped`. Closed the content gap in [#49](https://github.com/agile-toolkit/moving-motivators/issues/49) by extending the existing "About this exercise" panel rather than adding a new overlay — it already defaults open for first-time visitors. Shipped in PR #57; the issue itself stayed open by oversight until this pass closed it out.
+
 **Add glass effect to the header** (2026-09-04) — see `## Shipped`. `AppHeader.tsx`'s background changed to a translucent blur, matching the Dashboard's own nav — user-reported inconsistency.
 
 **Facilitator Mode persists across suite apps** (2026-09-03) — see `## Shipped`. `useFacilitatorMode`'s storage key changed to the shared `agile-toolkit:facilitatorMode` so the mode survives switching to another suite app in the same tab, per direct user request.
@@ -34,6 +38,8 @@ None — idle. See `## Next epics` below.
 - Two open issues have no remaining work in *this* repo: [#16](https://github.com/agile-toolkit/moving-motivators/issues/16) (Dashboard card reader lives in `agile-toolkit.github.io`) and [#53](https://github.com/agile-toolkit/moving-motivators/issues/53) (Improvement Board deep link needs zero Moving Motivators changes — `?change=` param already exists from #22). [#22](https://github.com/agile-toolkit/moving-motivators/issues/22)'s Change Planner-side sidebar is likewise pending in the `change-planner` repo, not here.
 
 ## Shipped
+- ~~E2: Personalized results coaching — a collapsible "Coaching tips" panel with one impact-aware tip per top-3 motivator, reusing existing reflection content~~ (2026-09-05)
+- ~~First-run onboarding content in the "About this exercise" panel~~ (2026-07-10)
 - ~~Add glass/backdrop-blur effect to the header, matching the Dashboard's own nav~~
 - ~~Unify Facilitator Mode's storage key to the shared `agile-toolkit:facilitatorMode` so it persists across suite apps~~
 - ~~Fix MotivatorInfo's close button using the × variant instead of ✕~~

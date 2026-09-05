@@ -75,7 +75,13 @@
     "trendView": "Дынаміка рангу",
     "trendShow": "Паказаць дынаміку рангу",
     "trendHide": "Схаваць дынаміку рангу",
-    "importHistory": "Імпартаваць гісторыю"
+    "importHistory": "Імпартаваць гісторыю",
+    "coachingTips": {
+      "title": "Парады трэнера",
+      "positiveTip": "Гэтая змена спрыяе тваёй моцнай баку — {{name}} — {{reflection}}",
+      "negativeTip": "Гэтая змена можа ціснуць на тваю патрэбу ў {{name}} — {{reflection}}",
+      "neutralTip": "{{name}} — адзін з тваіх галоўных матыватараў — {{reflection}}"
+    }
   },
   "facilitation": {
     "title": "Кіраўніцтва для Фасілітатара",

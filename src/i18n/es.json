@@ -75,7 +75,13 @@
     "trendView": "Tendencia de clasificación",
     "trendShow": "Mostrar tendencia de clasificación",
     "trendHide": "Ocultar tendencia de clasificación",
-    "importHistory": "Importar historial"
+    "importHistory": "Importar historial",
+    "coachingTips": {
+      "title": "Consejos de coaching",
+      "positiveTip": "Este cambio favorece tu fortaleza en {{name}} — {{reflection}}",
+      "negativeTip": "Este cambio podría presionar tu necesidad de {{name}} — {{reflection}}",
+      "neutralTip": "{{name}} es uno de tus principales motivadores — {{reflection}}"
+    }
   },
   "facilitation": {
     "title": "Guía de Facilitación",
