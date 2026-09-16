@@ -59,7 +59,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/moving-motivators/',
+  base: './',
   build: {
     outDir: 'dist',
     sourcemap: true,
