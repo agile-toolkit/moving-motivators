@@ -9,7 +9,7 @@
     "soloDesc": "Explora tus propios motivadores",
     "team": "Sesión de Equipo",
     "teamDesc": "Facilita un taller de equipo",
-    "teamUnavailable": "Las sesiones de equipo requieren configuración de Firebase — ver README",
+    "teamUnavailable": "Estás sin conexión: las sesiones de equipo necesitan internet.",
     "host": "Organizar una Sesión",
     "join": "Unirse a una Sesión",
     "about": {
