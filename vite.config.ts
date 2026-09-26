@@ -61,7 +61,7 @@ export default defineConfig(({ mode }) => ({
       },
     }),
   ],
-  base: '/moving-motivators/',
+  base: './',
   build: {
     outDir: 'dist',
     sourcemap: mode === 'debug',
