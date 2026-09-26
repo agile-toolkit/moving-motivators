@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isFirebaseConfigured } from '../firebaseConfig'
 import { CompassIcon, TeamIcon, ClipboardIcon } from './icons'
 
 interface Props {
@@ -16,7 +15,7 @@ const ABOUT_DISMISSED_KEY = 'mm_about_dismissed'
 
 export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isOnline = true, facilitatorMode = false }: Props) {
   const { t } = useTranslation()
-  const firebaseReady = isFirebaseConfigured() && isOnline
+  const teamReady = isOnline
   const [aboutOpen, setAboutOpen] = useState(
     () => localStorage.getItem(ABOUT_DISMISSED_KEY) !== '1'
   )
@@ -51,21 +50,21 @@ export default function HomeScreen({ onSolo, onHost, onJoin, onFacilitation, isO
             <TeamIcon className="w-5 h-5" /> {t('home.team')}
           </span>
           <button
-            onClick={firebaseReady ? onHost : undefined}
-            disabled={!firebaseReady}
+            onClick={teamReady ? onHost : undefined}
+            disabled={!teamReady}
             className="flex flex-col items-start gap-1 p-4 bg-white dark:bg-gray-900 rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed dark:border-gray-700 dark:enabled:hover:border-brand-500"
           >
             <span className="font-semibold text-gray-900 dark:text-gray-50">{t('home.host')}</span>
             <span className="text-sm text-gray-500 dark:text-gray-400">{t('home.teamDesc')}</span>
           </button>
           <button
-            onClick={firebaseReady ? onJoin : undefined}
-            disabled={!firebaseReady}
+            onClick={teamReady ? onJoin : undefined}
+            disabled={!teamReady}
             className="flex flex-col items-start gap-1 p-4 bg-white dark:bg-gray-900 rounded-2xl card-shadow border-2 border-transparent enabled:hover:border-brand-500 enabled:hover:card-shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed dark:border-gray-700 dark:enabled:hover:border-brand-500"
           >
             <span className="font-semibold text-gray-900 dark:text-gray-50">{t('home.join')}</span>
           </button>
-          {!firebaseReady && (
+          {!teamReady && (
             <p className="text-xs text-gray-400 dark:text-gray-600 px-1">{t('home.teamUnavailable')}</p>
           )}
         </div>

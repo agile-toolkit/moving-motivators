@@ -14,6 +14,7 @@ function useOnlineStatus(): boolean {
 }
 import type { Screen, MotivatorItem, MotivatorId, SessionEntry, ImpactLevel } from './types'
 import { defaultMotivatorItems } from './data/motivators'
+import { normalizeRoomCode } from './live/crypto'
 import { buildSessionEntry } from './sessionEntry'
 import AppHeader from './components/AppHeader'
 import ThemeToggle from './components/ThemeToggle'
@@ -23,9 +24,9 @@ import HomeScreen from './components/HomeScreen'
 import RankingBoard from './components/RankingBoard'
 import ChangeAssessment from './components/ChangeAssessment'
 import ResultsView from './components/ResultsView'
-// Lazy: TeamSession is the only thing that needs the Firebase SDK, and most
-// visitors never open a team session. Loading it on demand keeps ~450 kB out
-// of the entry chunk for everyone else.
+// Lazy: TeamSession is the only thing that needs the relay clients (MQTT,
+// Nostr), and most visitors never open a team session. Loading it on demand
+// keeps them out of the entry chunk for everyone else.
 const TeamSession = lazy(() => import('./components/TeamSession'))
 import MotivatorInfo from './components/MotivatorInfo'
 import FacilitationGuide from './components/FacilitationGuide'
@@ -40,21 +41,14 @@ function readChangeParam(): string {
 }
 
 /**
- * The PIN from a join link, or '' if there isn't a usable one.
+ * The room code from a join link (`#join=ABCDE-12345`), normalized, or ''.
  *
- * This value is interpolated into a Realtime Database path, so it is
- * constrained here rather than trusted: anything that is not a bare run of
- * digits is dropped, and the length cap matches the six-digit PINs
- * `session.ts` mints. The security rules reject the rest, but a link should
- * not be able to steer a query at a path of its choosing in the first place.
+ * The code is the session's encryption secret, so it lives in the URL
+ * fragment — browsers never send that to a server — and anything that is
+ * not a well-formed code is dropped here.
  */
 function readJoinParam(): string {
-  try {
-    const raw = new URLSearchParams(window.location.search).get('join') ?? ''
-    return /^[0-9]{1,6}$/.test(raw) ? raw : ''
-  } catch {
-    return ''
-  }
+  return normalizeRoomCode(new URLSearchParams(window.location.hash.slice(1)).get('join') ?? '')
 }
 
 function App() {
@@ -62,16 +56,16 @@ function App() {
   const isOnline = useOnlineStatus()
   const [facilitatorMode, toggleFacilitatorMode] = useFacilitatorMode('agile-toolkit:facilitatorMode')
   const initialChange = readChangeParam()
-  const initialJoinPin = readJoinParam()
+  const initialJoinCode = readJoinParam()
   const [screen, setScreen] = useState<Screen>(
-    initialChange ? 'solo-rank' : initialJoinPin ? 'team-join' : 'home'
+    initialChange ? 'solo-rank' : initialJoinCode ? 'team-join' : 'home'
   )
   const [motivators, setMotivators] = useState<MotivatorItem[]>(defaultMotivatorItems())
   const [change, setChange] = useState(initialChange)
   const [infoMotivator, setInfoMotivator] = useState<MotivatorId | null>(null)
 
   useEffect(() => {
-    if (initialChange || initialJoinPin) {
+    if (initialChange || initialJoinCode) {
       window.history.replaceState({}, '', window.location.pathname)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -191,7 +185,7 @@ function App() {
             change={change}
             onChange={setChange}
             onBack={reset}
-            initialJoinPin={initialJoinPin}
+            initialJoinCode={initialJoinCode}
           />
           </Suspense>
         )}

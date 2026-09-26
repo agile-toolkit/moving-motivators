@@ -37,7 +37,7 @@ The exercise has two phases:
 ## Features
 
 - 🎯 **Solo mode** — rank your motivators and assess the impact of a change
-- 👥 **Team mode** — host or join a session with a PIN; see everyone's results together (requires Firebase)
+- 👥 **Team mode** — host or join a session with a 10-character code; see everyone's results together. No account or backend: messages are end-to-end encrypted and carried by free public relays
 - 🌐 **Multilingual** — English and Russian out of the box (easily extensible)
 - 📱 **Mobile-friendly** — touch drag-and-drop, responsive layout
 - 🔌 **Works offline** — solo mode requires no backend
@@ -72,20 +72,6 @@ Open http://localhost:5173/moving-motivators/
 | `npm run preview` | Serve the production build locally |
 | `npm test` | Run the test suite (`vitest run`) |
 
-### Environment variables (optional — for team mode)
-
-Copy `.env.example` to `.env.local` and fill in your Firebase project values:
-
-```
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_DATABASE_URL=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_APP_ID=...
-```
-
-Solo mode works without any Firebase config.
-
 ---
 
 ## Deployment
@@ -93,9 +79,8 @@ Solo mode works without any Firebase config.
 The app auto-deploys to GitHub Pages on every push to `main` via GitHub Actions.
 
 To deploy from a fork:
-1. Add the five `VITE_FIREBASE_*` secrets in **Settings → Secrets → Actions** (optional)
-2. Enable **GitHub Pages** with source = **GitHub Actions** in **Settings → Pages**
-3. Push to `main`
+1. Enable **GitHub Pages** with source = **GitHub Actions** in **Settings → Pages**
+2. Push to `main`
 
 ---
 
@@ -108,9 +93,8 @@ To deploy from a fork:
 | Styling | Tailwind CSS 3 |
 | Drag & Drop | @dnd-kit/core + @dnd-kit/sortable |
 | i18n | react-i18next |
-| Realtime | Firebase Realtime Database |
+| Realtime | MQTT.js + nostr-tools over public relays (`src/live/`) |
 | CI/CD | GitHub Actions → GitHub Pages |
-| Dev pipeline | [agentic-kit](https://github.com/bthos/agentic-kit) (submodule) |
 
 ---
 
@@ -135,7 +119,9 @@ All keys are namespaced `moving-motivators:*` except two shared-pattern keys (`t
 - **State**: no global store — screen/session state lives in `App.tsx` component state and is passed down as props; persistence is plain `localStorage.setItem`/`getItem` calls at the transition points listed above, not a data layer.
 - **i18n**: `react-i18next` with four complete locales (`src/i18n/{en,es,be,ru}.json`); the header language picker cycles all four. New UI strings must be added to all four files in the same run.
 - **Theme**: Tailwind `darkMode: 'class'`; an anti-flash inline script in `index.html` applies the stored `theme` class before first paint; `dark:` variants are hand-added per component (`design-system/tokens.css` token map).
-- **Team realtime**: Firebase Realtime Database, optional — configured via `VITE_FIREBASE_*` env vars. Solo mode and the whole build work with zero Firebase config; `HomeScreen` disables team buttons when Firebase isn't configured or the app is offline.
+- **Team sessions:** no backend and no account. `src/live/` (kept identical in Planning Poker) connects every client to two public MQTT brokers (`broker.hivemq.com:8884`, `broker.emqx.io:8084`) *and* two public Nostr relays (`relay.damus.io`, `nos.lol`, plain `wss://` on 443) at once, publishing to all of them and de-duplicating on receipt — so a network that blocks the MQTT ports still works over Nostr. The host generates a 10-character session code; PBKDF2 turns it into an AES-GCM key and an unrelated public room id, so relays only see a random topic and ciphertext. The code travels in the join link's fragment (`#join=…`), which browsers never send to a server.
+  - **Only numbers go over the wire** (`src/liveSession.ts`, validated field-by-field on receipt): the host's phase and timer, and each participant's alias index plus, once they finish, their ranking as motivator indices and their change impact as -1/0/+1. The change description stays on the participant's device and nobody types a name — each participant is a random animal alias (`live/aliases.ts`).
+  - `HomeScreen` disables the team buttons only while the browser is offline.
 - **PWA**: `vite-plugin-pwa` (`generateSW` strategy) caches the app shell, static assets, and Google Fonts; a `useOnlineStatus()` hook in `App.tsx` drives an offline banner and disables team-session actions while offline.
 - **Cross-app integrations**: writes `work-profiles:motivatorSnapshot` for Work Profiles and `moving-motivators:motivationSnapshot` for Sprint Metrics; opens Change Planner with a base64-encoded snapshot in `?mm_snapshot=` and reads `?change=`/`?join=` URL params on load from Change Planner and QR-code team invites respectively. All are one-way, URL/localStorage-only handoffs — no shared backend.
 - **Team identity**: `src/activeTeam.ts` reads/writes the suite-wide `agile-toolkit:activeTeam` contract (defined by the Dashboard). The host lobby offers a one-click "use this name" suggestion instead of asking again, and the accepted/typed name replaces the raw session PIN in `motivationSnapshot`/`teamSessionHistory` — a PIN is still the fallback when no name was entered.

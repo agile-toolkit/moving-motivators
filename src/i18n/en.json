@@ -9,7 +9,7 @@
     "soloDesc": "Explore your own motivators",
     "team": "Team Session",
     "teamDesc": "Facilitate a team workshop",
-    "teamUnavailable": "Team sessions require Firebase setup — see README",
+    "teamUnavailable": "You're offline — team sessions need an internet connection.",
     "host": "Host a Session",
     "join": "Join a Session",
     "about": {

@@ -4,6 +4,19 @@ All notable changes to this project are documented here.
 
 ## Unreleased
 
+- **feat** (team sessions): Firebase is replaced by free public relays that
+  need no account and no secrets. Every client connects to two public MQTT
+  brokers (HiveMQ, EMQX) and two public Nostr relays (damus, nos.lol) at
+  once and de-duplicates messages, so a network that blocks the MQTT ports
+  (8884/8084) still works over Nostr on 443. Shared module `src/live/`,
+  kept identical with Planning Poker.
+- **feat** (privacy): only numbers leave the device, end-to-end encrypted.
+  Participants get a random animal alias instead of typing a name, and the
+  change description stays on the participant's device.
+- **breaking**: sessions are joined with a 10-character code
+  (`XXXXX-XXXXX`) instead of a 6-digit PIN, and join links carry it in the
+  fragment (`#join=…`) rather than the query string (`?join=…`). Old PIN
+  links no longer open a session.
 - **chore** (security): 0 `npm audit` vulnerabilities, down from 15. `vite` ^6.4.3 (patched dev-server path traversal / `fs.deny`
   bypass) and `vitest` ^4.1.11 (patched `@vitest/mocker` arbitrary file
   read); transitive fixes via `npm audit fix` (postcss, nanoid,
