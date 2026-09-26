@@ -1,13 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ref, set, onValue, push, update, get } from 'firebase/database'
 import { QRCodeSVG } from 'qrcode.react'
-import { getFirebaseDb } from '../firebase'
-import { claimSession, releaseSession, sessionPath, isReclaimable } from '../session'
+import { generateRoomCode, normalizeRoomCode, formatRoomCode } from '../live/crypto'
+import { useLiveRoom } from '../live/useLiveRoom'
+import { pickAlias, aliasLabel, aliasLabels } from '../live/aliases'
+import {
+  APP_ID, PHASES, isPeerState, findHost, participantsOf, phaseOf, encodeMotivators, decodeMotivators,
+  type PeerState, type SessionPhase,
+} from '../liveSession'
 import { readActiveTeam, writeActiveTeam } from '../activeTeam'
 import { CloseIcon, ClockIcon, UploadIcon, DownloadIcon, ChartIcon, TeamIcon, CheckCircleIcon, HourglassIcon } from './icons'
 import type { Screen, MotivatorItem, MotivatorId, TeamSessionHistoryEntry } from '../types'
-import { getMotivatorMeta, defaultMotivatorItems } from '../data/motivators'
+import { getMotivatorMeta } from '../data/motivators'
 import RankingBoard from './RankingBoard'
 import ChangeAssessment from './ChangeAssessment'
 import FacilitatorTimer from './FacilitatorTimer'
@@ -22,10 +26,11 @@ interface Props {
   onChange: (s: string) => void
   onBack: () => void
   onInfo?: (id: MotivatorId) => void
-  initialJoinPin?: string
+  initialJoinCode?: string
 }
 
-interface FirebaseParticipant {
+/** A participant as the results views show them. `change` is only ever the viewer's own. */
+interface TeamParticipant {
   name: string
   completed: boolean
   motivators?: MotivatorItem[]
@@ -42,7 +47,7 @@ function IndividualComparisonGrid({
   entries,
   isHost,
 }: {
-  entries: [string, FirebaseParticipant][]
+  entries: [string, TeamParticipant][]
   isHost: boolean
 }) {
   const { t } = useTranslation()
@@ -270,7 +275,7 @@ function SessionHistoryPanel() {
                 >
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="font-mono text-sm font-semibold text-brand-600 dark:text-brand-400">
-                      PIN {entry.teamName}
+                      {entry.teamName}
                     </span>
                     <span className="text-xs text-gray-400 dark:text-gray-600">{entry.date}</span>
                   </div>
@@ -337,7 +342,7 @@ function TeamResultsView({
   onBack,
   isHost,
 }: {
-  participants: Record<string, FirebaseParticipant>
+  participants: Record<string, TeamParticipant>
   onBack: () => void
   isHost: boolean
 }) {
@@ -468,7 +473,7 @@ function TeamResultsView({
 function OverlapPanel({
   entries,
 }: {
-  entries: [string, FirebaseParticipant][]
+  entries: [string, TeamParticipant][]
 }) {
   const { t } = useTranslation()
 
@@ -518,6 +523,19 @@ function OverlapPanel({
 }
 
 // ── Main TeamSession ───────────────────────────────────────────────────────
+
+/** The code rides in the fragment, which browsers never send to a server. */
+function buildJoinUrl(code: string): string {
+  return `${window.location.origin}${window.location.pathname}#join=${code}`
+}
+
+/** How long a joiner waits for a host before calling the code wrong. */
+const HOST_WAIT_MS = 12_000
+
+function newSessionId(): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(3)), b => b.toString(16).padStart(2, '0')).join('').toUpperCase()
+}
+
 export default function TeamSession({
   screen,
   setScreen,
@@ -527,50 +545,68 @@ export default function TeamSession({
   onChange,
   onBack,
   onInfo,
-  initialJoinPin = '',
+  initialJoinCode = '',
 }: Props) {
-  const { t } = useTranslation()
-  const [pin, setPin] = useState('')
-  const [joinPin, setJoinPin] = useState(initialJoinPin)
-  const [name, setName] = useState('')
-  const [participantId, setParticipantId] = useState('')
-  const [sessionPhase, setSessionPhase] = useState<'lobby' | 'ranking' | 'assessing' | 'revealed'>('lobby')
-  const [participants, setParticipants] = useState<Record<string, FirebaseParticipant>>({})
-  const [sessionTimer, setSessionTimer] = useState<{ startedAt: number; durationSecs: number } | null>(null)
+  const { t, i18n } = useTranslation()
+  const lang = i18n.language ?? 'en'
+  const [code, setCode] = useState<string | null>(() => (screen === 'team-host' ? generateRoomCode() : null))
+  const [joinInput, setJoinInput] = useState(() => formatRoomCode(initialJoinCode))
+  const [alias] = useState(() => pickAlias())
+  const [sessionPhase, setSessionPhase] = useState<SessionPhase>('lobby')
   const [teamName, setTeamName] = useState('')
   const [teamNameSuggestion, setTeamNameSuggestion] = useState<string | null>(null)
   const [sessionError, setSessionError] = useState('')
-  const db = getFirebaseDb()
 
-  // HOST: create session.
-  //
-  // claimSession picks a PIN nobody is using; the previous code minted a
-  // 4-digit one and wrote straight over whatever was there — including, since
-  // both apps shared `sessions/<pin>` in one Firebase project, a live Planning
-  // Poker session. `hosting` guards against the effect running twice (React
-  // StrictMode does exactly that in development) and stranding a session.
-  const hosting = useRef(false)
+  // Host
+  const [timer, setTimer] = useState<[number, number] | null>(null)
+  /** Results captured at reveal, so they outlive the room. */
+  const [frozen, setFrozen] = useState<Record<string, TeamParticipant> | null>(null)
+
+  // Participant
+  const [done, setDone] = useState(false)
+  const [hostSeen, setHostSeen] = useState(false)
+  const [hostWaitOver, setHostWaitOver] = useState(false)
+
+  const isHost = screen === 'team-host' || (screen === 'team-results' && frozen !== null)
+  const myState: PeerState | null =
+    !code ? null
+    : isHost ? { k: 'h', ph: PHASES.indexOf(sessionPhase), ...(timer ? { tm: timer } : {}) }
+    : { k: 'p', a: alias, ...(done ? { d: 1 as const, ...encodeMotivators(motivators) } : { d: 0 as const }) }
+
+  const { status, selfId, peers } = useLiveRoom<PeerState>(code, APP_ID, isPeerState, myState)
+  const host = isHost ? null : findHost(peers)?.[1] ?? null
+  const hostPhase = host ? phaseOf(host) : null
+  const participantEntries = participantsOf(peers)
+  const labels = useMemo(
+    () => aliasLabels([
+      ...participantEntries.map(([id, p]): [string, number] => [id, p.a]),
+      ...(!isHost && selfId ? [[selfId, alias] as [string, number]] : []),
+    ], lang),
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+    [peers, selfId, alias, lang, isHost],
+  )
+  const participants: Record<string, TeamParticipant> = Object.fromEntries(
+    participantEntries.map(([id, p]) => [id, {
+      name: labels.get(id) ?? '?',
+      completed: p.d === 1,
+      ...(p.d === 1 && p.r && p.i ? { motivators: decodeMotivators(p.r, p.i) } : {}),
+    }]),
+  )
+
+  // PARTICIPANT: follow the host's phase. Local navigation between ranking
+  // and assessing still works; the host moving on pulls everyone along.
   useEffect(() => {
-    if (screen !== 'team-host' || !db || hosting.current) return
-    hosting.current = true
-    let cancelled = false
-    claimSession(db, newPin => ({
-      pin: newPin,
-      hostId: 'host',
-      change: '',
-      phase: 'lobby',
-    }))
-      .then(newPin => {
-        if (cancelled) return releaseSession(db, newPin)
-        setPin(newPin)
-      })
-      .catch(() => {
-        if (!cancelled) setSessionError(t('team.host_error'))
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [screen, db])
+    if (!hostPhase) return
+    setHostSeen(true)
+    if (hostPhase === 'lobby' || hostPhase === 'ranking' || hostPhase === 'assessing') setSessionPhase(hostPhase)
+  }, [hostPhase])
+
+  // PARTICIPANT: a mistyped code would otherwise wait forever.
+  useEffect(() => {
+    if (screen !== 'team-play' || status !== 'online' || hostSeen) return
+    const id = setTimeout(() => setHostWaitOver(true), HOST_WAIT_MS)
+    return () => clearTimeout(id)
+  }, [screen, status, hostSeen])
 
   // HOST: offer the suite-wide active team name (E1 #51) instead of asking
   // again — read once on mount, never overwrite what the host types.
@@ -591,87 +627,38 @@ export default function TeamSession({
     if (value.trim()) writeActiveTeam(value, 'moving-motivators')
   }
 
-  // HOST: listen for all participant data (including motivators)
-  useEffect(() => {
-    if (screen !== 'team-host' || !pin || !db) return
-    const unsub = onValue(ref(db, `${sessionPath(pin)}/participants`), snap => {
-      setParticipants(snap.val() ?? {})
-    })
-    return () => unsub()
-  }, [screen, pin])
-
-  // PARTICIPANT: listen for phase changes from host
-  useEffect(() => {
-    if (!['team-play'].includes(screen) || !pin || !db || participantId) return
-    // guest-only: listen to phase changes
-    const unsub = onValue(ref(db, `${sessionPath(pin)}/phase`), snap => {
-      const phase = snap.val() as typeof sessionPhase
-      if (phase) setSessionPhase(phase)
-    })
-    return () => unsub()
-  }, [screen, pin, participantId])
-
-  // PARTICIPANT: listen for timer (to show progress bar)
-  useEffect(() => {
-    if (screen !== 'team-play' || !pin || !db) return
-    const unsub = onValue(ref(db, `${sessionPath(pin)}/timer`), snap => {
-      setSessionTimer(snap.val() as { startedAt: number; durationSecs: number } | null)
-    })
-    return () => unsub()
-  }, [screen, pin])
-
-  // HOST: write/clear timer in Firebase
-  const writeTimer = (durationSecs: number) => {
-    if (!db || !pin) return
-    set(ref(db, `${sessionPath(pin)}/timer`), { startedAt: Date.now(), durationSecs })
-  }
-
-  const clearSessionTimer = () => {
-    if (!db || !pin) return
-    set(ref(db, `${sessionPath(pin)}/timer`), null)
-  }
+  // HOST: timer shown to participants as a progress bar
+  const writeTimer = (durationSecs: number) => setTimer([Date.now(), durationSecs])
+  const clearSessionTimer = () => setTimer(null)
 
   // PARTICIPANT: join session
-  const handleJoin = async () => {
-    if (!db || !joinPin || !name) return
-    setSessionError('')
-    // Check the session is really there first. Pushing a participant into a
-    // mistyped PIN used to *create* that node, leaving the joiner waiting in a
-    // lobby with no host and no way to tell that had happened. A session past
-    // its TTL counts as gone, so a recycled PIN never lands someone in
-    // yesterday's session either.
-    const snap = await get(ref(db, sessionPath(joinPin)))
-    if (!snap.exists() || isReclaimable(snap.val())) {
-      setSessionError(t('team.join_error'))
+  const handleJoin = () => {
+    const normalized = normalizeRoomCode(joinInput)
+    if (!normalized) {
+      setSessionError(t('team.code_invalid'))
       return
     }
-    const pRef = push(ref(db, `${sessionPath(joinPin)}/participants`))
-    const id = pRef.key!
-    setParticipantId(id)
-    await set(pRef, { name, completed: false, motivators: defaultMotivatorItems() })
-    setPin(joinPin)
+    setSessionError('')
+    setHostSeen(false)
+    setHostWaitOver(false)
+    setDone(false)
+    setCode(normalized)
     setScreen('team-play')
   }
 
-  // PARTICIPANT: save final results to Firebase
-  const handleParticipantDone = async () => {
-    if (db && pin && participantId) {
-      await update(ref(db, `${sessionPath(pin)}/participants/${participantId}`), {
-        completed: true,
-        motivators,
-        change,
-      })
-    }
+  // PARTICIPANT: submit — only the numeric ranking and impacts are sent;
+  // the change description stays on this device.
+  const handleParticipantDone = () => {
+    setDone(true)
     setScreen('team-results')
   }
 
   // HOST: advance phase (also clears timer)
-  const advancePhase = (next: typeof sessionPhase) => {
-    if (!db || !pin) return
+  const advancePhase = (next: SessionPhase) => {
     clearSessionTimer()
-    set(ref(db, `${sessionPath(pin)}/phase`), next)
     setSessionPhase(next)
     if (next === 'revealed') {
+      setFrozen(participants)
       const completedEntries = Object.values(participants).filter(p => p.completed && p.motivators)
       if (completedEntries.length > 0) {
         const avgRank: Record<string, number> = {}
@@ -683,7 +670,9 @@ export default function TeamSession({
           .sort((a, b) => avgRank[a] - avgRank[b])
           .slice(0, 3) as MotivatorId[]
         const date = new Date().toISOString().slice(0, 10)
-        const resolvedTeamName = teamName.trim() || pin
+        // Never the room code: it is the session key, and history gets exported.
+        const sessionId = newSessionId()
+        const resolvedTeamName = teamName.trim() || sessionId
         const snapshot = {
           teamName: resolvedTeamName,
           date,
@@ -692,7 +681,7 @@ export default function TeamSession({
         }
         localStorage.setItem('moving-motivators:motivationSnapshot', JSON.stringify(snapshot))
         const historyEntry: TeamSessionHistoryEntry = {
-          sessionId: pin,
+          sessionId,
           teamName: resolvedTeamName,
           date,
           topMotivators,
@@ -715,36 +704,38 @@ export default function TeamSession({
           JSON.stringify([historyEntry, ...existing].slice(0, 10))
         )
       }
-      // Results are captured locally now, so the Firebase session is spent.
-      // Dropping it frees the PIN and a connection slot immediately instead of
-      // leaving it to age out — nothing was ever deleted before this.
-      void releaseSession(db, pin)
       setScreen('team-results')
     }
   }
 
+  const statusBanner = status !== 'online' && code && (
+    <p role="status" className={`text-sm text-center ${status === 'unreachable' ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
+      {status === 'unreachable' ? t('team.unreachable') : t('team.connecting')}
+    </p>
+  )
+
+  const privacyNote = (
+    <p className="text-xs text-gray-400 dark:text-gray-600 text-center">{t('team.privacy_note')}</p>
+  )
+
   // ── HOST lobby ─────────────────────────────────────────────────────────
-  if (screen === 'team-host') {
+  if (screen === 'team-host' && code) {
     const entries = Object.entries(participants)
     const completedCount = entries.filter(([, p]) => p.completed).length
-    const joinUrl = `${window.location.origin}${import.meta.env.BASE_URL}?join=${pin}`
+    const joinUrl = buildJoinUrl(code)
 
     return (
       <div className="flex flex-col items-center gap-5 max-w-sm mx-auto pt-8">
-        {/* Always show PIN */}
+        {/* Always show the code */}
         <div className="flex flex-col items-center gap-1 w-full">
           <p className="text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('team.pinLabel')}</p>
-          <div className="text-5xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-8 py-3 rounded-2xl">
-            {/* Claiming a PIN is a round-trip now, so there is a moment before
-                one exists. An ellipsis beats rendering an empty box. */}
-            {pin || '……'}
+          <div className="text-3xl font-mono font-bold text-brand-600 dark:text-brand-400 tracking-widest bg-brand-50 dark:bg-gray-800 px-6 py-3 rounded-2xl select-all">
+            {formatRoomCode(code)}
           </div>
-          {sessionError && (
-            <p className="text-sm text-red-600 dark:text-red-400 text-center pt-2">{sessionError}</p>
-          )}
         </div>
+        {statusBanner}
 
-        {/* Optional team name — replaces the raw PIN in saved history */}
+        {/* Optional team name — stays on this device, labels saved history */}
         {sessionPhase === 'lobby' && (
           <div className="flex flex-col items-center gap-1.5 w-full">
             <input
@@ -768,14 +759,12 @@ export default function TeamSession({
         )}
 
         {/* QR code — hidden on small screens (< 480px) where host's phone can't be shared) */}
-        {pin && (
-          <div className="hidden min-[480px]:flex flex-col items-center gap-2">
-            <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <QRCodeSVG value={joinUrl} size={140} level="M" />
-            </div>
-            <p className="text-xs text-gray-400 dark:text-gray-500">{t('team.scanToJoin')}</p>
+        <div className="hidden min-[480px]:flex flex-col items-center gap-2">
+          <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+            <QRCodeSVG value={joinUrl} size={140} level="M" />
           </div>
-        )}
+          <p className="text-xs text-gray-400 dark:text-gray-500">{t('team.scanToJoin')}</p>
+        </div>
 
         {/* Phase: lobby — waiting for participants */}
         {sessionPhase === 'lobby' && (
@@ -799,6 +788,7 @@ export default function TeamSession({
             >
               {t('team.startRanking')}
             </button>
+            {privacyNote}
           </>
         )}
 
@@ -849,30 +839,30 @@ export default function TeamSession({
       <div className="flex flex-col items-center gap-4 max-w-sm mx-auto pt-12">
         <h2 className="text-2xl font-bold dark:text-gray-50">{t('team.joinPrompt')}</h2>
         <input
-          value={joinPin}
-          onChange={e => setJoinPin(e.target.value)}
-          placeholder={t('team.joinPin')}
-          className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-center text-2xl font-mono tracking-widest bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
-          maxLength={6}
-          inputMode="numeric"
+          autoFocus
+          value={joinInput}
+          onChange={e => { setJoinInput(e.target.value); setSessionError('') }}
+          onKeyDown={e => { if (e.key === 'Enter') handleJoin() }}
+          placeholder="XXXXX-XXXXX"
+          aria-label={t('team.joinPin')}
+          className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-center text-xl font-mono tracking-widest uppercase bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
+          maxLength={13}
+          autoComplete="off"
+          autoCapitalize="characters"
+          spellCheck={false}
         />
-        <input
-          value={name}
-          onChange={e => setName(e.target.value)}
-          placeholder={t('team.yourName')}
-          maxLength={40}
-          className="w-full border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-400"
-        />
+        <p className="text-sm text-gray-600 dark:text-gray-400">{t('team.you_are', { alias: aliasLabel(alias, lang) })}</p>
         {sessionError && (
           <p className="text-sm text-red-600 dark:text-red-400 text-center">{sessionError}</p>
         )}
         <button
           onClick={handleJoin}
-          disabled={!joinPin || !name}
+          disabled={!joinInput.trim()}
           className="w-full py-3 bg-brand-500 text-white rounded-xl font-medium hover:bg-brand-600 disabled:opacity-40 transition-colors"
         >
           {t('team.join')}
         </button>
+        {privacyNote}
         <button onClick={onBack} className="text-sm text-gray-400 dark:text-gray-600">
           {t('common.back')}
         </button>
@@ -882,16 +872,38 @@ export default function TeamSession({
 
   // ── PARTICIPANT play ────────────────────────────────────────────────────
   if (screen === 'team-play') {
-    if (sessionPhase === 'lobby') {
+    if (!host) {
+      const message =
+        status === 'unreachable' ? t('team.unreachable')
+        : hostSeen ? t('team.host_left')
+        : hostWaitOver ? t('team.join_error')
+        : null
       return (
-        <div className="flex flex-col items-center gap-4 pt-16 text-gray-500 dark:text-gray-400">
-          <p className="text-lg font-medium">{t('team.phase.lobby')}</p>
+        <div className="flex flex-col items-center gap-4 pt-16 max-w-sm mx-auto text-center text-gray-500 dark:text-gray-400">
+          {message ? (
+            <p>{message}</p>
+          ) : (
+            <>
+              <div className="w-8 h-8 border-2 border-brand-300 border-t-brand-600 rounded-full animate-spin" />
+              <p className="text-sm">{t('team.connecting')}</p>
+            </>
+          )}
           <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">{t('common.back')}</button>
         </div>
       )
     }
-    const timerBar = sessionTimer
-      ? <ParticipantTimerBar startedAt={sessionTimer.startedAt} durationSecs={sessionTimer.durationSecs} />
+    if (sessionPhase === 'lobby') {
+      return (
+        <div className="flex flex-col items-center gap-4 pt-16 text-gray-500 dark:text-gray-400">
+          {statusBanner}
+          <p className="text-lg font-medium">{t('team.phase.lobby')}</p>
+          <p className="text-sm">{t('team.you_are', { alias: labels.get(selfId) ?? aliasLabel(alias, lang) })}</p>
+          <button onClick={onBack} className="text-sm text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400">{t('common.back')}</button>
+        </div>
+      )
+    }
+    const timerBar = host.tm
+      ? <ParticipantTimerBar startedAt={host.tm[0]} durationSecs={host.tm[1]} />
       : null
     const phaseBadge = (key: string) => (
       <p className="text-xs font-medium text-brand-500 uppercase tracking-wider mb-2">{t(key)}</p>
@@ -899,6 +911,7 @@ export default function TeamSession({
     if (sessionPhase === 'ranking') {
       return (
         <div>
+          {statusBanner}
           {timerBar}
           {phaseBadge('team.phase.ranking')}
           <RankingBoard
@@ -914,6 +927,7 @@ export default function TeamSession({
     }
     return (
       <div>
+        {statusBanner}
         {timerBar}
         {phaseBadge('team.phase.assessing')}
         <ChangeAssessment
@@ -931,17 +945,11 @@ export default function TeamSession({
 
   // ── TEAM RESULTS ────────────────────────────────────────────────────────
   if (screen === 'team-results') {
-    // Host: participants already loaded via listener
-    // Participant: build a fake entry from their own data
-    const isHostView = Object.keys(participants).length > 0 && !participantId
-    const displayParticipants: Record<string, FirebaseParticipant> =
-      Object.keys(participants).length > 0
-        ? participants
-        : participantId
-        ? { [participantId]: { name: name || 'You', completed: true, motivators, change } }
-        : {}
-
-    return <TeamResultsView participants={displayParticipants} onBack={onBack} isHost={isHostView} />
+    // Host: the snapshot taken at reveal. Participant: their own data only.
+    const displayParticipants: Record<string, TeamParticipant> = frozen ?? {
+      self: { name: labels.get(selfId) ?? aliasLabel(alias, lang), completed: true, motivators, change },
+    }
+    return <TeamResultsView participants={displayParticipants} onBack={onBack} isHost={frozen !== null} />
   }
 
   return null
